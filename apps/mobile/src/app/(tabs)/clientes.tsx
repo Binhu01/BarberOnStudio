@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl, TextInput, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/auth-context";
-import { NexoraTheme } from "../../contexts/theme-context";
+import { Barber-OnTheme } from "../../contexts/theme-context";
 import { supabase } from "../../lib/supabase";
 
 interface Customer {
@@ -51,7 +51,7 @@ export default function ClientesScreen() {
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar cliente..."
-          placeholderTextColor={NexoraTheme.colors.textSecondary}
+          placeholderTextColor={Barber-OnTheme.colors.textSecondary}
           value={search}
           onChangeText={setSearch}
         />
@@ -59,7 +59,7 @@ export default function ClientesScreen() {
 
       {loading && customers.length === 0 ? (
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color={NexoraTheme.colors.blue} />
+          <ActivityIndicator size="large" color={Barber-OnTheme.colors.blue} />
         </View>
       ) : (
         <FlatList
@@ -89,32 +89,32 @@ export default function ClientesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: NexoraTheme.colors.bg },
+  container: { flex: 1, backgroundColor: Barber-OnTheme.colors.bg },
   header: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12, gap: 12 },
-  title: { fontSize: 22, fontWeight: "700", color: NexoraTheme.colors.dark },
+  title: { fontSize: 22, fontWeight: "700", color: Barber-OnTheme.colors.dark },
   searchInput: {
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
-    borderRadius: NexoraTheme.radius.md,
+    borderColor: Barber-OnTheme.colors.border,
+    borderRadius: Barber-OnTheme.radius.md,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 14,
-    color: NexoraTheme.colors.text,
+    color: Barber-OnTheme.colors.text,
   },
   loader: { flex: 1, justifyContent: "center", alignItems: "center" },
   listContent: { padding: 16, gap: 10 },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: NexoraTheme.radius.md,
+    borderRadius: Barber-OnTheme.radius.md,
     padding: 14,
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
+    borderColor: Barber-OnTheme.colors.border,
   },
   cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  cardName: { fontSize: 15, fontWeight: "600", color: NexoraTheme.colors.dark },
-  inactiveBadge: { fontSize: 10, fontWeight: "600", color: NexoraTheme.colors.textSecondary, backgroundColor: NexoraTheme.colors.bgSecondary, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
-  cardDetail: { fontSize: 12, color: NexoraTheme.colors.textSecondary, marginTop: 4 },
+  cardName: { fontSize: 15, fontWeight: "600", color: Barber-OnTheme.colors.dark },
+  inactiveBadge: { fontSize: 10, fontWeight: "600", color: Barber-OnTheme.colors.textSecondary, backgroundColor: Barber-OnTheme.colors.bgSecondary, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+  cardDetail: { fontSize: 12, color: Barber-OnTheme.colors.textSecondary, marginTop: 4 },
   emptyBox: { padding: 32, alignItems: "center" },
-  emptyText: { fontSize: 13, color: NexoraTheme.colors.textSecondary },
+  emptyText: { fontSize: 13, color: Barber-OnTheme.colors.textSecondary },
 });

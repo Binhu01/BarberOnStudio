@@ -1,4 +1,4 @@
--- Nexora Fase 05 — Produtos e Controle de Estoque
+-- Barber-On Fase 05 — Produtos e Controle de Estoque
 -- Product catalog, variants, warehouses, inventory balances, movements, reservations
 -- All tables scoped by organization_id and protected by RLS via is_member_of().
 

@@ -28,7 +28,7 @@ export default async function NovaConversaPage(props: {
  </Link>
  <div className="rounded-xl border border-amber-200 bg-amber-50 p-8 text-center">
  <p className="text-sm text-amber-800">
- Nexora Intelligence não está configurado. Configure a variável ANTHROPIC_API_KEY no servidor.
+ Barber-On Intelligence não está configurado. Configure a variável ANTHROPIC_API_KEY no servidor.
  </p>
  </div>
  </div>

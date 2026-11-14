@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../contexts/auth-context";
-import { NexoraTheme } from "../contexts/theme-context";
+import { Barber-OnTheme } from "../contexts/theme-context";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function LoginScreen() {
           <View style={styles.logoMark}>
             <Text style={styles.logoText}>N</Text>
           </View>
-          <Text style={styles.brandName}>Nexora</Text>
+          <Text style={styles.brandName}>Barber-On</Text>
           <Text style={styles.slogan}>Gestão que impulsiona.</Text>
         </View>
 
@@ -50,7 +50,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder="E-mail"
-            placeholderTextColor={NexoraTheme.colors.textSecondary}
+            placeholderTextColor={Barber-OnTheme.colors.textSecondary}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -61,7 +61,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder="Senha"
-            placeholderTextColor={NexoraTheme.colors.textSecondary}
+            placeholderTextColor={Barber-OnTheme.colors.textSecondary}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -97,7 +97,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: NexoraTheme.colors.bg,
+    backgroundColor: Barber-OnTheme.colors.bg,
   },
   inner: {
     flex: 1,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 16,
-    backgroundColor: NexoraTheme.colors.blue,
+    backgroundColor: Barber-OnTheme.colors.blue,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: 28,
     fontWeight: "700",
-    color: NexoraTheme.colors.dark,
+    color: Barber-OnTheme.colors.dark,
   },
   slogan: {
     fontSize: 14,
-    color: NexoraTheme.colors.textSecondary,
+    color: Barber-OnTheme.colors.textSecondary,
     marginTop: 4,
   },
   form: {
@@ -138,16 +138,16 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
-    borderRadius: NexoraTheme.radius.md,
+    borderColor: Barber-OnTheme.colors.border,
+    borderRadius: Barber-OnTheme.radius.md,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: NexoraTheme.colors.text,
+    color: Barber-OnTheme.colors.text,
   },
   button: {
-    backgroundColor: NexoraTheme.colors.blue,
-    borderRadius: NexoraTheme.radius.md,
+    backgroundColor: Barber-OnTheme.colors.blue,
+    borderRadius: Barber-OnTheme.radius.md,
     paddingVertical: 16,
     alignItems: "center",
     marginTop: 8,
@@ -165,19 +165,19 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   linkText: {
-    color: NexoraTheme.colors.blue,
+    color: Barber-OnTheme.colors.blue,
     fontSize: 14,
     fontWeight: "500",
   },
   errorBox: {
     backgroundColor: "#FEF2F2",
     borderLeftWidth: 3,
-    borderLeftColor: NexoraTheme.colors.error,
+    borderLeftColor: Barber-OnTheme.colors.error,
     borderRadius: 8,
     padding: 12,
   },
   errorText: {
-    color: NexoraTheme.colors.error,
+    color: Barber-OnTheme.colors.error,
     fontSize: 13,
   },
 });

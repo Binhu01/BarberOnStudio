@@ -1,5 +1,5 @@
 -- ============================================================================
--- Nexora Fase 08 — BI Views & Report Permissions
+-- Barber-On Fase 08 — BI Views & Report Permissions
 -- ============================================================================
 
 -- Seed report permissions into the global permissions catalog

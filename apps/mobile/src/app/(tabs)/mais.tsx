@@ -14,7 +14,7 @@ import {
   LogOut,
 } from "lucide-react-native";
 import { useAuth } from "../../contexts/auth-context";
-import { NexoraTheme } from "../../contexts/theme-context";
+import { Barber-OnTheme } from "../../contexts/theme-context";
 
 const MENU_ITEMS = [
   { label: "Leads", icon: Users, route: "/leads", color: "#8B5CF6" },
@@ -68,7 +68,7 @@ export default function MaisScreen() {
             </View>
           </View>
           <TouchableOpacity style={styles.logoutButton} onPress={signOut} activeOpacity={0.7}>
-            <LogOut size={18} color={NexoraTheme.colors.error} />
+            <LogOut size={18} color={Barber-OnTheme.colors.error} />
             <Text style={styles.logoutText}>Sair</Text>
           </TouchableOpacity>
         </View>
@@ -78,17 +78,17 @@ export default function MaisScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: NexoraTheme.colors.bg },
+  container: { flex: 1, backgroundColor: Barber-OnTheme.colors.bg },
   content: { padding: 16, paddingBottom: 32 },
-  title: { fontSize: 22, fontWeight: "700", color: NexoraTheme.colors.dark, marginBottom: 20 },
+  title: { fontSize: 22, fontWeight: "700", color: Barber-OnTheme.colors.dark, marginBottom: 20 },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   menuCard: {
     width: "31%",
     backgroundColor: "#FFFFFF",
-    borderRadius: NexoraTheme.radius.md,
+    borderRadius: Barber-OnTheme.radius.md,
     padding: 14,
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
+    borderColor: Barber-OnTheme.colors.border,
     alignItems: "center",
     gap: 8,
   },
@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  menuLabel: { fontSize: 12, fontWeight: "600", color: NexoraTheme.colors.dark, textAlign: "center" },
+  menuLabel: { fontSize: 12, fontWeight: "600", color: Barber-OnTheme.colors.dark, textAlign: "center" },
   userSection: {
     marginTop: 24,
     backgroundColor: "#FFFFFF",
-    borderRadius: NexoraTheme.radius.md,
+    borderRadius: Barber-OnTheme.radius.md,
     padding: 16,
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
+    borderColor: Barber-OnTheme.colors.border,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: NexoraTheme.colors.blue,
+    backgroundColor: Barber-OnTheme.colors.blue,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarText: { color: "#FFFFFF", fontSize: 16, fontWeight: "700" },
-  userName: { fontSize: 14, fontWeight: "600", color: NexoraTheme.colors.dark },
-  userEmail: { fontSize: 12, color: NexoraTheme.colors.textSecondary, marginTop: 2 },
+  userName: { fontSize: 14, fontWeight: "600", color: Barber-OnTheme.colors.dark },
+  userEmail: { fontSize: 12, color: Barber-OnTheme.colors.textSecondary, marginTop: 2 },
   logoutButton: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 12, paddingVertical: 8 },
-  logoutText: { fontSize: 13, fontWeight: "600", color: NexoraTheme.colors.error },
+  logoutText: { fontSize: 13, fontWeight: "600", color: Barber-OnTheme.colors.error },
 });

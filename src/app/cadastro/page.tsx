@@ -72,7 +72,7 @@ export default function CadastroPage() {
             Criar conta
           </h1>
           <p className="mt-2 text-sm text-barber-text-secondary">
-            Comece a usar o Nexora gratuitamente
+            Comece a usar o Barber-On gratuitamente
           </p>
         </div>
 

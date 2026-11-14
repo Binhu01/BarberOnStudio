@@ -31,7 +31,7 @@ src/app/
 ├── _components/                # Componentes da landing
 │   └── landing-booking-widget.tsx
 ├── (public)/planos/            # Página comercial SaaS
-├── admin/                      # Painel Nexora Admin (platform)
+├── admin/                      # Painel Barber-On Admin (platform)
 │   ├── audit/
 │   ├── organizacoes/
 │   ├── planos/
@@ -41,8 +41,8 @@ src/app/
 │   ├── auth/signout/
 │   ├── billing/webhook/        # Mercado Pago SaaS
 │   └── intelligence/chat/      # AI streaming SSE
-├── cadastro/                   # Auth pages (legacy nexora tokens)
-├── login/                      # Auth pages (legacy nexora tokens)
+├── cadastro/                   # Auth pages (legacy barber-on tokens)
+├── login/                      # Auth pages (legacy barber-on tokens)
 └── dashboard/                  # App principal multi-tenant
     ├── shell.tsx               # Sidebar + header (23 itens nav)
     ├── page.tsx                # Dashboard home
@@ -140,7 +140,7 @@ src/app/
 | 18 | Logs | /dashboard/equipe/auditoria | ✅ | ✅ Funcional | Audit log imutável via RPC |
 | 19 | Configurações | /dashboard/configuracoes | ✅ | ⚠️ Parcial | Settings form existe, submenus pendentes |
 | 20 | Integrações | /dashboard/integracoes | ❌ | ❌ Não iniciado | comingSoon: true |
-| 21 | Meu plano | /dashboard/billing | ✅ | ✅ Funcional | Billing SaaS Nexora (não confundir com assinaturas clientes) |
+| 21 | Meu plano | /dashboard/billing | ✅ | ✅ Funcional | Billing SaaS Barber-On (não confundir com assinaturas clientes) |
 | 22 | Renovar assinatura | - | ⚠️ | ⚠️ Pendente | Precisa integrar com Mercado Pago checkout |
 | 23 | Contas | /dashboard/financeiro/contas | ✅ | ✅ Funcional | Contas financeiras múltiplas |
 
@@ -233,7 +233,7 @@ src/app/
 ## 5. Problemas Identificados
 
 ### Críticos
-1. **Referências Nexora em arquivos legados** — `cadastro/page.tsx`, `login/page.tsx`, `dashboard/actions.ts` usam tokens `nexora-*` e cookie `nexora_active_org`. Precisam ser migrados para `barber-*`.
+1. **Referências Barber-On em arquivos legados** — `cadastro/page.tsx`, `login/page.tsx`, `dashboard/actions.ts` usam tokens `barber-on-*` e cookie `barber-on_active_org`. Precisam ser migrados para `barber-*`.
 2. **WhatsApp não implementado** — Módulo inteiro ausente. É requisito obrigatório para automação de vencimentos.
 3. **Integrações não configuradas** — Sem credenciais de WhatsApp, Resend ou MP cliente, as automações não funcionarão.
 
@@ -246,8 +246,8 @@ src/app/
 9. **Configurações centralizadas** — Submenus de configurações espalhados entre múltiplas rotas em vez de unificados.
 
 ### Menores
-10. **README desatualizado** — Ainda referencia "Nexora" como nome principal e lista apenas 13 fases.
-11. **Sidebar tem `border-nexora-border`** — Linha 204 do shell.tsx usa token legado.
+10. **README desatualizado** — Ainda referencia "Barber-On" como nome principal e lista apenas 13 fases.
+11. **Sidebar tem `border-barber-on-border`** — Linha 204 do shell.tsx usa token legado.
 12. **Mobile app desatualizado** — Apps/mobile pode não refletir módulos barber-specific.
 
 ---
@@ -260,7 +260,7 @@ Este documento.
 ### FASE 1 — Fundação do Backend
 - [ ] Criar migration 017: tabelas ausentes (notification_templates, notification_logs, recurring_appointments, whatsapp_config)
 - [ ] Criar RPC functions para validação de conflitos de agendamento
-- [ ] Migrar tokens nexora → barber em arquivos legados
+- [ ] Migrar tokens barber-on → barber em arquivos legados
 - [ ] Atualizar README.md
 
 ### FASE 2 — Cadastros e Disponibilidade

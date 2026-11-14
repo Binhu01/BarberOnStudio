@@ -1,5 +1,5 @@
 // ============================================================================
-// NEXORA INTELLIGENCE — AI Provider Adapter (Anthropic Claude)
+// BARBER-ON INTELLIGENCE — AI Provider Adapter (Anthropic Claude)
 // ============================================================================
 // Decoupled adapter layer: the rest of the app never imports @anthropic-ai/sdk directly.
 // All calls go through this module, which handles auth, streaming, tool use and error mapping.
@@ -29,7 +29,7 @@ export function isAiConfigured(): boolean {
 // System prompt builder
 // ---------------------------------------------------------------------------
 
-const SYSTEM_PROMPT = `Você é o Nexora Intelligence, assistente empresarial integrado à plataforma Nexora.
+const SYSTEM_PROMPT = `Você é o Barber-On Intelligence, assistente empresarial integrado à plataforma Barber-On.
 
 REGRAS OBRIGATÓRIAS:
 1. Responda SEMPRE em português brasileiro.

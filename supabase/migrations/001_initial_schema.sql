@@ -1,4 +1,4 @@
--- Nexora Initial Schema
+-- Barber-On Initial Schema
 -- Multi-tenant foundation: profiles, organizations, memberships
 
 -- Profiles table (extends Supabase auth.users)

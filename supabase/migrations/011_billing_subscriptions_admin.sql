@@ -1,5 +1,5 @@
 -- ============================================================================
--- NEXORA FASE 14: Planos, Assinaturas e Administração SaaS
+-- BARBER-ON FASE 14: Planos, Assinaturas e Administração SaaS
 -- Migration 011 — Billing, Subscriptions, Entitlements, Platform Admin
 -- ============================================================================
 
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS organization_usage_records (
 CREATE INDEX idx_usage_records_org ON organization_usage_records(organization_id, period_start);
 
 -- ============================================================================
--- 11. PLATFORM ADMINS (administradores internos da Nexora)
+-- 11. PLATFORM ADMINS (administradores internos da Barber-On)
 -- ============================================================================
 
 CREATE TABLE IF NOT EXISTS platform_admins (
@@ -687,7 +687,7 @@ $$;
 -- ============================================================================
 
 INSERT INTO subscription_plans (slug, name, description, is_active, is_featured, display_order) VALUES
-  ('free', 'Free', 'Plano gratuito para pequenas empresas conhecerem a Nexora.', true, false, 1),
+  ('free', 'Free', 'Plano gratuito para pequenas empresas conhecerem a Barber-On.', true, false, 1),
   ('pro', 'Pro', 'Plano intermediário para empresas em crescimento.', true, true, 2),
   ('business', 'Business', 'Plano avançado para empresas que precisam de mais recursos.', true, false, 3)
 ON CONFLICT (slug) DO NOTHING;

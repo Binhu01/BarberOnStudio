@@ -1,5 +1,5 @@
 // ============================================================================
-// NEXORA INTELLIGENCE — Authorized Tool Registry
+// BARBER-ON INTELLIGENCE — Authorized Tool Registry
 // ============================================================================
 // Each tool is explicitly listed, validated and permission-gated.
 // The AI model NEVER executes arbitrary SQL or accesses the DB directly.

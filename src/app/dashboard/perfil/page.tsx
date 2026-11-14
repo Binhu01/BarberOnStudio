@@ -37,7 +37,7 @@ export default async function PerfilPage() {
           Meu Perfil
         </h1>
         <p className="mt-1 text-barber-text-secondary">
-          Informações da sua conta na plataforma Nexora.
+          Informações da sua conta na plataforma Barber-On.
         </p>
       </div>
 

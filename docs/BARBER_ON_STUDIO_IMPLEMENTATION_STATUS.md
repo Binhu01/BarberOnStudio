@@ -30,7 +30,7 @@
 | Server Actions (booking) | getLandingData, slots, createBooking | Implementado | Supabase RPC | TS ✅ | Teste E2E pendente |
 | Dashboard Sidebar | 23 itens + submenus | Implementado | Rotas criadas | TS ✅ | Páginas WhatsApp/Integrações vazias |
 | Migration 017 | notifications, whatsapp_config, recurring | Implementado | RLS + RPCs | TS ✅ | Seed templates criado |
-| Tokens CSS | nexora→barber em 101 arquivos | Implementado | N/A | TS ✅ | Admin/billing mantêm "Nexora" como nome SaaS |
+| Tokens CSS | barber-on→barber em 101 arquivos | Implementado | N/A | TS ✅ | Admin/billing mantêm "Barber-On" como nome SaaS |
 | Profissionais | CRUD + Instagram + desempenho | Implementado | Supabase + view v_barber_performance | TS ✅ | Página exibe métricas e link Instagram |
 | Serviços | CRUD completo | Implementado | Supabase | TS ✅ | Snapshot de preços em agendamentos |
 | Produtos | CRUD + categorias + estoque | Implementado | Supabase | TS ✅ | Reserva em pedidos pendente |
@@ -63,7 +63,7 @@
 - `src/app/dashboard/profissionais/actions.ts` — campo instagram + função getBarberPerformance
 - `src/app/dashboard/profissionais/page.tsx` — exibe Instagram, métricas de desempenho
 - `src/app/dashboard/tarefas/actions.ts` — prevenção de conflitos via RPC check_appointment_conflict
-- 101 arquivos em `src/` — tokens `nexora-*` → `barber-*`
+- 101 arquivos em `src/` — tokens `barber-on-*` → `barber-*`
 - `src/app/api/billing/webhook/route.ts` — URL atualizada
 - `src/app/dashboard/onboarding/page.tsx` — domínio atualizado
 

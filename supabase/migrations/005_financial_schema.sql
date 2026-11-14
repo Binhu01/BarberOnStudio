@@ -1,5 +1,5 @@
 -- ============================================================================
--- NEXORA FASE 06 — GESTÃO FINANCEIRA
+-- BARBER-ON FASE 06 — GESTÃO FINANCEIRA
 -- Tabelas: financial_accounts, financial_categories, receivables, payables,
 --          financial_payments, payment_allocations, financial_transactions
 -- Funções: register_payment, allocate_payment, reverse_payment,

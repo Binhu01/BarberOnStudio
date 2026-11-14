@@ -1,4 +1,4 @@
--- Nexora Fase 04 — Vendas: sales_channels, orders, order_items, quotes, quote_items, order_status_history, document_sequences
+-- Barber-On Fase 04 — Vendas: sales_channels, orders, order_items, quotes, quote_items, order_status_history, document_sequences
 -- All tables scoped by organization_id and protected by RLS via is_member_of().
 
 -- ============================================================================

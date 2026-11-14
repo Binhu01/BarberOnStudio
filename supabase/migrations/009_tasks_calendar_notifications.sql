@@ -1,4 +1,4 @@
--- Nexora Fase 10 — Tarefas, Agenda e Notificações
+-- Barber-On Fase 10 — Tarefas, Agenda e Notificações
 -- Migration: tasks, task_checklists, calendar_events, event_reminders,
 --            notifications, notification_preferences, push_subscriptions
 

@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Check } from "lucide-react-native";
 import { useAuth } from "../contexts/auth-context";
-import { NexoraTheme } from "../contexts/theme-context";
+import { Barber-OnTheme } from "../contexts/theme-context";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -61,7 +61,7 @@ export default function SelectOrgScreen() {
  return (
  <SafeAreaView style={styles.container}>
  <View style={styles.loader}>
- <ActivityIndicator size="large" color={NexoraTheme.colors.blue} />
+ <ActivityIndicator size="large" color={Barber-OnTheme.colors.blue} />
  </View>
  </SafeAreaView>
  );
@@ -96,7 +96,7 @@ export default function SelectOrgScreen() {
  <Text style={styles.orgRole}>{item.role}</Text>
  </View>
  {activeOrgId === item.org_id && (
- <Check size={20} color={NexoraTheme.colors.blue} />
+ <Check size={20} color={Barber-OnTheme.colors.blue} />
  )}
  </TouchableOpacity>
  )}
@@ -107,14 +107,14 @@ export default function SelectOrgScreen() {
 }
 
 const styles = StyleSheet.create({
- container: { flex: 1, backgroundColor: NexoraTheme.colors.bg },
+ container: { flex: 1, backgroundColor: Barber-OnTheme.colors.bg },
  loader: { flex: 1, justifyContent: "center", alignItems: "center" },
  content: { flex: 1, paddingHorizontal: 24, paddingTop: 48 },
  logoMark: {
  width: 56,
  height: 56,
  borderRadius: 14,
- backgroundColor: NexoraTheme.colors.blue,
+ backgroundColor: Barber-OnTheme.colors.blue,
  alignItems: "center",
  justifyContent: "center",
  alignSelf: "center",
@@ -124,12 +124,12 @@ const styles = StyleSheet.create({
  title: {
  fontSize: 22,
  fontWeight: "700",
- color: NexoraTheme.colors.dark,
+ color: Barber-OnTheme.colors.dark,
  textAlign: "center",
  },
  subtitle: {
  fontSize: 14,
- color: NexoraTheme.colors.textSecondary,
+ color: Barber-OnTheme.colors.textSecondary,
  textAlign: "center",
  marginTop: 6,
  marginBottom: 32,
@@ -137,25 +137,25 @@ const styles = StyleSheet.create({
  list: { gap: 10 },
  orgCard: {
  backgroundColor: "#FFFFFF",
- borderRadius: NexoraTheme.radius.md,
+ borderRadius: Barber-OnTheme.radius.md,
  padding: 16,
  borderWidth: 1,
- borderColor: NexoraTheme.colors.border,
+ borderColor: Barber-OnTheme.colors.border,
  flexDirection: "row",
  justifyContent: "space-between",
  alignItems: "center",
  },
  orgCardActive: {
- borderColor: NexoraTheme.colors.blue,
+ borderColor: Barber-OnTheme.colors.blue,
  backgroundColor: "#EFF4FF",
  },
- orgName: { fontSize: 15, fontWeight: "600", color: NexoraTheme.colors.dark },
+ orgName: { fontSize: 15, fontWeight: "600", color: Barber-OnTheme.colors.dark },
  orgRole: {
  fontSize: 11,
  fontWeight: "600",
  textTransform: "uppercase",
  letterSpacing: 0.5,
- color: NexoraTheme.colors.textSecondary,
+ color: Barber-OnTheme.colors.textSecondary,
  marginTop: 2,
  },
 });

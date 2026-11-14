@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { processMpWebhookEvent, verifyWebhookSignature } from "@/lib/billing/mercado-pago";
 
 /**
- * NEXORA FASE 14 — Webhook Endpoint para Mercado Pago SaaS Billing
+ * BARBER-ON FASE 14 — Webhook Endpoint para Mercado Pago SaaS Billing
  *
  * Recebe notificações assíncronas do Mercado Pago sobre:
  * - Pagamentos aprovados/rejeitados

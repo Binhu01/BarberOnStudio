@@ -60,11 +60,11 @@ async function captureScreenshots() {
  { name: '04-dashboard-principal', url: '/dashboard', desc: 'Dashboard principal (redireciona se não logado)' },
  { name: '05-equipe-limite-usuarios', url: '/dashboard/equipe', desc: 'Equipe — testar limite de usuários' },
  { name: '06-billing-assinatura', url: '/dashboard/billing', desc: 'Minha Assinatura — upgrade/downgrade' },
- { name: '07-admin-dashboard', url: '/admin', desc: 'Nexora Admin — Dashboard' },
- { name: '08-admin-planos', url: '/admin/planos', desc: 'Nexora Admin — Catálogo de planos' },
- { name: '09-admin-organizacoes', url: '/admin/organizacoes', desc: 'Nexora Admin — Organizações' },
- { name: '10-admin-suporte', url: '/admin/suporte', desc: 'Nexora Admin — Suporte' },
- { name: '11-admin-audit', url: '/admin/audit', desc: 'Nexora Admin — Audit Log' },
+ { name: '07-admin-dashboard', url: '/admin', desc: 'Barber-On Admin — Dashboard' },
+ { name: '08-admin-planos', url: '/admin/planos', desc: 'Barber-On Admin — Catálogo de planos' },
+ { name: '09-admin-organizacoes', url: '/admin/organizacoes', desc: 'Barber-On Admin — Organizações' },
+ { name: '10-admin-suporte', url: '/admin/suporte', desc: 'Barber-On Admin — Suporte' },
+ { name: '11-admin-audit', url: '/admin/audit', desc: 'Barber-On Admin — Audit Log' },
  ];
 
  for (const p of pages) {
@@ -109,7 +109,7 @@ function printManualGuide() {
  console.log(' 4 | /dashboard | Dashboard principal');
  console.log(' 5 | /dashboard/equipe | Equipe (limite de usuários)');
  console.log(' 6 | /dashboard/billing | Minha Assinatura');
- console.log(' 7 | /admin | Nexora Admin Dashboard');
+ console.log(' 7 | /admin | Barber-On Admin Dashboard');
  console.log(' 8 | /admin/planos | Admin — Planos');
  console.log(' 9 | /admin/organizacoes | Admin — Organizações');
  console.log('10 | /admin/suporte | Admin — Suporte');

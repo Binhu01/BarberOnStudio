@@ -1,5 +1,5 @@
 -- ============================================================================
--- NEXORA FASE 09 — FORNECEDORES E GESTÃO DE COMPRAS
+-- BARBER-ON FASE 09 — FORNECEDORES E GESTÃO DE COMPRAS
 -- Tabelas: suppliers, supplier_addresses, supplier_contacts, supplier_products,
 --          purchase_orders, purchase_order_items, goods_receipts,
 --          goods_receipt_items, purchase_payable_links

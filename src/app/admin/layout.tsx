@@ -50,7 +50,7 @@ export default async function AdminLayout({
             </Link>
             <span className="text-slate-300">|</span>
             <span className="text-sm font-bold text-[#0B1220]">
-              Nexora Admin
+              Barber-On Admin
             </span>
             <span className="rounded-full bg-[#3563F5]/10 px-2.5 py-0.5 text-xs font-medium text-[#3563F5]">
               {admin.internal_role.replace(/_/g, " ")}

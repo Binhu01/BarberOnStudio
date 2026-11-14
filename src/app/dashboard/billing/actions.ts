@@ -329,7 +329,7 @@ export async function getMySupportTickets(): Promise<SupportTicket[]> {
 }
 
 // ============================================================================
-// NEXORA ADMIN: Dashboard
+// BARBER-ON ADMIN: Dashboard
 // ============================================================================
 
 export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
@@ -399,7 +399,7 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
 }
 
 // ============================================================================
-// NEXORA ADMIN: Gerenciar Planos
+// BARBER-ON ADMIN: Gerenciar Planos
 // ============================================================================
 
 export async function getAllPlans(): Promise<PlanWithCurrentVersion[]> {
@@ -581,7 +581,7 @@ export async function createPlanVersion(input: CreatePlanVersionInput) {
 }
 
 // ============================================================================
-// NEXORA ADMIN: Organizações e Assinaturas
+// BARBER-ON ADMIN: Organizações e Assinaturas
 // ============================================================================
 
 export async function adminGetOrganizations(filters?: {
@@ -640,7 +640,7 @@ export async function adminGetSubscriptions() {
 }
 
 // ============================================================================
-// NEXORA ADMIN: Suporte
+// BARBER-ON ADMIN: Suporte
 // ============================================================================
 
 export async function adminGetSupportTickets(status?: string) {
@@ -694,7 +694,7 @@ export async function adminUpdateTicketStatus(
 }
 
 // ============================================================================
-// NEXORA ADMIN: Audit Logs
+// BARBER-ON ADMIN: Audit Logs
 // ============================================================================
 
 export async function adminGetAuditLogs(limit = 100) {
@@ -714,7 +714,7 @@ export async function adminGetAuditLogs(limit = 100) {
 }
 
 // ============================================================================
-// NEXORA ADMIN: Platform Admins
+// BARBER-ON ADMIN: Platform Admins
 // ============================================================================
 
 export async function adminGetPlatformAdmins(): Promise<PlatformAdminWithProfile[]> {

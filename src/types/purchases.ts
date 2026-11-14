@@ -1,4 +1,4 @@
-// Nexora Fase 09 — Fornecedores e Gestão de Compras
+// Barber-On Fase 09 — Fornecedores e Gestão de Compras
 
 // ============================================================================
 // SUPPLIERS

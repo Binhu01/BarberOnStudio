@@ -1,4 +1,4 @@
-// Nexora Fase 07 — Team & Permissions Types
+// Barber-On Fase 07 — Team & Permissions Types
 
 export type SystemRole = "OWNER" | "ADMIN" | "MANAGER" | "EMPLOYEE";
 

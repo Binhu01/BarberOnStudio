@@ -1,6 +1,6 @@
-# Nexora Mobile
+# Barber-On Mobile
 
-Aplicativo oficial da Nexora para Android e iOS, desenvolvido com React Native e Expo.
+Aplicativo oficial da Barber-On para Android e iOS, desenvolvido com React Native e Expo.
 
 ## Tecnologias
 
@@ -18,7 +18,7 @@ Aplicativo oficial da Nexora para Android e iOS, desenvolvido com React Native e
 
 - Node.js 20+
 - npm ou pnpm
-- Conta no [Supabase](https://supabase.com) (mesmo projeto da Nexora Web)
+- Conta no [Supabase](https://supabase.com) (mesmo projeto da Barber-On Web)
 - Conta na [Expo](https://expo.dev) para builds com EAS
 - Android Studio (para build local Android) ou Xcode (para build local iOS)
 
@@ -34,7 +34,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Preencha `.env.local` com as mesmas credenciais Supabase usadas pela Nexora Web:
+Preencha `.env.local` com as mesmas credenciais Supabase usadas pela Barber-On Web:
 
 | Variável | Descrição |
 |----------|-----------|
@@ -87,7 +87,7 @@ apps/mobile/
 │   │       └── mais.tsx      # Menu secundário
 │   ├── contexts/
 │   │   ├── auth-context.tsx  # Autenticação + sessão + organizações
-│   │   └── theme-context.tsx # Tokens de identidade visual Nexora
+│   │   └── theme-context.tsx # Tokens de identidade visual Barber-On
 │   └── lib/
 │       └── supabase.ts       # Cliente Supabase com SecureStore
 ├── assets/                   # Ícones, splash screen, imagens
@@ -112,7 +112,7 @@ apps/mobile/
 
 ## Integração com Supabase
 
-O app consome o **mesmo banco de dados e RLS** da Nexora Web:
+O app consome o **mesmo banco de dados e RLS** da Barber-On Web:
 
 - Autenticação via `supabase.auth` (email/password)
 - Sessão persistida no SecureStore (tokens seguros)
@@ -160,8 +160,8 @@ npx eas build --profile production --platform ios
 
 | Plataforma | Bundle ID / Package | Configurável em |
 |------------|---------------------|-----------------|
-| Android | `com.nexora.app` | `app.json` → `android.package` |
-| iOS | `com.nexora.app` | `app.json` → `ios.bundleIdentifier` |
+| Android | `com.barber-on.app` | `app.json` → `android.package` |
+| iOS | `com.barber-on.app` | `app.json` → `ios.bundleIdentifier` |
 
 > ⚠️ Verifique a disponibilidade dos identificadores nas lojas antes de publicar. Os valores atuais são placeholders.
 
@@ -191,5 +191,5 @@ As seguintes funcionalidades permanecem exclusivas da versão Web nesta fase:
 - Motor de automações
 - Auditoria completa
 - Relatórios exportáveis
-- Nexora Intelligence (chat completo — acessível via menu "Mais" mas com interface simplificada)
+- Barber-On Intelligence (chat completo — acessível via menu "Mais" mas com interface simplificada)
 - Gestão financeira avançada (contas, categorias, fluxo de caixa detalhado)

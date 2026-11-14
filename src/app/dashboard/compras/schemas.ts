@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // ============================================================================
-// NEXORA — Schemas Zod para Compras (Suppliers, Purchase Orders, Receipts)
+// BARBER-ON — Schemas Zod para Compras (Suppliers, Purchase Orders, Receipts)
 // ============================================================================
 
 // ---------------------------------------------------------------------------

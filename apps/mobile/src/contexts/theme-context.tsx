@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-export const NexoraTheme = {
+export const Barber-OnTheme = {
   colors: {
     blue: "#3563F5",
     cyan: "#20C5C9",
@@ -19,13 +19,13 @@ export const NexoraTheme = {
   radius: { sm: 8, md: 12, lg: 16, xl: 24 },
 } as const;
 
-export type Theme = typeof NexoraTheme;
+export type Theme = typeof Barber-OnTheme;
 
-const ThemeContext = createContext<Theme>(NexoraTheme);
+const ThemeContext = createContext<Theme>(Barber-OnTheme);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeContext.Provider value={NexoraTheme}>
+    <ThemeContext.Provider value={Barber-OnTheme}>
       {children}
     </ThemeContext.Provider>
   );

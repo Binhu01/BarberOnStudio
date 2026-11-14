@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/auth-context";
-import { NexoraTheme } from "../../contexts/theme-context";
+import { Barber-OnTheme } from "../../contexts/theme-context";
 import { supabase } from "../../lib/supabase";
 
 interface DashboardStats {
@@ -177,7 +177,7 @@ export default function DashboardScreen() {
 
         {loading && !stats ? (
           <View style={styles.loader}>
-            <ActivityIndicator size="large" color={NexoraTheme.colors.blue} />
+            <ActivityIndicator size="large" color={Barber-OnTheme.colors.blue} />
           </View>
         ) : stats ? (
           <>
@@ -244,7 +244,7 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: NexoraTheme.colors.bg },
+  container: { flex: 1, backgroundColor: Barber-OnTheme.colors.bg },
   content: { padding: 16, paddingBottom: 32 },
   header: {
     flexDirection: "row",
@@ -252,17 +252,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
   },
-  greeting: { fontSize: 20, fontWeight: "700", color: NexoraTheme.colors.dark },
+  greeting: { fontSize: 20, fontWeight: "700", color: Barber-OnTheme.colors.dark },
   orgName: {
     fontSize: 13,
-    color: NexoraTheme.colors.textSecondary,
+    color: Barber-OnTheme.colors.textSecondary,
     marginTop: 2,
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: NexoraTheme.colors.blue,
+    backgroundColor: Barber-OnTheme.colors.blue,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -278,43 +278,43 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: "47%",
     backgroundColor: "#FFFFFF",
-    borderRadius: NexoraTheme.radius.md,
+    borderRadius: Barber-OnTheme.radius.md,
     padding: 16,
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
+    borderColor: Barber-OnTheme.colors.border,
   },
   cardLabel: {
     fontSize: 11,
     fontWeight: "600",
     textTransform: "uppercase",
     letterSpacing: 0.5,
-    color: NexoraTheme.colors.textSecondary,
+    color: Barber-OnTheme.colors.textSecondary,
   },
   cardValue: {
     fontSize: 22,
     fontWeight: "700",
-    color: NexoraTheme.colors.dark,
+    color: Barber-OnTheme.colors.dark,
     marginTop: 6,
   },
   cardSub: {
     fontSize: 12,
-    color: NexoraTheme.colors.textSecondary,
+    color: Barber-OnTheme.colors.textSecondary,
     marginTop: 2,
   },
-  alert: { color: NexoraTheme.colors.error },
+  alert: { color: Barber-OnTheme.colors.error },
   section: { marginBottom: 20 },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: NexoraTheme.colors.dark,
+    color: Barber-OnTheme.colors.dark,
     marginBottom: 10,
   },
   emptyBox: {
     backgroundColor: "#FFFFFF",
-    borderRadius: NexoraTheme.radius.md,
+    borderRadius: Barber-OnTheme.radius.md,
     padding: 16,
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
+    borderColor: Barber-OnTheme.colors.border,
   },
-  emptyText: { fontSize: 13, color: NexoraTheme.colors.textSecondary },
+  emptyText: { fontSize: 13, color: Barber-OnTheme.colors.textSecondary },
 });

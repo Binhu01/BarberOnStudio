@@ -1,11 +1,11 @@
 # Barber-On Studio — Blueprint de Arquitetura
 
-> Sistema de gestão completo para barbearia, transformado a partir da plataforma Nexora.
+> Sistema de gestão completo para barbearia, transformado a partir da plataforma Barber-On.
 
 ## 1. Visão Geral
 
 **Nome:** Barber-On Studio  
-**Base:** Nexora (Next.js 16 + Supabase + TypeScript)  
+**Base:** Barber-On (Next.js 16 + Supabase + TypeScript)  
 **Finalidade:** Gestão operacional de barbearia — agendamentos, clientes, profissionais, serviços, comandas, assinaturas, financeiro e automações.  
 **Modelo:** Single-tenant inicial, com arquitetura multi-tenant preservada para expansão futura.
 
@@ -30,7 +30,7 @@
 | `--color-barber-error` | `#EF4444` | Erros, ações destrutivas |
 
 ### Tipografia
-- **Display/Títulos:** Montserrat (mantida do Nexora)
+- **Display/Títulos:** Montserrat (mantida do Barber-On)
 - **Corpo:** Geist (via next/font/google)
 - **Estilo:** Moderna, limpa, pesos 400/500/600/700
 
@@ -77,7 +77,7 @@
 - Compras/Fornecedores (complexo excessivo para fase 1)
 - Estoque multi-depósito (simplificar para single-location)
 - Intelligence/IA (feature avançada, manter infraestrutura)
-- Admin SaaS (painel Nexora interno)
+- Admin SaaS (painel Barber-On interno)
 - Minha Assinatura SaaS (billing da plataforma)
 
 ---
@@ -85,7 +85,7 @@
 ## 4. Mapeamento de Tabelas Existentes
 
 ### Tabelas a Reutilizar Diretamente
-| Tabela Nexora | Uso em Barber-On | Adaptações Necessárias |
+| Tabela Barber-On | Uso em Barber-On | Adaptações Necessárias |
 |---------------|------------------|----------------------|
 | `profiles` | Contas de usuário/staff | Nenhuma |
 | `organizations` | Barbearia (single-tenant) | Manter para expansão futura |
@@ -125,7 +125,7 @@
 | `integration_settings` | Configurações de integrações por barbearia |
 
 ### Tabelas SaaS a Ignorar (Migration 011)
-Todas as tabelas da migration 011 são específicas do billing SaaS da Nexora e NÃO devem ser reutilizadas:
+Todas as tabelas da migration 011 são específicas do billing SaaS da Barber-On e NÃO devem ser reutilizadas:
 - `subscription_plans`, `subscription_plan_versions`, `plan_entitlements`
 - `billing_customers`, `subscriptions`, `subscription_events`
 - `subscription_invoices`, `subscription_payment_events`
@@ -225,7 +225,7 @@ NEXT_PUBLIC_BARBER_SLUG=barber-on-studio
 
 ## 11. Funcionalidades Existentes vs Ausentes
 
-### ✅ Implementadas no Nexora (reutilizáveis)
+### ✅ Implementadas no Barber-On (reutilizáveis)
 - Autenticação Supabase Auth + SSR
 - Multi-tenancy com RLS
 - CRUD de clientes com timeline
@@ -255,4 +255,4 @@ NEXT_PUBLIC_BARBER_SLUG=barber-on-studio
 
 ---
 
-*Documento gerado como parte da Fase 1 de transformação Nexora → Barber-On Studio.*
+*Documento gerado como parte da Fase 1 de transformação Barber-On → Barber-On Studio.*

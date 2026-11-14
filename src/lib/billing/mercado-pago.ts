@@ -1,10 +1,10 @@
 /**
- * NEXORA FASE 14 — Adaptador Mercado Pago para Billing SaaS
+ * BARBER-ON FASE 14 — Adaptador Mercado Pago para Billing SaaS
  *
  * Integração server-side com a API do Mercado Pago para gerenciamento de
- * assinaturas recorrentes da plataforma Nexora. Esta integração é separada
+ * assinaturas recorrentes da plataforma Barber-On. Esta integração é separada
  * da integração de pagamentos de clientes (Fase 12) — usa credenciais
- * próprias da Nexora como merchant.
+ * próprias da Barber-On como merchant.
  *
  * Fluxo:
  * 1. Criar customer no MP (se não existir)
@@ -148,7 +148,7 @@ export async function getOrCreateMpCustomer(
       email,
       first_name: firstName || undefined,
       last_name: lastName,
-      description: `Nexora Organization ${organizationId}`,
+      description: `Barber-On Organization ${organizationId}`,
     }),
   });
 
@@ -194,7 +194,7 @@ export async function getOrCreateMpPlan(
   const mpPlan = await mpFetch<MpPreapprovalPlan>("/preapproval_plans", {
     method: "POST",
     body: JSON.stringify({
-      reason: `Nexora - ${planName}`,
+      reason: `Barber-On - ${planName}`,
       auto_recurring: {
         frequency: 1,
         frequency_type: "months",
@@ -259,7 +259,7 @@ export async function createMpSubscription(params: {
       payer_email: params.customerEmail,
       customer_id: customerId,
       preapproval_plan_id: mpPlanId,
-      reason: `Nexora - ${params.planName}`,
+      reason: `Barber-On - ${params.planName}`,
       external_reference: params.organizationId,
       auto_recurring: {
         frequency: 1,
@@ -455,7 +455,7 @@ export async function processMpWebhookEvent(event: {
         `/preapproval/${event.data.id}`,
       );
 
-      const orgId = preapproval.reason?.includes("Nexora")
+      const orgId = preapproval.reason?.includes("Barber-On")
         ? undefined // Need to find by external_reference
         : undefined;
 

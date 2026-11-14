@@ -1,4 +1,4 @@
--- Nexora Fase 03 — CRM: customers, pipelines, pipeline_stages, leads, interactions
+-- Barber-On Fase 03 — CRM: customers, pipelines, pipeline_stages, leads, interactions
 -- All tables are scoped by organization_id and protected by RLS.
 
 -- Habilitar extensões necessárias para índices de busca textual

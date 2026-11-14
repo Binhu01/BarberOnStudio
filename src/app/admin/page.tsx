@@ -82,7 +82,7 @@ export default async function AdminDashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#0B1220]">Painel Administrativo</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Visão geral da plataforma Nexora · {admin.internal_role.replace(/_/g, " ")}
+            Visão geral da plataforma Barber-On · {admin.internal_role.replace(/_/g, " ")}
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-[#E4E9F2] bg-white px-4 py-2 shadow-sm">

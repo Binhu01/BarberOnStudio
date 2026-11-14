@@ -1,8 +1,8 @@
-# NEXORA FASE 14 — Planos, Assinaturas e Administração SaaS
+# BARBER-ON FASE 14 — Planos, Assinaturas e Administração SaaS
 
 ## Visão Geral
 
-Esta fase implementa a infraestrutura comercial completa da plataforma Nexora como SaaS multi-tenant: catálogo de planos com versionamento imutável, sistema de assinaturas recorrentes via Mercado Pago, enforcement de limites por entitlements, painel administrativo interno (Nexora Admin), tickets de suporte e logs de auditoria da plataforma.
+Esta fase implementa a infraestrutura comercial completa da plataforma Barber-On como SaaS multi-tenant: catálogo de planos com versionamento imutável, sistema de assinaturas recorrentes via Mercado Pago, enforcement de limites por entitlements, painel administrativo interno (Barber-On Admin), tickets de suporte e logs de auditoria da plataforma.
 
 ## Arquitetura
 
@@ -11,7 +11,7 @@ Esta fase implementa a infraestrutura comercial completa da plataforma Nexora co
 | Ambiente | Acesso | Propósito |
 |----------|--------|-----------|
 | **Dashboard da Empresa** (`/dashboard/billing`) | OWNER/ADMIN da organização | Gerenciar assinatura, faturas, uso e suporte da própria empresa |
-| **Nexora Admin** (`/admin/*`) | Platform Admins (tabela `platform_admins`) | Gerenciar todas as organizações, planos, suporte e auditoria da plataforma |
+| **Barber-On Admin** (`/admin/*`) | Platform Admins (tabela `platform_admins`) | Gerenciar todas as organizações, planos, suporte e auditoria da plataforma |
 
 ### Fluxo de Assinatura
 
@@ -50,7 +50,7 @@ Empresa se cadastra → Trial gratuito (14 dias) → Aprova pagamento no MP
 | `subscription_payment_events` | Eventos de pagamento idempotentes |
 | `plan_changes` | Solicitações de upgrade/downgrade |
 | `organization_usage_records` | Uso mensal por feature |
-| `platform_admins` | Admins internos da Nexora |
+| `platform_admins` | Admins internos da Barber-On |
 | `platform_audit_logs` | Log imutável de operações admin |
 | `support_tickets` | Tickets de suporte das empresas |
 
@@ -82,7 +82,7 @@ Empresa se cadastra → Trial gratuito (14 dias) → Aprova pagamento no MP
 | `src/app/(public)/planos/page.tsx` | Página comercial com cards e tabela comparativa |
 | `src/app/dashboard/billing/page.tsx` | Área "Minha Assinatura" com uso, faturas e histórico |
 
-### Frontend — Nexora Admin
+### Frontend — Barber-On Admin
 
 | Arquivo | Descrição |
 |---------|-----------|
@@ -102,13 +102,13 @@ Empresa se cadastra → Trial gratuito (14 dias) → Aprova pagamento no MP
 ## Variáveis de Ambiente
 
 ```env
-# Mercado Pago SaaS Billing (credenciais da Nexora como merchant)
+# Mercado Pago SaaS Billing (credenciais da Barber-On como merchant)
 MP_SAAS_ACCESS_TOKEN=APP_USR-xxxx...
 MP_SAAS_WEBHOOK_SECRET=webhook-secret-here
 MP_SAAS_API_URL=https://api.mercadopago.com  # opcional, default já configurado
 
 # URL pública da aplicação
-NEXT_PUBLIC_APP_URL=https://nexora.app
+NEXT_PUBLIC_APP_URL=https://barber-on.app
 ```
 
 ## Enforcement de Limites
@@ -195,7 +195,7 @@ Idempotência garantida via constraint UNIQUE em `event_id`.
 25. Evento duplicado ignorado (idempotente)
 26. Sync manual reconcilia status
 
-### Nexora Admin
+### Barber-On Admin
 27. Dashboard mostra stats corretos
 28. Lista organizações com filtro
 29. Visualizar detalhes de assinatura

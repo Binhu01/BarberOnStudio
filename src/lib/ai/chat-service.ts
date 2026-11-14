@@ -88,7 +88,7 @@ export async function processChatMessage(
 
  // 1. Check configuration
  if (!isAiConfigured()) {
- callbacks.onError("Nexora Intelligence não está configurado. Configure a variável ANTHROPIC_API_KEY no servidor.");
+ callbacks.onError("Barber-On Intelligence não está configurado. Configure a variável ANTHROPIC_API_KEY no servidor.");
  return;
  }
 

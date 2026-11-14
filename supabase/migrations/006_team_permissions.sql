@@ -1,4 +1,4 @@
--- Nexora Fase 07 — Equipe, Funcionários e Gestão de Permissões
+-- Barber-On Fase 07 — Equipe, Funcionários e Gestão de Permissões
 -- Migration: departments, employee_profiles, organization_roles, permissions,
 --            role_permissions, membership_permissions, invitations,
 --            audit_logs, approval_requests, approval_votes

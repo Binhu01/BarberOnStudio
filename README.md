@@ -1,6 +1,6 @@
-# Nexora — Plataforma SaaS Multi-Tenant para PMEs Brasileiras
+# Barber-On — Plataforma SaaS Multi-Tenant para PMEs Brasileiras
 
-Nexora é uma plataforma completa de gestão empresarial (ERP + CRM) desenvolvida com **Next.js 16**, **Supabase** e **TypeScript**, projetada para micro, pequenas e médias empresas brasileiras.
+Barber-On é uma plataforma completa de gestão empresarial (ERP + CRM) desenvolvida com **Next.js 16**, **Supabase** e **TypeScript**, projetada para micro, pequenas e médias empresas brasileiras.
 
 ## Stack Tecnológica
 
@@ -101,7 +101,7 @@ Nexora é uma plataforma completa de gestão empresarial (ERP + CRM) desenvolvid
 - Webhook idempotente para eventos de pagamento
 - Página comercial `/planos` com tabela comparativa
 - Área "Minha Assinatura" com uso, faturas e histórico
-- Painel Nexora Admin (`/admin/*`) completo
+- Painel Barber-On Admin (`/admin/*`) completo
 - Tickets de suporte
 - Audit log da plataforma
 - Proteção de owners (mínimo 2 garantidos)
@@ -112,7 +112,7 @@ Nexora é uma plataforma completa de gestão empresarial (ERP + CRM) desenvolvid
 src/
 ├── app/
 │   ├── (public)/          # Rotas públicas (landing, planos)
-│   ├── admin/             # Painel Nexora Admin (platform admins)
+│   ├── admin/             # Painel Barber-On Admin (platform admins)
 │   ├── api/               # API routes (webhooks, AI chat)
 │   ├── auth/              # Login, cadastro, onboarding
 │   └── dashboard/         # App principal (multi-tenant)
@@ -164,7 +164,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # Aplicação
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_APP_NAME=Nexora
+NEXT_PUBLIC_APP_NAME=Barber-On
 
 # Mercado Pago SaaS Billing (obrigatório para assinaturas)
 MP_SAAS_ACCESS_TOKEN=APP_USR-xxxx...

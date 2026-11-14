@@ -1,4 +1,4 @@
-// Nexora Fase 05 — Products & Inventory types
+// Barber-On Fase 05 — Products & Inventory types
 
 export type ProductType = "physical" | "service";
 export type MovementType =

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
  // 2. Config check
  if (!isAiConfigured()) {
  return NextResponse.json(
- { error: "Nexora Intelligence não está configurado. Configure ANTHROPIC_API_KEY no servidor." },
+ { error: "Barber-On Intelligence não está configurado. Configure ANTHROPIC_API_KEY no servidor." },
  { status: 503 },
  );
  }

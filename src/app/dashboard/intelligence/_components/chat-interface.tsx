@@ -236,7 +236,7 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  <Sparkles className="h-8 w-8 text-white" />
  </div>
  <h2 className="mt-4 font-display text-lg font-semibold text-barber-dark">
- Nexora Intelligence
+ Barber-On Intelligence
  </h2>
  <p className="mt-2 max-w-md text-sm text-barber-text-secondary">
  Pergunte sobre vendas, estoque, financeiro, clientes ou qualquer aspecto da sua empresa.

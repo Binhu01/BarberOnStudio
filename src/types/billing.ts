@@ -1,5 +1,5 @@
 // ============================================================================
-// NEXORA FASE 14: Tipos TypeScript — Billing, Subscriptions & Platform Admin
+// BARBER-ON FASE 14: Tipos TypeScript — Billing, Subscriptions & Platform Admin
 // ============================================================================
 
 // ---------------------------------------------------------------------------
@@ -291,7 +291,7 @@ export interface SupportTicket {
 }
 
 // ---------------------------------------------------------------------------
-// Dashboard Stats (Nexora Admin)
+// Dashboard Stats (Barber-On Admin)
 // ---------------------------------------------------------------------------
 
 export interface AdminDashboardStats {

@@ -81,7 +81,7 @@ export default function OnboardingPage() {
             Crie sua empresa
           </h1>
           <p className="mt-2 text-sm text-barber-text-secondary">
-            Configure o ambiente da sua organização para começar a usar o Nexora.
+            Configure o ambiente da sua organização para começar a usar o Barber-On.
           </p>
         </div>
 

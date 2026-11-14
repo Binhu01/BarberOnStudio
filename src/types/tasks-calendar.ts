@@ -1,5 +1,5 @@
 // ============================================================================
-// NEXORA FASE 10 — Tarefas, Agenda e Notificações: Tipos TypeScript
+// BARBER-ON FASE 10 — Tarefas, Agenda e Notificações: Tipos TypeScript
 // ============================================================================
 
 // --- TASKS ---

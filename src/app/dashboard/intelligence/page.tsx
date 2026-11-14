@@ -39,7 +39,7 @@ export default async function IntelligencePage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">Nexora Intelligence</h1>
+          <h1 className="font-display text-2xl font-bold text-barber-dark">Barber-On Intelligence</h1>
           <p className="mt-1 text-sm text-barber-text-secondary">
             Assistente empresarial com inteligência artificial integrado à plataforma.
           </p>
@@ -52,8 +52,8 @@ export default async function IntelligencePage() {
           </h2>
           <p className="mt-2 text-sm text-amber-800">
             {!status.is_configured
-              ? "A variável de ambiente ANTHROPIC_API_KEY não está configurada no servidor. Configure-a para ativar o Nexora Intelligence."
-              : "O Nexora Intelligence está desativado para esta organização. Ative-o nas configurações."}
+              ? "A variável de ambiente ANTHROPIC_API_KEY não está configurada no servidor. Configure-a para ativar o Barber-On Intelligence."
+              : "O Barber-On Intelligence está desativado para esta organização. Ative-o nas configurações."}
           </p>
           {["OWNER", "ADMIN"].includes(status.role ?? "") && (
             <Link
@@ -78,7 +78,7 @@ export default async function IntelligencePage() {
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-display text-2xl font-bold text-barber-dark">Nexora Intelligence</h1>
+            <h1 className="font-display text-2xl font-bold text-barber-dark">Barber-On Intelligence</h1>
             <p className="text-xs text-barber-text-secondary">
               Assistente empresarial · {conversations.length} conversa{conversations.length !== 1 ? "s" : ""}
             </p>
@@ -132,7 +132,7 @@ export default async function IntelligencePage() {
       <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
         <h2 className="font-display text-lg font-semibold text-barber-dark">Perguntas sugeridas</h2>
         <p className="mt-1 text-xs text-barber-text-secondary">
-          Clique em uma pergunta para iniciar uma conversa com o Nexora Intelligence.
+          Clique em uma pergunta para iniciar uma conversa com o Barber-On Intelligence.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {SUGGESTED_QUESTIONS.map((q) => {

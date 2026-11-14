@@ -56,7 +56,7 @@ export default function LoginPage() {
             N
           </div>
           <h1 className="font-display text-2xl font-bold text-barber-dark">
-            Entrar no Nexora
+            Entrar no Barber-On
           </h1>
           <p className="mt-2 text-sm text-barber-text-secondary">
             Acesse sua conta para continuar

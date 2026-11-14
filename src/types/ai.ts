@@ -1,5 +1,5 @@
 // ============================================================================
-// NEXORA FASE 11 — Nexora Intelligence: Tipos TypeScript
+// BARBER-ON FASE 11 — Barber-On Intelligence: Tipos TypeScript
 // ============================================================================
 
 // --- CONVERSATIONS ---

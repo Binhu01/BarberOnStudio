@@ -1,4 +1,4 @@
-// Nexora Fase 08 — Reports & BI Types
+// Barber-On Fase 08 — Reports & BI Types
 
 // ============================================================================
 // DATE RANGE & FILTERS

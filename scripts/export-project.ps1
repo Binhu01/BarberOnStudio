@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
-$src = "C:\Users\glaub\OneDrive\Desktop\Nexora\.claude\worktrees\hungry-proskuriakova-78f113"
-$dst = "C:\Users\glaub\OneDrive\Desktop\Nexora.zip"
-$tempDir = Join-Path $env:TEMP "nexora-export-$(Get-Date -Format 'yyyyMMddHHmmss')"
+$src = "C:\Users\glaub\OneDrive\Desktop\Barber-On\.claude\worktrees\hungry-proskuriakova-78f113"
+$dst = "C:\Users\glaub\OneDrive\Desktop\Barber-On.zip"
+$tempDir = Join-Path $env:TEMP "barber-on-export-$(Get-Date -Format 'yyyyMMddHHmmss')"
 
 Write-Host "Copiando projeto para diretorio temporario..."
 $excludeDirs = @("node_modules", ".next", ".git", ".claude", "screenshots")

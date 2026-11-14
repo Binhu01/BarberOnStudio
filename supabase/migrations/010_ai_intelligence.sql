@@ -1,4 +1,4 @@
--- Nexora Fase 11 — Nexora Intelligence (AI Assistant)
+-- Barber-On Fase 11 — Barber-On Intelligence (AI Assistant)
 -- Migration: ai_conversations, ai_messages, ai_usage_records, ai_settings, ai_insights
 
 -- ============================================================================
@@ -306,7 +306,7 @@ $$;
 -- SEED PERMISSIONS FOR AI MODULE
 -- ============================================================================
 INSERT INTO permissions (permission_key, module, action, description) VALUES
-  ('ai.chat', 'ai', 'chat', 'Usar o assistente Nexora Intelligence'),
+  ('ai.chat', 'ai', 'chat', 'Usar o assistente Barber-On Intelligence'),
   ('ai.view_history', 'ai', 'view_history', 'Visualizar histórico de conversas'),
   ('ai.view_insights', 'ai', 'view_insights', 'Visualizar insights da IA'),
   ('ai.manage_settings', 'ai', 'manage_settings', 'Gerenciar configurações da IA'),

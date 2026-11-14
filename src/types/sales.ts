@@ -1,4 +1,4 @@
-// Nexora Fase 04 — Sales module types
+// Barber-On Fase 04 — Sales module types
 
 export type OrderStatus = "draft" | "confirmed" | "preparing" | "completed" | "cancelled";
 export type QuoteStatus = "draft" | "sent" | "accepted" | "rejected" | "expired" | "converted";

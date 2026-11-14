@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/auth-context";
-import { NexoraTheme } from "../../contexts/theme-context";
+import { Barber-OnTheme } from "../../contexts/theme-context";
 import { supabase } from "../../lib/supabase";
 
 interface Task {
@@ -40,9 +40,9 @@ export default function TarefasScreen() {
   }, [activeOrgId, user]);
 
   const priorityColor: Record<string, string> = {
-    high: NexoraTheme.colors.error,
-    medium: NexoraTheme.colors.warning,
-    low: NexoraTheme.colors.success,
+    high: Barber-OnTheme.colors.error,
+    medium: Barber-OnTheme.colors.warning,
+    low: Barber-OnTheme.colors.success,
   };
 
   return (
@@ -53,7 +53,7 @@ export default function TarefasScreen() {
 
       {loading && tasks.length === 0 ? (
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color={NexoraTheme.colors.blue} />
+          <ActivityIndicator size="large" color={Barber-OnTheme.colors.blue} />
         </View>
       ) : (
         <FlatList
@@ -70,7 +70,7 @@ export default function TarefasScreen() {
             <TouchableOpacity style={styles.card} activeOpacity={0.7}>
               <View style={styles.cardHeader}>
                 <Text style={styles.cardName} numberOfLines={2}>{item.title}</Text>
-                <View style={[styles.priorityDot, { backgroundColor: priorityColor[item.priority] ?? NexoraTheme.colors.textSecondary }]} />
+                <View style={[styles.priorityDot, { backgroundColor: priorityColor[item.priority] ?? Barber-OnTheme.colors.textSecondary }]} />
               </View>
               <View style={styles.cardFooter}>
                 <Text style={styles.statusBadge}>{item.status}</Text>
@@ -89,25 +89,25 @@ export default function TarefasScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: NexoraTheme.colors.bg },
+  container: { flex: 1, backgroundColor: Barber-OnTheme.colors.bg },
   header: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12 },
-  title: { fontSize: 22, fontWeight: "700", color: NexoraTheme.colors.dark },
+  title: { fontSize: 22, fontWeight: "700", color: Barber-OnTheme.colors.dark },
   loader: { flex: 1, justifyContent: "center", alignItems: "center" },
   listContent: { padding: 16, gap: 10 },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: NexoraTheme.radius.md,
+    borderRadius: Barber-OnTheme.radius.md,
     padding: 14,
     borderWidth: 1,
-    borderColor: NexoraTheme.colors.border,
+    borderColor: Barber-OnTheme.colors.border,
   },
   cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
-  cardName: { fontSize: 15, fontWeight: "600", color: NexoraTheme.colors.dark, flex: 1, marginRight: 8 },
+  cardName: { fontSize: 15, fontWeight: "600", color: Barber-OnTheme.colors.dark, flex: 1, marginRight: 8 },
   priorityDot: { width: 10, height: 10, borderRadius: 5, marginTop: 4 },
   cardFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 8 },
-  statusBadge: { fontSize: 11, fontWeight: "600", textTransform: "uppercase", color: NexoraTheme.colors.textSecondary },
-  dueDate: { fontSize: 12, color: NexoraTheme.colors.textSecondary },
-  overdue: { color: NexoraTheme.colors.error, fontWeight: "600" },
+  statusBadge: { fontSize: 11, fontWeight: "600", textTransform: "uppercase", color: Barber-OnTheme.colors.textSecondary },
+  dueDate: { fontSize: 12, color: Barber-OnTheme.colors.textSecondary },
+  overdue: { color: Barber-OnTheme.colors.error, fontWeight: "600" },
   emptyBox: { padding: 32, alignItems: "center" },
-  emptyText: { fontSize: 13, color: NexoraTheme.colors.textSecondary },
+  emptyText: { fontSize: 13, color: Barber-OnTheme.colors.textSecondary },
 });

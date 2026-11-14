@@ -30,7 +30,7 @@ export default async function AiConfiguracoesPage() {
           <Shield className="mx-auto h-12 w-12 text-red-600" />
           <h2 className="mt-4 font-display text-lg font-semibold text-red-900">Acesso negado</h2>
           <p className="mt-2 text-sm text-red-800">
-            Apenas proprietários e administradores podem acessar as configurações do Nexora Intelligence.
+            Apenas proprietários e administradores podem acessar as configurações do Barber-On Intelligence.
           </p>
         </div>
       </div>
@@ -113,7 +113,7 @@ export default async function AiConfiguracoesPage() {
           <div className="flex items-start justify-between rounded-lg border border-barber-border p-4">
             <div>
               <label htmlFor="enabled" className="text-sm font-medium text-barber-dark">
-                Nexora Intelligence ativo
+                Barber-On Intelligence ativo
               </label>
               <p className="mt-0.5 text-xs text-barber-text-secondary">
                 Quando desativado, nenhum membro poderá usar o assistente de IA.
