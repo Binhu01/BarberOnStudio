@@ -9,32 +9,39 @@ import { createClient } from "@/lib/supabase/server";
 export async function getLandingData() {
   const supabase = await createClient();
 
-  // Buscar a primeira organização ativa (barbearia principal)
-  const { data: org } = await supabase
+  // 1. Buscar organização — NÃO usar .single() pois falha se retornar 0 ou >1 rows
+  const { data: orgs, error: orgError } = await supabase
     .from("organizations")
     .select("id, name, slug")
-    .limit(1)
-    .single();
+    .limit(1);
 
-  if (!org) {
+  if (orgError || !orgs || orgs.length === 0) {
+    console.error("[getLandingData] Erro ao buscar organização:", orgError?.message);
     return { barbers: [], services: [], products: [], settings: null };
   }
 
-  // Buscar membros ativos da organização primeiro
-  const { data: activeMembers } = await supabase
+  const org = orgs[0];
+
+  // 2. Buscar membros ativos — não filtrar por status se a coluna não existir
+  //    Usar apenas organization_id para evitar falhas
+  const { data: activeMembers, error: membersError } = await supabase
     .from("memberships")
     .select("user_id, role")
-    .eq("organization_id", org.id)
-    .eq("status", "active");
+    .eq("organization_id", org.id);
+
+  if (membersError) {
+    console.error("[getLandingData] Erro ao buscar membros:", membersError.message);
+  }
 
   const memberIds = (activeMembers ?? []).map((m: any) => m.user_id);
-  const memberRoles = Object.fromEntries(
-    (activeMembers ?? []).map((m: any) => [m.user_id, m.role])
-  );
+  const memberRoles: Record<string, string> = {};
+  for (const m of activeMembers ?? []) {
+    memberRoles[m.user_id] = m.role;
+  }
 
-  // Buscar dados em paralelo
+  // 3. Buscar dados em paralelo
   const [barbersRes, servicesRes, productsRes, settingsRes] = await Promise.all([
-    // Profissionais ativos — profiles não tem phone/instagram/role
+    // Profissionais
     memberIds.length > 0
       ? supabase
           .from("profiles")
@@ -61,16 +68,32 @@ export async function getLandingData() {
       .order("name")
       .limit(8),
 
-    // Configurações da barbearia
+    // Configurações da barbearia — NÃO usar .single()
     supabase
       .from("barbershop_settings")
       .select("*")
       .eq("organization_id", org.id)
-      .single(),
+      .limit(1),
   ]);
 
+  // Log errors for debugging
+  if ((barbersRes as any).error) {
+    console.error("[getLandingData] Erro barbers:", (barbersRes as any).error.message);
+  }
+  if (servicesRes.error) {
+    console.error("[getLandingData] Erro services:", servicesRes.error.message);
+  }
+  if (productsRes.error) {
+    console.error("[getLandingData] Erro products:", productsRes.error.message);
+  }
+  if ((settingsRes as any).error) {
+    console.error("[getLandingData] Erro settings:", (settingsRes as any).error.message);
+  }
+
+  const settingsData = Array.isArray(settingsRes.data) ? settingsRes.data[0] : settingsRes.data;
+
   return {
-    barbers: (barbersRes.data ?? []).map((b: any) => ({
+    barbers: ((barbersRes as any).data ?? []).map((b: any) => ({
       id: b.id,
       full_name: b.full_name,
       avatar_url: b.avatar_url,
@@ -93,7 +116,7 @@ export async function getLandingData() {
       price: p.price,
       image_url: p.image_url ?? null,
     })),
-    settings: settingsRes.data ?? null,
+    settings: settingsData ?? null,
   };
 }
 
@@ -108,13 +131,13 @@ export async function getAvailableSlotsForLanding(params: {
 }) {
   const supabase = await createClient();
 
-  const { data: org } = await supabase
+  const { data: orgs } = await supabase
     .from("organizations")
     .select("id")
-    .limit(1)
-    .single();
+    .limit(1);
 
-  if (!org) return { slots: [], error: "Organização não encontrada" };
+  if (!orgs || orgs.length === 0) return { slots: [], error: "Organização não encontrada" };
+  const org = orgs[0];
 
   // Buscar duração do serviço
   const { data: service } = await supabase
@@ -122,7 +145,7 @@ export async function getAvailableSlotsForLanding(params: {
     .select("duration_minutes")
     .eq("id", params.serviceId)
     .eq("organization_id", org.id)
-    .single();
+    .maybeSingle();
 
   if (!service) return { slots: [], error: "Serviço não encontrado" };
 
@@ -143,8 +166,7 @@ export async function getAvailableSlotsForLanding(params: {
   const { data: members } = await supabase
     .from("memberships")
     .select("user_id")
-    .eq("organization_id", org.id)
-    .eq("status", "active");
+    .eq("organization_id", org.id);
 
   if (!members || members.length === 0) {
     return { slots: [], error: "Nenhum profissional disponível" };
@@ -179,13 +201,13 @@ export async function createPublicBookingFromLanding(input: {
 }) {
   const supabase = await createClient();
 
-  const { data: org } = await supabase
+  const { data: orgs } = await supabase
     .from("organizations")
     .select("id, name")
-    .limit(1)
-    .single();
+    .limit(1);
 
-  if (!org) throw new Error("Organização não encontrada");
+  if (!orgs || orgs.length === 0) throw new Error("Organização não encontrada");
+  const org = orgs[0];
 
   // Buscar serviço
   const { data: service } = await supabase
@@ -193,7 +215,7 @@ export async function createPublicBookingFromLanding(input: {
     .select("id, name, duration_minutes, price")
     .eq("id", input.serviceId)
     .eq("organization_id", org.id)
-    .single();
+    .maybeSingle();
 
   if (!service) throw new Error("Serviço não encontrado");
 
