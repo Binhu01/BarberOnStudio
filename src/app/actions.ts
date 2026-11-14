@@ -62,7 +62,7 @@ export async function getLandingData() {
     // Produtos ativos
     supabase
       .from("products")
-      .select("id, name, description, price, image_url")
+      .select("id, name, description, sale_price, image_url")
       .eq("organization_id", org.id)
       .eq("is_active", true)
       .order("name")
@@ -113,7 +113,7 @@ export async function getLandingData() {
       id: p.id,
       name: p.name,
       description: p.description,
-      price: p.price,
+      price: p.sale_price,
       image_url: p.image_url ?? null,
     })),
     settings: settingsData ?? null,

@@ -170,20 +170,16 @@ export default async function HomePage() {
       <div className="border-y border-bo-border/50 bg-bo-graphite/50 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 overflow-x-auto px-6 py-4 scrollbar-hide">
           {[
-            { label: "Barbeiros", icon: Scissors, active: true },
-            { label: "Horários", icon: Clock, active: false },
-            { label: "Localização", icon: MapPin, active: false },
-            { label: "Instagram", icon: Instagram, active: false },
-            { label: "Produtos e Serviços", icon: Box, active: false },
+            { label: "Barbeiros", icon: Scissors, href: "#barbeiros" },
+            { label: "Horários", icon: Clock, href: "#agendar" },
+            { label: "Localização", icon: MapPin, href: "#localizacao" },
+            { label: "Instagram", icon: Instagram, href: "#instagram" },
+            { label: "Produtos e Serviços", icon: Box, href: "#produtos" },
           ].map((tab) => (
             <a
               key={tab.label}
-              href={`#${tab.label.toLowerCase().replace(/ /g, "-")}`}
-              className={`flex shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
-                tab.active
-                  ? "bg-bo-blue text-white shadow-[0_0_15px_rgba(8,102,232,0.3)]"
-                  : "border border-bo-border bg-bo-card text-bo-gray hover:border-bo-blue/50 hover:text-bo-white"
-              }`}
+              href={tab.href}
+              className="flex shrink-0 items-center gap-2 rounded-full border border-bo-border bg-bo-card px-5 py-2.5 text-sm font-medium text-bo-gray transition-all hover:border-bo-blue/50 hover:text-bo-white"
             >
               <tab.icon className="h-4 w-4" />
               {tab.label}
