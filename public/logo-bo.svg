@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" fill="none">
+  <!-- Letter B - Silver Metallic -->
+  <defs>
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8EAED"/>
+      <stop offset="30%" stop-color="#C2C6CE"/>
+      <stop offset="60%" stop-color="#A4A9B2"/>
+      <stop offset="100%" stop-color="#C2C6CE"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1684FF"/>
+      <stop offset="100%" stop-color="#0866E8"/>
+    </linearGradient>
+    <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A4A9B2"/>
+      <stop offset="40%" stop-color="#E8EAED"/>
+      <stop offset="60%" stop-color="#C2C6CE"/>
+      <stop offset="100%" stop-color="#8A8F98"/>
+    </linearGradient>
+  </defs>
+
+  <!-- B letter -->
+  <path d="M20 15 L20 105 L55 105 C75 105 88 95 88 80 C88 68 80 60 70 57 C78 54 84 47 84 37 C84 23 72 15 55 15 Z M38 30 L52 30 C62 30 67 35 67 42 C67 49 62 54 52 54 L38 54 Z M38 68 L55 68 C66 68 71 73 71 81 C71 89 66 93 55 93 L38 93 Z" fill="url(#silverGrad)"/>
+
+  <!-- O letter -->
+  <path d="M105 60 C105 33 122 13 148 13 C174 13 191 33 191 60 C191 87 174 107 148 107 C122 107 105 87 105 60 Z M123 60 C123 79 133 92 148 92 C163 92 173 79 173 60 C173 41 163 28 148 28 C133 28 123 41 123 60 Z" fill="url(#blueGrad)"/>
+
+  <!-- Razor blade cutting through -->
+  <path d="M5 58 L210 48 L215 52 L210 56 L5 66 Z" fill="url(#bladeGrad)" opacity="0.95"/>
+  <line x1="5" y1="62" x2="215" y2="52" stroke="#FFFFFF" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- BARBER ON STUDIO text -->
+  <text x="100" y="118" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="800" font-size="11" letter-spacing="6" fill="#C2C6CE" text-anchor="middle">BARBER ON STUDIO</text>
+</svg>
