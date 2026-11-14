@@ -222,7 +222,7 @@ export default async function HomePage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.barbers.map((barber) => (
+                  {data.barbers.map((barber: { id: string; full_name: string | null; avatar_url: string | null; phone: string | null; role: string; instagram: string | null }) => (
                     <div
                       key={barber.id}
                       className="group relative overflow-hidden rounded-2xl border border-bo-border bg-bo-card p-6 text-center transition-all hover:border-bo-blue/50 hover:shadow-[0_0_30px_rgba(8,102,232,0.1)]"
@@ -306,7 +306,7 @@ export default async function HomePage() {
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Services */}
-                {data.services.map((service) => (
+                {data.services.map((service: { id: string; name: string; description: string | null; price: number; duration_minutes: number; image_url: string | null }) => (
                   <div
                     key={service.id}
                     className="group overflow-hidden rounded-2xl border border-bo-border bg-bo-card transition-all hover:border-bo-blue/50"
@@ -336,7 +336,7 @@ export default async function HomePage() {
                 ))}
 
                 {/* Products placeholder */}
-                {data.products.map((product) => (
+                {data.products.map((product: { id: string; name: string; description: string | null; price: number; image_url: string | null }) => (
                   <div
                     key={product.id}
                     className="group overflow-hidden rounded-2xl border border-bo-border bg-bo-card transition-all hover:border-bo-blue/50"
