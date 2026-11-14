@@ -3,7 +3,7 @@
 **Última atualização:** 2026-11-14  
 **Stack:** Next.js 16 + Supabase + Vercel  
 **Migrations:** 26 arquivos SQL (001–026)  
-**Edge Functions:** 2 (`criar-pagamento`, `pagamento-webhook`)
+**Pagamentos:** Presencial na loja (sem integração online)
 
 ---
 
@@ -14,14 +14,11 @@
 3. [Aplicar migrations](#3-aplicar-migrations)
 4. [Configurar variáveis de ambiente](#4-configurar-variáveis-de-ambiente)
 5. [Habilitar extensões e cron](#5-habilitar-extensões-e-cron)
-6. [Deploy das Edge Functions](#6-deploy-das-edge-functions)
-7. [Configurar secrets do Supabase](#7-configurar-secrets-do-supabase)
-8. [Criar dados iniciais (seed)](#8-criar-dados-iniciais-seed)
-9. [Deploy na Vercel](#9-deploy-na-vercel)
-10. [Configurar webhook do Mercado Pago](#10-configurar-webhook-do-mercado-pago)
-11. [Configurar WhatsApp Business API](#11-configurar-whatsapp-business-api)
-12. [Verificação pós-deploy](#12-verificação-pós-deploy)
-13. [Troubleshooting](#13-troubleshooting)
+6. [Criar dados iniciais (seed)](#6-criar-dados-iniciais-seed)
+7. [Deploy na Vercel](#7-deploy-na-vercel)
+8. [Configurar WhatsApp Business API](#8-configurar-whatsapp-business-api-opcional)
+9. [Verificação pós-deploy](#9-verificação-pós-deploy)
+10. [Troubleshooting](#10-troubleshooting)
 
 ---
 
@@ -39,13 +36,14 @@ npm install -g supabase
 
 # Git
 git --version
-
-# Conta no Supabase: https://supabase.com
-# Conta na Vercel: https://vercel.com
-# Conta no Mercado Pago: https://www.mercadopago.com.br/developers
-# Conta Meta Developers: https://developers.facebook.com
-# Conta Resend: https://resend.com
 ```
+
+### Contas necessárias
+
+- **Supabase:** https://supabase.com (obrigatório)
+- **Vercel:** https://vercel.com (obrigatório)
+- **Meta Developers:** https://developers.facebook.com (opcional, para WhatsApp)
+- **Resend:** https://resend.com (opcional, para email)
 
 ### Clonar o repositório
 
@@ -72,7 +70,7 @@ npm install
    - **anon public key:** chave anônima (segura para frontend)
    - **service_role key:** chave administrativa (**NUNCA exponha no frontend**)
 
-> ⚠️ **Região São Paulo (`sa-east-1`)** é essencial para latência aceitável com Mercado Pago e WhatsApp Business API no Brasil. A região padrão `us-east-1` adiciona ~200-400ms de latência.
+> ⚠️ **Região São Paulo (`sa-east-1`)** é essencial para latência aceitável no Brasil. A região padrão `us-east-1` adiciona ~200-400ms de latência.
 
 ---
 
@@ -165,24 +163,20 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<sua-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<sua-service-role-key>
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-# === OPCIONAIS (configurar quando for usar) ===
+# === OPCIONAIS ===
 NEXT_PUBLIC_APP_NAME=Barber-On Studio
 NEXT_PUBLIC_BARBER_SLUG=barber-on-studio
 
-# WhatsApp (obrigatório para módulo WhatsApp)
+# WhatsApp (opcional, para módulo WhatsApp)
 WHATSAPP_PHONE_NUMBER_ID=<phone-number-id>
 WHATSAPP_ACCESS_TOKEN=<access-token>
 WHATSAPP_VERIFY_TOKEN=<verify-token-customizado>
 
-# Email (obrigatório para notificações por email)
+# Email (opcional, para notificações por email)
 RESEND_API_KEY=re_xxxxx
 RESEND_FROM_EMAIL=noreply@seudominio.com
 
-# Mercado Pago (obrigatório para pagamentos)
-MP_ACCESS_TOKEN=APP_USR-xxxx...
-MP_WEBHOOK_SECRET=<secret-gerado-no-MP>
-
-# IA (obrigatório para assistente inteligente)
+# IA (opcional, para assistente inteligente)
 ANTHROPIC_API_KEY=sk-ant-xxxx...
 ```
 
@@ -235,70 +229,7 @@ SELECT cron.schedule(
 
 ---
 
-## 6. Deploy das Edge Functions
-
-### Via Supabase CLI
-
-```bash
-# Deploy da função de criação de pagamento
-supabase functions deploy criar-pagamento --no-verify-jwt
-
-# Deploy da função de webhook
-supabase functions deploy pagamento-webhook --no-verify-jwt
-```
-
-> ⚠️ `--no-verify-jwt` é necessário porque:
-> - `criar-pagamento` recebe o JWT via header `Authorization` manualmente
-> - `pagamento-webhook` é chamado pelo Mercado Pago (sem JWT do Supabase)
-
-### Verificar URLs
-
-Após o deploy, as funções estarão disponíveis em:
-
-```
-https://<project-id>.supabase.co/functions/v1/criar-pagamento
-https://<project-id>.supabase.co/functions/v1/pagamento-webhook
-```
-
-Teste com curl:
-
-```bash
-# Health check do webhook (deve retornar "ok")
-curl https://<project-id>.supabase.co/functions/v1/pagamento-webhook
-```
-
----
-
-## 7. Configurar secrets do Supabase
-
-As Edge Functions leem variáveis de ambiente via `Deno.env.get()`. Configure os secrets:
-
-```bash
-# Secrets obrigatórios para pagamentos
-supabase secrets set \
-  MP_ACCESS_TOKEN="APP_USR-xxxx..." \
-  MP_WEBHOOK_SECRET="seu-webhook-secret" \
-  NEXT_PUBLIC_APP_URL="https://seu-dominio.vercel.app"
-
-# Secrets opcionais (configure quando for usar)
-supabase secrets set \
-  WHATSAPP_PHONE_NUMBER_ID="1234567890" \
-  WHATSAPP_ACCESS_TOKEN="EAAxxxx..." \
-  RESEND_API_KEY="re_xxxxx" \
-  ANTHROPIC_API_KEY="sk-ant-xxxx..."
-```
-
-> ⚠️ `SUPABASE_URL` e `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` são injetados automaticamente pelo runtime do Supabase — **não precisam ser configurados manualmente**.
-
-Listar secrets configurados:
-
-```bash
-supabase secrets list
-```
-
----
-
-## 8. Criar dados iniciais (seed)
+## 6. Criar dados iniciais (seed)
 
 O projeto ainda não tem `supabase/seed.sql`. Crie os dados iniciais manualmente via **SQL Editor**:
 
@@ -351,7 +282,7 @@ VALUES
 
 ---
 
-## 9. Deploy na Vercel
+## 7. Deploy na Vercel
 
 ### Passo 1: Conectar repositório
 
@@ -370,7 +301,7 @@ A Vercel detecta automaticamente Next.js. Confirme:
 
 ### Passo 3: Configurar variáveis de ambiente
 
-No painel da Vercel, adicione **todas** as variáveis do `.env.example`:
+No painel da Vercel, adicione as variáveis:
 
 | Variável | Valor | Ambiente |
 |----------|-------|----------|
@@ -378,12 +309,12 @@ No painel da Vercel, adicione **todas** as variáveis do `.env.example`:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `<anon-key>` | Production + Preview |
 | `SUPABASE_SERVICE_ROLE_KEY` | `<service-role-key>` | Production apenas |
 | `NEXT_PUBLIC_APP_URL` | `https://seu-dominio.vercel.app` | Production |
-| `MP_ACCESS_TOKEN` | `APP_USR-xxxx...` | Production |
-| `MP_WEBHOOK_SECRET` | `<secret>` | Production |
-| `WHATSAPP_PHONE_NUMBER_ID` | `<id>` | Production |
-| `WHATSAPP_ACCESS_TOKEN` | `<token>` | Production |
-| `RESEND_API_KEY` | `re_xxxxx` | Production |
-| `ANTHROPIC_API_KEY` | `sk-ant-xxxx...` | Production |
+| `NEXT_PUBLIC_APP_NAME` | `Barber-On Studio` | Production + Preview |
+| `NEXT_PUBLIC_BARBER_SLUG` | `<slug-da-barbearia>` | Production + Preview |
+| `WHATSAPP_PHONE_NUMBER_ID` | `<id>` | Production (opcional) |
+| `WHATSAPP_ACCESS_TOKEN` | `<token>` | Production (opcional) |
+| `RESEND_API_KEY` | `re_xxxxx` | Production (opcional) |
+| `ANTHROPIC_API_KEY` | `sk-ant-xxxx...` | Production (opcional) |
 
 > ⚠️ **`SUPABASE_SERVICE_ROLE_KEY` deve estar marcada como "Production only"** — nunca exponha em preview/dev.
 
@@ -400,31 +331,9 @@ Clique em **Deploy**. O build leva ~2-4 minutos.
 
 ---
 
-## 10. Configurar webhook do Mercado Pago
+## 8. Configurar WhatsApp Business API (opcional)
 
-1. Acesse [Mercado Pago Developers → Webhooks](https://www.mercadopago.com.br/developers/panel/app)
-2. Selecione sua aplicação
-3. Em **Webhooks**, configure:
-   - **URL:** `https://<project-id>.supabase.co/functions/v1/pagamento-webhook`
-   - **Eventos:** marque `Pagamentos` (payment.created, payment.updated)
-4. Copie o **Webhook Secret** gerado
-5. Atualize o secret no Supabase:
-
-```bash
-supabase secrets set MP_WEBHOOK_SECRET="<secret-copiado>"
-```
-
-### Testar webhook
-
-Crie um pagamento de teste no sandbox do Mercado Pago e verifique nos logs da Edge Function:
-
-```bash
-supabase functions logs pagamento-webhook --limit 10
-```
-
----
-
-## 11. Configurar WhatsApp Business API
+> 💡 Esta seção é opcional. O sistema funciona sem WhatsApp — os lembretes e notificações serão exibidos apenas no dashboard.
 
 ### Passo 1: Meta Developer Portal
 
@@ -440,30 +349,22 @@ supabase functions logs pagamento-webhook --limit 10
 2. Crie e envie para aprovação os templates usados pelo sistema:
    - `appointment_reminder` — lembrete de agendamento
    - `appointment_confirmation` — confirmação
-   - `payment_receipt` — recibo de pagamento
    - `birthday_greeting` — mensagem de aniversário
    - `reactivation` — reativação de cliente inativo
 
-### Passo 3: Configurar no Supabase
+### Passo 3: Configurar variáveis
 
-```bash
-supabase secrets set \
-  WHATSAPP_PHONE_NUMBER_ID="<phone-number-id>" \
-  WHATSAPP_ACCESS_TOKEN="<permanent-access-token>" \
-  WHATSAPP_VERIFY_TOKEN="<token-personalizado>"
+Adicione no painel da Vercel (ou no `.env.local` para desenvolvimento):
+
+```env
+WHATSAPP_PHONE_NUMBER_ID=<phone-number-id>
+WHATSAPP_ACCESS_TOKEN=<permanent-access-token>
+WHATSAPP_VERIFY_TOKEN=<token-personalizado>
 ```
-
-### Passo 4: Configurar webhook do WhatsApp
-
-No Meta Developer Portal, configure o webhook:
-
-- **Callback URL:** `https://<project-id>.supabase.co/functions/v1/whatsapp-webhook` (criar Edge Function adicional se necessário)
-- **Verify Token:** mesmo valor de `WHATSAPP_VERIFY_TOKEN`
-- **Subscription Fields:** `messages`, `message_template_status_update`
 
 ---
 
-## 12. Verificação pós-deploy
+## 9. Verificação pós-deploy
 
 ### Checklist automatizado
 
@@ -479,9 +380,6 @@ curl -I https://seu-dominio.vercel.app
 
 # 4. API do Supabase responde
 curl https://<project-id>.supabase.co/rest/v1/ -H "apikey: <anon-key>"
-
-# 5. Edge Function responde
-curl https://<project-id>.supabase.co/functions/v1/pagamento-webhook
 ```
 
 ### Checklist manual
@@ -494,11 +392,12 @@ curl https://<project-id>.supabase.co/functions/v1/pagamento-webhook
 - [ ] Fazer um agendamento de teste
 - [ ] Verificar se o agendamento aparece na agenda
 - [ ] Acessar `/agendar/<slug>` — página pública funciona
+- [ ] Registrar um pagamento presencial na comanda
 - [ ] Verificar logs do Supabase: **Database → Logs**
 
 ---
 
-## 13. Troubleshooting
+## 10. Troubleshooting
 
 ### Build falha na Vercel
 
@@ -519,16 +418,6 @@ Error: Cannot find module 'next/dist/docs/...'
 **Causa:** Migration foi aplicada parcialmente.  
 **Fix:** Execute manualmente a migration problemática no SQL Editor, ignorando erros de `IF NOT EXISTS`.
 
-### Edge Function retorna 500
-
-```bash
-# Ver logs detalhados
-supabase functions logs criar-pagamento --limit 50
-
-# Verificar se secrets estão configurados
-supabase secrets list
-```
-
 ### RLS bloqueia acesso legítimo
 
 **Causa:** Usuário não é membro da organização.  
@@ -541,27 +430,28 @@ JOIN profiles p ON p.id = om.user_id
 WHERE om.organization_id = '<org-id>';
 ```
 
-### Webhook do Mercado Pago não processa
-
-1. Verifique se `MP_WEBHOOK_SECRET` está configurado
-2. Verifique se a URL do webhook está correta no painel do MP
-3. Cheque os logs: `supabase functions logs pagamento-webhook`
-4. Teste com o [simulador de webhooks do MP](https://www.mercadopago.com.br/developers/pt/guides/webhooks/testing)
-
 ### Latência alta (>1s)
 
 - Verifique se o Supabase está na região `sa-east-1` (São Paulo)
 - Verifique se a Vercel está na região `gru1` (São Paulo)
 - Considere adicionar Cloudflare CDN na frente da Vercel
 
+### Página exibe "Loading..." infinito
+
+**Causa:** Falta `export const instant = false` em página dinâmica.  
+**Fix:** Adicione `export const instant = false;` no topo do arquivo da página.
+
+### Erro de tipo TypeScript no build
+
+**Causa:** Next.js 16 não permite exportar tipos/schemas de arquivos `"use server"`.  
+**Fix:** Extraia schemas Zod e tipos para arquivos `schemas.ts` separados e importe nos actions.
+
 ---
 
 ## Referências
 
 - [Supabase Docs — Migrations](https://supabase.com/docs/guides/deployment/database-migrations)
-- [Supabase Docs — Edge Functions](https://supabase.com/docs/guides/functions)
 - [Vercel Docs — Next.js](https://vercel.com/docs/frameworks/nextjs)
-- [Mercado Pago — Webhooks](https://www.mercadopago.com.br/developers/pt/guides/webhooks)
 - [WhatsApp Business API — Getting Started](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)
 - [Next.js 16 Release Notes](https://nextjs.org/blog/next-16)
 
