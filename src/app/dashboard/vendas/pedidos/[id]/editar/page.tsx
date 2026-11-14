@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { notFound } from "next/navigation";
 import { getOrderById, updateOrder } from "../../../actions";
 import OrderForm from "../../_components/order-form";
@@ -29,10 +32,10 @@ export default async function EditOrderPage({ params }: EditOrderPageProps) {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Editar Pedido
         </h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Pedido {order.document_number} — atualize os dados abaixo.
         </p>
       </div>

@@ -125,54 +125,54 @@ export function ReceiptConfirmationForm({
       )}
 
       {/* Header Info */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">Dados do recebimento</h2>
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">Dados do recebimento</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Depósito destino *</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Depósito destino *</label>
             <input
               value={warehouseId}
               onChange={(e) => setWarehouseId(e.target.value)}
               placeholder="UUID do depósito"
               required
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Data de entrada *</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Data de entrada *</label>
             <input
               type="date"
               value={receivedAt}
               onChange={(e) => setReceivedAt(e.target.value)}
               required
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Ordem de compra</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Ordem de compra</label>
             <input
               disabled
               value={order.purchase_number}
-              className="w-full rounded-lg border border-nexora-border bg-nexora-bg-secondary/50 px-3 py-2.5 text-sm text-nexora-text-secondary"
+              className="w-full rounded-lg border border-barber-border bg-barber-bg-secondary/50 px-3 py-2.5 text-sm text-barber-text-secondary"
             />
           </div>
         </div>
         <div className="mt-4">
-          <label className="mb-1 block text-sm font-medium text-nexora-dark">Observações</label>
+          <label className="mb-1 block text-sm font-medium text-barber-dark">Observações</label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             placeholder="Notas sobre este recebimento…"
-            className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           />
         </div>
       </div>
 
       {/* Items */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">Itens para recebimento</h2>
-        <p className="mt-1 text-xs text-nexora-text-secondary">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">Itens para recebimento</h2>
+        <p className="mt-1 text-xs text-barber-text-secondary">
           Informe as quantidades recebidas, aceitas e rejeitadas para cada item pendente.
         </p>
 
@@ -185,16 +185,16 @@ export function ReceiptConfirmationForm({
             return (
               <div
                 key={item.purchase_order_item_id}
-                className={`rounded-lg border p-4 ${hasDiscrepancy ? "border-amber-300 bg-amber-50/30" : "border-nexora-border/50 bg-nexora-bg-secondary/20"}`}
+                className={`rounded-lg border p-4 ${hasDiscrepancy ? "border-amber-300 bg-amber-50/30" : "border-barber-border/50 bg-barber-bg-secondary/20"}`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium text-nexora-dark">{poItem.product_name_snapshot}</p>
-                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-nexora-text-secondary">
+                    <p className="font-medium text-barber-dark">{poItem.product_name_snapshot}</p>
+                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-barber-text-secondary">
                       {poItem.sku_snapshot && <span>SKU: {poItem.sku_snapshot}</span>}
                       <span>Pedido: {poItem.quantity_ordered}</span>
                       <span>Já recebido: {poItem.quantity_received}</span>
-                      <span className="font-semibold text-nexora-dark">Pendente: {pending}</span>
+                      <span className="font-semibold text-barber-dark">Pendente: {pending}</span>
                     </div>
                   </div>
                   {hasDiscrepancy && (
@@ -207,7 +207,7 @@ export function ReceiptConfirmationForm({
 
                 <div className="mt-3 grid gap-3 md:grid-cols-4">
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Qtd. recebida *</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Qtd. recebida *</label>
                     <input
                       type="number"
                       min="0"
@@ -215,7 +215,7 @@ export function ReceiptConfirmationForm({
                       max={pending}
                       value={item.quantity_received || ""}
                       onChange={(e) => updateItem(index, "quantity_received", parseFloat(e.target.value) || 0)}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                     />
                   </div>
                   <div>
@@ -226,7 +226,7 @@ export function ReceiptConfirmationForm({
                       step="any"
                       value={item.quantity_accepted || ""}
                       onChange={(e) => updateItem(index, "quantity_accepted", parseFloat(e.target.value) || 0)}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm text-green-700 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm text-green-700 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                     />
                   </div>
                   <div>
@@ -237,17 +237,17 @@ export function ReceiptConfirmationForm({
                       step="any"
                       value={item.quantity_rejected || ""}
                       onChange={(e) => updateItem(index, "quantity_rejected", parseFloat(e.target.value) || 0)}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm text-red-700 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm text-red-700 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Motivo rejeição</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Motivo rejeição</label>
                     <input
                       value={item.rejection_reason}
                       onChange={(e) => updateItem(index, "rejection_reason", e.target.value)}
                       placeholder={item.quantity_rejected > 0 ? "Obrigatório se houver rejeição" : "—"}
                       disabled={item.quantity_rejected === 0}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm disabled:bg-nexora-bg-secondary/50 disabled:text-nexora-text-secondary/50"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm disabled:bg-barber-bg-secondary/50 disabled:text-barber-text-secondary/50"
                     />
                   </div>
                 </div>
@@ -269,7 +269,7 @@ export function ReceiptConfirmationForm({
         </button>
         <a
           href={`/dashboard/compras/ordens/${order.id}`}
-          className="inline-flex items-center gap-2 rounded-lg border border-nexora-border bg-white px-6 py-2.5 text-sm font-medium text-nexora-dark transition-colors hover:bg-nexora-bg-secondary"
+          className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-white px-6 py-2.5 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-bg-secondary"
         >
           <X className="h-4 w-4" />
           Cancelar

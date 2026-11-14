@@ -77,7 +77,7 @@ export async function getActiveOrganization(): Promise<{
   let activeOrgId: string | undefined;
   try {
     const cookieStore = await cookies();
-    activeOrgId = cookieStore.get("nexora_active_org")?.value;
+    activeOrgId = cookieStore.get("barber_active_org")?.value;
   } catch {
     // Cookie indisponível — fallback seguro para a primeira organização
   }

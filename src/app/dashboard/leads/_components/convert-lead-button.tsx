@@ -131,10 +131,10 @@ export default function ConvertLeadButton({
       {/* Modal overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl border border-nexora-border bg-white shadow-xl">
+          <div className="w-full max-w-md rounded-xl border border-barber-border bg-white shadow-xl">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-nexora-border px-5 py-4">
-              <h3 className="text-base font-semibold text-nexora-dark">
+            <div className="flex items-center justify-between border-b border-barber-border px-5 py-4">
+              <h3 className="text-base font-semibold text-barber-dark">
                 {modal.kind === "checking" && "Verificando duplicados..."}
                 {modal.kind === "duplicates" && "Clientes duplicados encontrados"}
                 {modal.kind === "confirm" && "Confirmar conversão"}
@@ -145,7 +145,7 @@ export default function ConvertLeadButton({
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="text-nexora-text-secondary hover:text-nexora-dark"
+                  className="text-barber-text-secondary hover:text-barber-dark"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -157,7 +157,7 @@ export default function ConvertLeadButton({
               {modal.kind === "checking" && (
                 <div className="flex flex-col items-center gap-3 py-6">
                   <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
-                  <p className="text-sm text-nexora-text-secondary">
+                  <p className="text-sm text-barber-text-secondary">
                     Verificando se já existem clientes com os mesmos dados...
                   </p>
                 </div>
@@ -176,12 +176,12 @@ export default function ConvertLeadButton({
                     {modal.duplicates.map((dup) => (
                       <li
                         key={dup.id}
-                        className="rounded-lg border border-nexora-border px-3 py-2 text-sm"
+                        className="rounded-lg border border-barber-border px-3 py-2 text-sm"
                       >
-                        <p className="font-medium text-nexora-dark">
+                        <p className="font-medium text-barber-dark">
                           {dup.name}
                         </p>
-                        <div className="mt-0.5 text-xs text-nexora-text-secondary">
+                        <div className="mt-0.5 text-xs text-barber-text-secondary">
                           {dup.email && <span>{dup.email}</span>}
                           {dup.email && dup.phone && <span> &middot; </span>}
                           {dup.phone && <span>{dup.phone}</span>}
@@ -194,28 +194,28 @@ export default function ConvertLeadButton({
 
               {modal.kind === "confirm" && (
                 <div className="space-y-3">
-                  <p className="text-sm text-nexora-text">
+                  <p className="text-sm text-barber-text">
                     O lead{" "}
-                    <strong className="text-nexora-dark">{leadName}</strong>{" "}
+                    <strong className="text-barber-dark">{leadName}</strong>{" "}
                     será convertido em um novo cliente com os seguintes dados:
                   </p>
-                  <dl className="rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2.5 text-sm">
+                  <dl className="rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2.5 text-sm">
                     <div className="flex justify-between py-1">
-                      <dt className="text-nexora-text-secondary">Nome</dt>
-                      <dd className="font-medium text-nexora-dark">
+                      <dt className="text-barber-text-secondary">Nome</dt>
+                      <dd className="font-medium text-barber-dark">
                         {leadName}
                       </dd>
                     </div>
                     {leadEmail && (
                       <div className="flex justify-between py-1">
-                        <dt className="text-nexora-text-secondary">E-mail</dt>
-                        <dd className="text-nexora-text">{leadEmail}</dd>
+                        <dt className="text-barber-text-secondary">E-mail</dt>
+                        <dd className="text-barber-text">{leadEmail}</dd>
                       </div>
                     )}
                     {leadPhone && (
                       <div className="flex justify-between py-1">
-                        <dt className="text-nexora-text-secondary">Telefone</dt>
-                        <dd className="text-nexora-text">{leadPhone}</dd>
+                        <dt className="text-barber-text-secondary">Telefone</dt>
+                        <dd className="text-barber-text">{leadPhone}</dd>
                       </div>
                     )}
                   </dl>
@@ -225,7 +225,7 @@ export default function ConvertLeadButton({
               {modal.kind === "converting" && (
                 <div className="flex flex-col items-center gap-3 py-6">
                   <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
-                  <p className="text-sm text-nexora-text-secondary">
+                  <p className="text-sm text-barber-text-secondary">
                     Criando cliente e vinculando ao lead...
                   </p>
                 </div>
@@ -241,13 +241,13 @@ export default function ConvertLeadButton({
 
             {/* Footer */}
             {!isLoading && (
-              <div className="flex items-center justify-end gap-2 border-t border-nexora-border px-5 py-3">
+              <div className="flex items-center justify-end gap-2 border-t border-barber-border px-5 py-3">
                 {modal.kind === "duplicates" && (
                   <>
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary"
+                      className="rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary"
                     >
                       Cancelar
                     </button>
@@ -265,7 +265,7 @@ export default function ConvertLeadButton({
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary"
+                      className="rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary"
                     >
                       Cancelar
                     </button>
@@ -282,7 +282,7 @@ export default function ConvertLeadButton({
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary"
+                    className="rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary"
                   >
                     Fechar
                   </button>

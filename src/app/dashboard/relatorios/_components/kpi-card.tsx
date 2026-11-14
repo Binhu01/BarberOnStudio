@@ -16,14 +16,14 @@ export function KPICard({
   change,
   changeLabel,
   icon,
-  accentColor = "bg-nexora-blue/10 text-nexora-blue",
+  accentColor = "bg-barber-blue/10 text-barber-blue",
   subtitle,
 }: KPICardProps) {
   const hasChange = change !== undefined && change !== null;
   const isPositive = (change ?? 0) >= 0;
 
   return (
-    <div className="rounded-xl border border-nexora-border bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
       <div className="flex items-center gap-3">
         {icon && (
           <div
@@ -33,15 +33,15 @@ export function KPICard({
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-xs font-medium text-nexora-text-secondary">{label}</p>
-          <p className="truncate text-xl font-bold text-nexora-dark">{value}</p>
+          <p className="text-xs font-medium text-barber-text-secondary">{label}</p>
+          <p className="truncate text-xl font-bold text-barber-dark">{value}</p>
         </div>
       </div>
 
       {(hasChange || subtitle) && (
         <div className="mt-3 flex items-center gap-3 text-xs">
           {subtitle && (
-            <span className="text-nexora-text-secondary">{subtitle}</span>
+            <span className="text-barber-text-secondary">{subtitle}</span>
           )}
           {hasChange && (
             <span
@@ -57,7 +57,7 @@ export function KPICard({
               {isPositive ? "+" : ""}
               {change.toFixed(1)}%
               {changeLabel && (
-                <span className="ml-1 text-nexora-text-secondary">
+                <span className="ml-1 text-barber-text-secondary">
                   vs {changeLabel}
                 </span>
               )}

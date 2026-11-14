@@ -121,16 +121,16 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
       )}
 
       {/* Header Info */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">Dados da ordem</h2>
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">Dados da ordem</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Fornecedor *</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Fornecedor *</label>
             <select
               value={supplierId}
               onChange={(e) => setSupplierId(e.target.value)}
               required
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Selecione…</option>
               {suppliers.map((s) => (
@@ -141,35 +141,35 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Data de emissão *</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Data de emissão *</label>
             <input
               type="date"
               value={issueDate}
               onChange={(e) => setIssueDate(e.target.value)}
               required
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Previsão de entrega</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Previsão de entrega</label>
             <input
               type="date"
               value={expectedDelivery}
               onChange={(e) => setExpectedDelivery(e.target.value)}
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Depósito destino</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Depósito destino</label>
             <input
               value={warehouseId}
               onChange={(e) => setWarehouseId(e.target.value)}
               placeholder="ID do depósito (opcional)"
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Frete (R$)</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Frete (R$)</label>
             <input
               type="number"
               step="0.01"
@@ -177,11 +177,11 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
               value={freightAmount || ""}
               onChange={(e) => setFreightAmount(parseFloat(e.target.value) || 0)}
               placeholder="0,00"
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-nexora-dark">Custos adicionais (R$)</label>
+            <label className="mb-1 block text-sm font-medium text-barber-dark">Custos adicionais (R$)</label>
             <input
               type="number"
               step="0.01"
@@ -189,20 +189,20 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
               value={additionalCosts || ""}
               onChange={(e) => setAdditionalCosts(parseFloat(e.target.value) || 0)}
               placeholder="0,00"
-              className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
         </div>
       </div>
 
       {/* Items */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Itens</h2>
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Itens</h2>
           <button
             type="button"
             onClick={addItem}
-            className="inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium text-nexora-blue hover:bg-nexora-blue/10"
+            className="inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium text-barber-blue hover:bg-barber-blue/10"
           >
             <Plus className="h-3.5 w-3.5" />
             Adicionar item
@@ -211,58 +211,58 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
 
         <div className="mt-4 space-y-3">
           {items.map((item, index) => (
-            <div key={index} className="rounded-lg border border-nexora-border/50 bg-nexora-bg-secondary/20 p-4">
+            <div key={index} className="rounded-lg border border-barber-border/50 bg-barber-bg-secondary/20 p-4">
               <div className="flex items-start gap-3">
                 <div className="grid flex-1 gap-3 md:grid-cols-6">
                   <div className="md:col-span-2">
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Produto (ID) *</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Produto (ID) *</label>
                     <input
                       value={item.product_id}
                       onChange={(e) => updateItem(index, "product_id", e.target.value)}
                       placeholder="UUID do produto"
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Qtd. *</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Qtd. *</label>
                     <input
                       type="number"
                       min="0.01"
                       step="any"
                       value={item.quantity || ""}
                       onChange={(e) => updateItem(index, "quantity", parseFloat(e.target.value) || 0)}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Preço unit. *</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Preço unit. *</label>
                     <input
                       type="number"
                       min="0"
                       step="0.01"
                       value={item.unit_price || ""}
                       onChange={(e) => updateItem(index, "unit_price", parseFloat(e.target.value) || 0)}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Desconto</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Desconto</label>
                     <input
                       type="number"
                       min="0"
                       step="0.01"
                       value={item.discount || ""}
                       onChange={(e) => updateItem(index, "discount", parseFloat(e.target.value) || 0)}
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-nexora-dark">Variante (ID)</label>
+                    <label className="mb-1 block text-xs font-medium text-barber-dark">Variante (ID)</label>
                     <input
                       value={item.variant_id}
                       onChange={(e) => updateItem(index, "variant_id", e.target.value)}
                       placeholder="Opcional"
-                      className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm"
+                      className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm"
                     />
                   </div>
                 </div>
@@ -280,10 +280,10 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
                   value={item.notes}
                   onChange={(e) => updateItem(index, "notes", e.target.value)}
                   placeholder="Observação do item (opcional)"
-                  className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-xs text-nexora-text-secondary"
+                  className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-xs text-barber-text-secondary"
                 />
               </div>
-              <div className="mt-2 text-right text-xs font-medium text-nexora-dark">
+              <div className="mt-2 text-right text-xs font-medium text-barber-dark">
                 Linha: R$ {(item.quantity * item.unit_price - item.discount).toFixed(2)}
               </div>
             </div>
@@ -292,26 +292,26 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
 
         {/* Totals */}
         <div className="mt-4 flex justify-end">
-          <div className="w-full max-w-xs space-y-2 rounded-lg border border-nexora-border/50 bg-nexora-bg-secondary/30 p-4 text-sm">
+          <div className="w-full max-w-xs space-y-2 rounded-lg border border-barber-border/50 bg-barber-bg-secondary/30 p-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-nexora-text-secondary">Subtotal</span>
-              <span className="font-medium text-nexora-dark">R$ {subtotal.toFixed(2)}</span>
+              <span className="text-barber-text-secondary">Subtotal</span>
+              <span className="font-medium text-barber-dark">R$ {subtotal.toFixed(2)}</span>
             </div>
             {freightAmount > 0 && (
               <div className="flex justify-between">
-                <span className="text-nexora-text-secondary">Frete</span>
-                <span className="font-medium text-nexora-dark">R$ {freightAmount.toFixed(2)}</span>
+                <span className="text-barber-text-secondary">Frete</span>
+                <span className="font-medium text-barber-dark">R$ {freightAmount.toFixed(2)}</span>
               </div>
             )}
             {additionalCosts > 0 && (
               <div className="flex justify-between">
-                <span className="text-nexora-text-secondary">Custos adicionais</span>
-                <span className="font-medium text-nexora-dark">R$ {additionalCosts.toFixed(2)}</span>
+                <span className="text-barber-text-secondary">Custos adicionais</span>
+                <span className="font-medium text-barber-dark">R$ {additionalCosts.toFixed(2)}</span>
               </div>
             )}
-            <div className="flex justify-between border-t border-nexora-border pt-2 text-base font-bold">
-              <span className="text-nexora-dark">Total</span>
-              <span className="text-nexora-dark">R$ {total.toFixed(2)}</span>
+            <div className="flex justify-between border-t border-barber-border pt-2 text-base font-bold">
+              <span className="text-barber-dark">Total</span>
+              <span className="text-barber-dark">R$ {total.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -319,24 +319,24 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
 
       {/* Notes & Terms */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Observações</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Observações</h2>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Observações internas sobre esta ordem…"
-            className="mt-3 w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="mt-3 w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           />
         </div>
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Condições comerciais</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Condições comerciais</h2>
           <textarea
             value={commercialTerms}
             onChange={(e) => setCommercialTerms(e.target.value)}
             rows={3}
             placeholder="Prazo de pagamento, condições de frete, etc."
-            className="mt-3 w-full rounded-lg border border-nexora-border bg-white px-3 py-2.5 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="mt-3 w-full rounded-lg border border-barber-border bg-white px-3 py-2.5 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           />
         </div>
       </div>
@@ -346,14 +346,14 @@ export function PurchaseOrderForm({ suppliers, preselectedSupplierId }: Purchase
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:opacity-50"
         >
           <Save className="h-4 w-4" />
           {isPending ? "Criando…" : "Criar ordem de compra"}
         </button>
         <a
           href="/dashboard/compras/ordens"
-          className="inline-flex items-center gap-2 rounded-lg border border-nexora-border bg-white px-6 py-2.5 text-sm font-medium text-nexora-dark transition-colors hover:bg-nexora-bg-secondary"
+          className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-white px-6 py-2.5 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-bg-secondary"
         >
           <X className="h-4 w-4" />
           Cancelar

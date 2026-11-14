@@ -43,15 +43,15 @@ export function StatusChangeForm({
   };
 
   return (
-    <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-      <h2 className="font-display text-lg font-semibold text-nexora-dark">
+    <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+      <h2 className="font-display text-lg font-semibold text-barber-dark">
         Alterar status
       </h2>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div>
           <label
             htmlFor="new-status"
-            className="block text-xs font-medium uppercase tracking-wider text-nexora-text-secondary"
+            className="block text-xs font-medium uppercase tracking-wider text-barber-text-secondary"
           >
             Novo status
           </label>
@@ -60,7 +60,7 @@ export function StatusChangeForm({
             value={status}
             onChange={(e) => setStatus(e.target.value as OrderStatus)}
             disabled={isPending}
-            className="mt-1 w-full rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue disabled:opacity-50"
+            className="mt-1 w-full rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue disabled:opacity-50"
           >
             {statusOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -73,7 +73,7 @@ export function StatusChangeForm({
         <div>
           <label
             htmlFor="status-reason"
-            className="block text-xs font-medium uppercase tracking-wider text-nexora-text-secondary"
+            className="block text-xs font-medium uppercase tracking-wider text-barber-text-secondary"
           >
             Motivo (opcional)
           </label>
@@ -84,14 +84,14 @@ export function StatusChangeForm({
             disabled={isPending}
             rows={2}
             placeholder="Descreva o motivo da alteração..."
-            className="mt-1 w-full resize-none rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue disabled:opacity-50"
+            className="mt-1 w-full resize-none rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue disabled:opacity-50"
           />
         </div>
 
         <button
           type="submit"
           disabled={isPending || (status === currentStatus && !reason.trim())}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-nexora-blue px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-barber-blue px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPending ? (
             <>Atualizando...</>

@@ -722,6 +722,31 @@ export async function createCalendarEvent(input: CreateEventInput) {
   const { supabase, user, orgId } = await getCtx();
   const parsed = createEventSchema.parse(input);
 
+  // Verificar conflitos de horário se houver barbeiro atribuído e não for evento de dia inteiro
+  if (parsed.attendee_ids && parsed.attendee_ids.length > 0 && !(parsed.all_day)) {
+    for (const memberId of parsed.attendee_ids) {
+      const { data: conflicts, error: conflictError } = await supabase.rpc(
+        "check_appointment_conflict",
+        {
+          p_org_id: orgId,
+          p_barber_membership_id: memberId,
+          p_start_time: parsed.start_at,
+          p_end_time: parsed.end_at,
+        }
+      );
+
+      if (conflictError) {
+        // RPC pode não existir ainda (migration pendente) — log e continua
+        console.warn("Conflict check unavailable:", conflictError.message);
+      } else if (conflicts && conflicts.length > 0) {
+        const c = conflicts[0];
+        throw new Error(
+          `Conflito detectado: ${c.conflicting_title ?? c.conflict_type} (${new Date(c.conflicting_start).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}–${new Date(c.conflicting_end).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })})`
+        );
+      }
+    }
+  }
+
   const { data, error } = await supabase
     .from("calendar_events")
     .insert({

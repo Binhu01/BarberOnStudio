@@ -112,8 +112,8 @@ export default function LeadForm({
 
       {/* Won/Lost Status Badge */}
       {isWonOrLost && (
-        <div className="flex items-center gap-3 rounded-lg border border-nexora-border bg-nexora-bg-secondary p-4">
-          <span className="text-sm font-medium text-nexora-text-secondary">
+        <div className="flex items-center gap-3 rounded-lg border border-barber-border bg-barber-bg-secondary p-4">
+          <span className="text-sm font-medium text-barber-text-secondary">
             Status:
           </span>
           <span
@@ -121,15 +121,15 @@ export default function LeadForm({
           >
             {STATUS_LABELS[initialData!.status]?.label ?? initialData!.status}
           </span>
-          <span className="text-xs text-nexora-text-secondary">
+          <span className="text-xs text-barber-text-secondary">
             Para alterar o estagio, use a acao de mover no quadro Kanban.
           </span>
         </div>
       )}
 
       {/* Section: Dados do Lead */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
           Dados do Lead
         </h2>
         <div className="mt-4 space-y-4">
@@ -137,7 +137,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Nome <span className="text-red-500">*</span>
             </label>
@@ -146,7 +146,7 @@ export default function LeadForm({
               type="text"
               placeholder="Nome do lead"
               {...register("name")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
             {errors.name && (
               <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
@@ -157,7 +157,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="company_name"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Empresa
             </label>
@@ -166,7 +166,7 @@ export default function LeadForm({
               type="text"
               placeholder="Nome da empresa (opcional)"
               {...register("company_name")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
@@ -174,14 +174,14 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="source"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Origem
             </label>
             <select
               id="source"
               {...register("source")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               {SOURCE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -194,8 +194,8 @@ export default function LeadForm({
       </section>
 
       {/* Section: Contato */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
           Contato
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -203,7 +203,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               E-mail
             </label>
@@ -212,7 +212,7 @@ export default function LeadForm({
               type="email"
               placeholder="lead@exemplo.com"
               {...register("email")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
             {errors.email && (
               <p className="mt-1 text-xs text-red-600">
@@ -225,7 +225,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Telefone
             </label>
@@ -234,7 +234,7 @@ export default function LeadForm({
               type="tel"
               placeholder="(00) 0000-0000"
               {...register("phone")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
@@ -242,7 +242,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="whatsapp"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               WhatsApp
             </label>
@@ -251,15 +251,15 @@ export default function LeadForm({
               type="tel"
               placeholder="(00) 00000-0000"
               {...register("whatsapp")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
         </div>
       </section>
 
       {/* Section: Oportunidade */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
           Oportunidade
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -267,7 +267,7 @@ export default function LeadForm({
           <div className="sm:col-span-2">
             <label
               htmlFor="interest"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Interesse
             </label>
@@ -276,7 +276,7 @@ export default function LeadForm({
               type="text"
               placeholder="Produto ou servico de interesse"
               {...register("interest")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
@@ -284,12 +284,12 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="estimated_value"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Valor Estimado
             </label>
             <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-nexora-text-secondary">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-barber-text-secondary">
                 R$
               </span>
               <input
@@ -299,7 +299,7 @@ export default function LeadForm({
                 min="0"
                 placeholder="0,00"
                 {...register("estimated_value", { valueAsNumber: true })}
-                className="w-full rounded-lg border border-nexora-border py-2 pl-9 pr-3 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                className="w-full rounded-lg border border-barber-border py-2 pl-9 pr-3 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
               />
             </div>
             {errors.estimated_value && (
@@ -313,7 +313,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="stage_id"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Estagio
             </label>
@@ -324,13 +324,13 @@ export default function LeadForm({
                 value={
                   stages.find((s) => s.id === initialData?.stage_id)?.name ?? ""
                 }
-                className="mt-1 w-full cursor-not-allowed rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-text-secondary"
+                className="mt-1 w-full cursor-not-allowed rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-text-secondary"
               />
             ) : (
               <select
                 id="stage_id"
                 {...register("stage_id")}
-                className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
               >
                 {availableStages.map((stage) => (
                   <option key={stage.id} value={stage.id}>
@@ -350,7 +350,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="assigned_to"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Responsavel
             </label>
@@ -360,7 +360,7 @@ export default function LeadForm({
               readOnly
               placeholder="Atribuido automaticamente"
               {...register("assigned_to")}
-              className="mt-1 w-full cursor-default rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-text-secondary"
+              className="mt-1 w-full cursor-default rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-text-secondary"
             />
           </div>
 
@@ -368,7 +368,7 @@ export default function LeadForm({
           <div>
             <label
               htmlFor="expected_return_at"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Retorno Esperado
             </label>
@@ -376,21 +376,21 @@ export default function LeadForm({
               id="expected_return_at"
               type="date"
               {...register("expected_return_at")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
         </div>
       </section>
 
       {/* Section: Observacoes */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
           Observacoes
         </h2>
         <div className="mt-4">
           <label
             htmlFor="notes"
-            className="block text-sm font-medium text-nexora-dark"
+            className="block text-sm font-medium text-barber-dark"
           >
             Notas
           </label>
@@ -399,7 +399,7 @@ export default function LeadForm({
             rows={4}
             placeholder="Informacoes adicionais sobre o lead..."
             {...register("notes")}
-            className="mt-1 w-full resize-y rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="mt-1 w-full resize-y rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           />
         </div>
       </section>
@@ -410,14 +410,14 @@ export default function LeadForm({
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="rounded-lg border border-nexora-border px-4 py-2.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:opacity-50"
+          className="rounded-lg border border-barber-border px-4 py-2.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:opacity-50"
         >
           {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
           {isSubmitting ? "Salvando..." : submitLabel}

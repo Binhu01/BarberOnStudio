@@ -100,11 +100,11 @@ export default function InteractionTimeline({
   }
 
   return (
-    <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-nexora-text-secondary" />
-          <h2 className="text-base font-semibold text-nexora-dark">
+          <Calendar className="h-5 w-5 text-barber-text-secondary" />
+          <h2 className="text-base font-semibold text-barber-dark">
             Histórico de Interações
           </h2>
         </div>
@@ -112,7 +112,7 @@ export default function InteractionTimeline({
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-nexora-border bg-white px-3 py-1.5 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-dark"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-white px-3 py-1.5 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
           >
             <Plus className="h-4 w-4" />
             Nova interação
@@ -124,29 +124,29 @@ export default function InteractionTimeline({
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="mb-6 rounded-lg border border-nexora-border bg-nexora-bg-secondary p-4"
+          className="mb-6 rounded-lg border border-barber-border bg-barber-bg-secondary p-4"
         >
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-sm font-medium text-nexora-dark">
+            <span className="text-sm font-medium text-barber-dark">
               Registrar interação
             </span>
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="text-nexora-text-secondary hover:text-nexora-dark"
+              className="text-barber-text-secondary hover:text-barber-dark"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
           <div className="space-y-3">
             <div>
-              <label className="mb-1 block text-xs text-nexora-text-secondary">
+              <label className="mb-1 block text-xs text-barber-text-secondary">
                 Tipo
               </label>
               <select
                 value={formType}
                 onChange={(e) => setFormType(e.target.value as InteractionType)}
-                className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm text-nexora-text focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-text focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
               >
                 <option value="note">Nota</option>
                 <option value="call">Ligação</option>
@@ -157,7 +157,7 @@ export default function InteractionTimeline({
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-xs text-nexora-text-secondary">
+              <label className="mb-1 block text-xs text-barber-text-secondary">
                 Descrição
               </label>
               <textarea
@@ -166,7 +166,7 @@ export default function InteractionTimeline({
                 placeholder="Descreva a interação..."
                 rows={3}
                 required
-                className="w-full rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm text-nexora-text placeholder:text-nexora-text-secondary/60 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-text placeholder:text-barber-text-secondary/60 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
               />
             </div>
             <div className="flex justify-end">
@@ -185,13 +185,13 @@ export default function InteractionTimeline({
       {/* Timeline entries */}
       {localInteractions.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10 text-center">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-nexora-bg-secondary">
-            <Calendar className="h-6 w-6 text-nexora-text-secondary" />
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-barber-bg-secondary">
+            <Calendar className="h-6 w-6 text-barber-text-secondary" />
           </div>
-          <p className="text-sm font-medium text-nexora-text">
+          <p className="text-sm font-medium text-barber-text">
             Nenhuma interação registrada
           </p>
-          <p className="mt-1 text-xs text-nexora-text-secondary">
+          <p className="mt-1 text-xs text-barber-text-secondary">
             Registre ligações, e-mails, reuniões e notas para acompanhar o
             relacionamento com este cliente.
           </p>
@@ -199,7 +199,7 @@ export default function InteractionTimeline({
       ) : (
         <div className="relative space-y-0">
           {/* Vertical line */}
-          <div className="absolute left-[19px] top-2 bottom-2 w-px bg-nexora-border" />
+          <div className="absolute left-[19px] top-2 bottom-2 w-px bg-barber-border" />
 
           {localInteractions.map((entry, idx) => {
             const Icon = typeIcons[entry.type] ?? MoreHorizontal;
@@ -209,7 +209,7 @@ export default function InteractionTimeline({
             return (
               <div key={entry.id} className={`relative flex gap-4 ${isLast ? "" : "pb-6"}`}>
                 {/* Icon node */}
-                <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-nexora-border bg-white">
+                <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-barber-border bg-white">
                   <Icon className="h-4 w-4 text-teal-600" />
                 </div>
 
@@ -220,14 +220,14 @@ export default function InteractionTimeline({
                       <span className="inline-flex items-center rounded-full bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700">
                         {label}
                       </span>
-                      <p className="mt-1.5 text-sm text-nexora-text">
+                      <p className="mt-1.5 text-sm text-barber-text">
                         {entry.description}
                       </p>
                     </div>
                   </div>
-                  <div className="mt-1.5 flex items-center gap-3 text-xs text-nexora-text-secondary">
+                  <div className="mt-1.5 flex items-center gap-3 text-xs text-barber-text-secondary">
                     <span>{formatDateTime(entry.occurred_at)}</span>
-                    <span className="text-nexora-border">|</span>
+                    <span className="text-barber-border">|</span>
                     <span>{entry.creator_name}</span>
                   </div>
                 </div>

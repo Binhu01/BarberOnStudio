@@ -46,25 +46,25 @@ export function ReportExportButton({ reportType, title, data, className = "" }: 
         type="button"
         onClick={() => setOpen(!open)}
         disabled={exporting || data.length === 0}
-        className="flex items-center gap-2 rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm font-medium text-nexora-dark shadow-sm transition-colors hover:bg-nexora-bg-secondary disabled:opacity-50"
+        className="flex items-center gap-2 rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-dark shadow-sm transition-colors hover:bg-barber-bg-secondary disabled:opacity-50"
       >
-        <Download className="h-4 w-4 text-nexora-text-secondary" />
+        <Download className="h-4 w-4 text-barber-text-secondary" />
         <span>{exporting ? "Exportando…" : "Exportar"}</span>
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-nexora-border bg-white p-1.5 shadow-lg">
-            <p className="mb-1 px-2 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wide">Formato</p>
+          <div className="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-barber-border bg-white p-1.5 shadow-lg">
+            <p className="mb-1 px-2 text-xs font-semibold text-barber-text-secondary uppercase tracking-wide">Formato</p>
             {FORMATS.map((fmt) => (
               <button
                 key={fmt.key}
                 type="button"
                 onClick={() => handleExport(fmt.key)}
-                className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-nexora-dark transition-colors hover:bg-nexora-bg-secondary"
+                className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-barber-dark transition-colors hover:bg-barber-bg-secondary"
               >
-                <fmt.Icon className="h-4 w-4 text-nexora-text-secondary" />
+                <fmt.Icon className="h-4 w-4 text-barber-text-secondary" />
                 {fmt.label}
               </button>
             ))}

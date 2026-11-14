@@ -40,16 +40,16 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-xl border border-nexora-border bg-white p-6 shadow-lg">
-        <h3 className="font-display text-lg font-semibold text-nexora-dark">
+      <div className="w-full max-w-sm rounded-xl border border-barber-border bg-white p-6 shadow-lg">
+        <h3 className="font-display text-lg font-semibold text-barber-dark">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-nexora-text-secondary">{message}</p>
+        <p className="mt-2 text-sm text-barber-text-secondary">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onCancel}
             disabled={loading}
-            className="rounded-lg border border-nexora-border px-4 py-2 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:opacity-50"
+            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -187,19 +187,19 @@ export default function CanaisPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Canais de Venda
         </h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Gerencie os canais por onde suas vendas são realizadas
         </p>
       </div>
 
       {/* Inline Create Form */}
-      <div className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="flex-1">
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
               Nome do canal
             </label>
             <input
@@ -208,11 +208,11 @@ export default function CanaisPage() {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-              className="w-full rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div className="flex-[2]">
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
               Descrição (opcional)
             </label>
             <input
@@ -221,13 +221,13 @@ export default function CanaisPage() {
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-              className="w-full rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <button
             onClick={handleCreate}
             disabled={!newName.trim() || creating}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
             {creating ? "Adicionando..." : "Adicionar"}
@@ -236,28 +236,28 @@ export default function CanaisPage() {
       </div>
 
       {/* Table Card */}
-      <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
         {loading ? (
           <div className="space-y-3 p-6">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex items-center gap-4">
-                <div className="h-4 w-32 animate-pulse rounded bg-nexora-border" />
-                <div className="h-4 w-48 animate-pulse rounded bg-nexora-border" />
-                <div className="h-4 w-16 animate-pulse rounded bg-nexora-border" />
-                <div className="ml-auto h-4 w-24 animate-pulse rounded bg-nexora-border" />
+                <div className="h-4 w-32 animate-pulse rounded bg-barber-border" />
+                <div className="h-4 w-48 animate-pulse rounded bg-barber-border" />
+                <div className="h-4 w-16 animate-pulse rounded bg-barber-border" />
+                <div className="ml-auto h-4 w-24 animate-pulse rounded bg-barber-border" />
               </div>
             ))}
           </div>
         ) : channels.length === 0 ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-nexora-bg-secondary text-nexora-text-secondary">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-barber-bg-secondary text-barber-text-secondary">
               <Store className="h-6 w-6" />
             </div>
-            <h3 className="mt-4 font-display text-lg font-semibold text-nexora-dark">
+            <h3 className="mt-4 font-display text-lg font-semibold text-barber-dark">
               Nenhum canal cadastrado
             </h3>
-            <p className="mt-1 max-w-xs text-sm text-nexora-text-secondary">
+            <p className="mt-1 max-w-xs text-sm text-barber-text-secondary">
               Adicione seu primeiro canal de venda usando o formulário acima.
             </p>
           </div>
@@ -265,35 +265,35 @@ export default function CanaisPage() {
           /* Table */
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-nexora-border bg-nexora-bg-secondary">
+              <thead className="border-b border-barber-border bg-barber-bg-secondary">
                 <tr>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Nome
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Descrição
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Status
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">
                     Ações
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {channels.map((channel) => {
                   const isEditing = editingId === channel.id;
 
                   if (isEditing) {
                     return (
-                      <tr key={channel.id} className="bg-nexora-bg-secondary/30">
+                      <tr key={channel.id} className="bg-barber-bg-secondary/30">
                         <td className="px-4 py-3">
                           <input
                             type="text"
                             value={editName}
                             onChange={(e) => setEditName(e.target.value)}
-                            className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                            className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                             autoFocus
                           />
                         </td>
@@ -302,7 +302,7 @@ export default function CanaisPage() {
                             type="text"
                             value={editDescription}
                             onChange={(e) => setEditDescription(e.target.value)}
-                            className="w-full rounded-md border border-nexora-border bg-white px-2 py-1.5 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                            className="w-full rounded-md border border-barber-border bg-white px-2 py-1.5 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                           />
                         </td>
                         <td className="px-4 py-3">
@@ -321,7 +321,7 @@ export default function CanaisPage() {
                             <button
                               onClick={handleSave}
                               disabled={saving || !editName.trim()}
-                              className="rounded-md p-1.5 text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-success disabled:opacity-50"
+                              className="rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-success disabled:opacity-50"
                               title="Salvar"
                             >
                               <Save className="h-4 w-4" />
@@ -329,7 +329,7 @@ export default function CanaisPage() {
                             <button
                               onClick={cancelEdit}
                               disabled={saving}
-                              className="rounded-md p-1.5 text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-error"
+                              className="rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-error"
                               title="Cancelar"
                             >
                               <X className="h-4 w-4" />
@@ -343,14 +343,14 @@ export default function CanaisPage() {
                   return (
                     <tr
                       key={channel.id}
-                      className="transition-colors hover:bg-nexora-bg-secondary/50"
+                      className="transition-colors hover:bg-barber-bg-secondary/50"
                     >
-                      <td className="whitespace-nowrap px-4 py-3 font-medium text-nexora-dark">
+                      <td className="whitespace-nowrap px-4 py-3 font-medium text-barber-dark">
                         {channel.name}
                       </td>
-                      <td className="px-4 py-3 text-nexora-text">
+                      <td className="px-4 py-3 text-barber-text">
                         {channel.description || (
-                          <span className="text-nexora-text-secondary">—</span>
+                          <span className="text-barber-text-secondary">—</span>
                         )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
@@ -383,14 +383,14 @@ export default function CanaisPage() {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => startEdit(channel)}
-                            className="rounded-md p-1.5 text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-blue"
+                            className="rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-blue"
                             title="Editar"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => setDeleteTarget(channel.id)}
-                            className="rounded-md p-1.5 text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-red-600"
+                            className="rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-red-600"
                             title="Excluir"
                           >
                             <Trash2 className="h-4 w-4" />

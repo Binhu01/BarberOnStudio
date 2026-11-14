@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import {
   ArrowLeft,
   Edit,
@@ -110,13 +113,13 @@ export default async function ProductDetailPage({
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/produtos"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-nexora-border text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-dark"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-barber-border text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="font-display text-2xl font-bold text-nexora-dark">
+            <h1 className="font-display text-2xl font-bold text-barber-dark">
               {product.name}
             </h1>
             <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
@@ -128,14 +131,14 @@ export default async function ProductDetailPage({
               </span>
             )}
           </div>
-          <p className="mt-0.5 text-sm text-nexora-text-secondary">
+          <p className="mt-0.5 text-sm text-barber-text-secondary">
             Detalhes do produto
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href={`/dashboard/produtos/${id}/editar`}
-            className="inline-flex items-center gap-2 rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-dark"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
           >
             <Edit className="h-4 w-4" />
             Editar
@@ -157,68 +160,68 @@ export default async function ProductDetailPage({
       {/* Info Cards */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Dados do Produto */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <Package className="h-5 w-5 text-nexora-text-secondary" />
-            <h2 className="text-base font-semibold text-nexora-dark">
+            <Package className="h-5 w-5 text-barber-text-secondary" />
+            <h2 className="text-base font-semibold text-barber-dark">
               Dados do Produto
             </h2>
           </div>
           <dl className="space-y-4">
             <div>
-              <dt className="text-xs text-nexora-text-secondary">Nome</dt>
-              <dd className="text-sm font-medium text-nexora-text">
+              <dt className="text-xs text-barber-text-secondary">Nome</dt>
+              <dd className="text-sm font-medium text-barber-text">
                 {product.name}
               </dd>
             </div>
             {product.description && (
               <div>
-                <dt className="text-xs text-nexora-text-secondary">Descrição</dt>
-                <dd className="whitespace-pre-wrap text-sm text-nexora-text">
+                <dt className="text-xs text-barber-text-secondary">Descrição</dt>
+                <dd className="whitespace-pre-wrap text-sm text-barber-text">
                   {product.description}
                 </dd>
               </div>
             )}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <dt className="flex items-center gap-1 text-xs text-nexora-text-secondary">
+                <dt className="flex items-center gap-1 text-xs text-barber-text-secondary">
                   <Hash className="h-3 w-3" />
                   SKU
                 </dt>
-                <dd className="text-sm font-medium text-nexora-text">
+                <dd className="text-sm font-medium text-barber-text">
                   {product.sku || "—"}
                 </dd>
               </div>
               <div>
-                <dt className="flex items-center gap-1 text-xs text-nexora-text-secondary">
+                <dt className="flex items-center gap-1 text-xs text-barber-text-secondary">
                   <Hash className="h-3 w-3" />
                   Código de Barras
                 </dt>
-                <dd className="text-sm font-medium text-nexora-text">
+                <dd className="text-sm font-medium text-barber-text">
                   {product.barcode || "—"}
                 </dd>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <dt className="flex items-center gap-1 text-xs text-nexora-text-secondary">
+                <dt className="flex items-center gap-1 text-xs text-barber-text-secondary">
                   <Tag className="h-3 w-3" />
                   Marca
                 </dt>
-                <dd className="text-sm font-medium text-nexora-text">
+                <dd className="text-sm font-medium text-barber-text">
                   {product.brand || "—"}
                 </dd>
               </div>
               <div>
-                <dt className="text-xs text-nexora-text-secondary">Categoria</dt>
-                <dd className="text-sm font-medium text-nexora-text">
+                <dt className="text-xs text-barber-text-secondary">Categoria</dt>
+                <dd className="text-sm font-medium text-barber-text">
                   {(product.category as { name: string } | null)?.name || "—"}
                 </dd>
               </div>
             </div>
             <div>
-              <dt className="text-xs text-nexora-text-secondary">Unidade</dt>
-              <dd className="text-sm font-medium text-nexora-text">
+              <dt className="text-xs text-barber-text-secondary">Unidade</dt>
+              <dd className="text-sm font-medium text-barber-text">
                 {product.unit}
               </dd>
             </div>
@@ -226,28 +229,28 @@ export default async function ProductDetailPage({
         </div>
 
         {/* Preços */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-nexora-text-secondary" />
-            <h2 className="text-base font-semibold text-nexora-dark">Preços</h2>
+            <DollarSign className="h-5 w-5 text-barber-text-secondary" />
+            <h2 className="text-base font-semibold text-barber-dark">Preços</h2>
           </div>
           <dl className="space-y-4">
             <div>
-              <dt className="text-xs text-nexora-text-secondary">Preço de Custo</dt>
-              <dd className="text-sm font-medium text-nexora-text">
+              <dt className="text-xs text-barber-text-secondary">Preço de Custo</dt>
+              <dd className="text-sm font-medium text-barber-text">
                 {formatBRL(product.cost_price)}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-nexora-text-secondary">Preço de Venda</dt>
-              <dd className="text-lg font-semibold text-nexora-dark">
+              <dt className="text-xs text-barber-text-secondary">Preço de Venda</dt>
+              <dd className="text-lg font-semibold text-barber-dark">
                 {formatBRL(product.sale_price)}
               </dd>
             </div>
             {product.cost_price != null && product.sale_price != null && (
               <div>
-                <dt className="text-xs text-nexora-text-secondary">Margem</dt>
-                <dd className="text-sm font-medium text-nexora-text">
+                <dt className="text-xs text-barber-text-secondary">Margem</dt>
+                <dd className="text-sm font-medium text-barber-text">
                   {Number(product.cost_price) > 0
                     ? `${(((Number(product.sale_price) - Number(product.cost_price)) / Number(product.cost_price)) * 100).toFixed(1)}%`
                     : "—"}
@@ -255,14 +258,14 @@ export default async function ProductDetailPage({
               </div>
             )}
             <div>
-              <dt className="text-xs text-nexora-text-secondary">Estoque Mínimo</dt>
-              <dd className="text-sm font-medium text-nexora-text">
+              <dt className="text-xs text-barber-text-secondary">Estoque Mínimo</dt>
+              <dd className="text-sm font-medium text-barber-text">
                 {product.minimum_stock} {product.unit}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-nexora-text-secondary">Controle de Estoque</dt>
-              <dd className="text-sm font-medium text-nexora-text">
+              <dt className="text-xs text-barber-text-secondary">Controle de Estoque</dt>
+              <dd className="text-sm font-medium text-barber-text">
                 {product.track_inventory ? "Ativado" : "Desativado"}
               </dd>
             </div>
@@ -272,24 +275,24 @@ export default async function ProductDetailPage({
 
       {/* Inventory Balances */}
       {product.track_inventory && balances.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <Warehouse className="h-5 w-5 text-nexora-text-secondary" />
-            <h2 className="text-base font-semibold text-nexora-dark">
+            <Warehouse className="h-5 w-5 text-barber-text-secondary" />
+            <h2 className="text-base font-semibold text-barber-dark">
               Saldo por Depósito
             </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-nexora-border text-xs text-nexora-text-secondary">
+                <tr className="border-b border-barber-border text-xs text-barber-text-secondary">
                   <th className="pb-2 font-medium">Depósito</th>
                   <th className="pb-2 font-medium text-right">Em Estoque</th>
                   <th className="pb-2 font-medium text-right">Reservado</th>
                   <th className="pb-2 font-medium text-right">Disponível</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {balances.map((balance) => {
                   const onHand = Number(balance.quantity_on_hand);
                   const reserved = Number(balance.quantity_reserved);
@@ -297,13 +300,13 @@ export default async function ProductDetailPage({
                   const isLow = available <= product.minimum_stock;
                   return (
                     <tr key={balance.warehouse.id}>
-                      <td className="py-3 font-medium text-nexora-text">
+                      <td className="py-3 font-medium text-barber-text">
                         {balance.warehouse.name}
                       </td>
-                      <td className="py-3 text-right text-nexora-text">
+                      <td className="py-3 text-right text-barber-text">
                         {onHand}
                       </td>
-                      <td className="py-3 text-right text-nexora-text">
+                      <td className="py-3 text-right text-barber-text">
                         {reserved}
                       </td>
                       <td className="py-3 text-right">
@@ -311,7 +314,7 @@ export default async function ProductDetailPage({
                           className={
                             isLow
                               ? "font-medium text-amber-600"
-                              : "text-nexora-text"
+                              : "text-barber-text"
                           }
                         >
                           {available}
@@ -323,7 +326,7 @@ export default async function ProductDetailPage({
               </tbody>
             </table>
           </div>
-          <p className="mt-3 text-xs text-nexora-text-secondary">
+          <p className="mt-3 text-xs text-barber-text-secondary">
             Estoque mínimo configurado: {product.minimum_stock} {product.unit}
           </p>
         </div>
@@ -331,17 +334,17 @@ export default async function ProductDetailPage({
 
       {/* Variants */}
       {variants.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <Tag className="h-5 w-5 text-nexora-text-secondary" />
-            <h2 className="text-base font-semibold text-nexora-dark">
+            <Tag className="h-5 w-5 text-barber-text-secondary" />
+            <h2 className="text-base font-semibold text-barber-dark">
               Variantes
             </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-nexora-border text-xs text-nexora-text-secondary">
+                <tr className="border-b border-barber-border text-xs text-barber-text-secondary">
                   <th className="pb-2 font-medium">Nome</th>
                   <th className="pb-2 font-medium">SKU</th>
                   <th className="pb-2 font-medium">Atributos</th>
@@ -351,29 +354,29 @@ export default async function ProductDetailPage({
                   <th className="pb-2 font-medium text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {variants.map((variant) => (
                   <tr key={variant.id}>
-                    <td className="py-3 font-medium text-nexora-text">
+                    <td className="py-3 font-medium text-barber-text">
                       {variant.name}
                     </td>
-                    <td className="py-3 text-nexora-text">
+                    <td className="py-3 text-barber-text">
                       {variant.sku || "—"}
                     </td>
-                    <td className="py-3 text-nexora-text">
+                    <td className="py-3 text-barber-text">
                       {variant.attributes
                         ? Object.entries(variant.attributes)
                             .map(([k, v]) => `${k}: ${v}`)
                             .join(", ")
                         : "—"}
                     </td>
-                    <td className="py-3 text-right text-nexora-text">
+                    <td className="py-3 text-right text-barber-text">
                       {formatBRL(variant.cost_price_override)}
                     </td>
-                    <td className="py-3 text-right text-nexora-text">
+                    <td className="py-3 text-right text-barber-text">
                       {formatBRL(variant.sale_price_override)}
                     </td>
-                    <td className="py-3 text-right text-nexora-text">
+                    <td className="py-3 text-right text-barber-text">
                       {variant.minimum_stock}
                     </td>
                     <td className="py-3 text-center">
@@ -397,17 +400,17 @@ export default async function ProductDetailPage({
 
       {/* Recent Movements */}
       {movements.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <Package className="h-5 w-5 text-nexora-text-secondary" />
-            <h2 className="text-base font-semibold text-nexora-dark">
+            <Package className="h-5 w-5 text-barber-text-secondary" />
+            <h2 className="text-base font-semibold text-barber-dark">
               Movimentações Recentes
             </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-nexora-border text-xs text-nexora-text-secondary">
+                <tr className="border-b border-barber-border text-xs text-barber-text-secondary">
                   <th className="pb-2 font-medium">Data</th>
                   <th className="pb-2 font-medium">Tipo</th>
                   <th className="pb-2 font-medium text-right">Quantidade</th>
@@ -416,15 +419,15 @@ export default async function ProductDetailPage({
                   <th className="pb-2 font-medium">Usuário</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {movements.map((movement) => {
                   const qty = Number(movement.quantity_delta);
                   return (
                     <tr key={movement.id}>
-                      <td className="py-3 text-nexora-text">
+                      <td className="py-3 text-barber-text">
                         {formatDateTime(movement.created_at)}
                       </td>
-                      <td className="py-3 text-nexora-text">
+                      <td className="py-3 text-barber-text">
                         {MOVEMENT_TYPE_LABELS[movement.movement_type] ??
                           movement.movement_type}
                       </td>
@@ -435,14 +438,14 @@ export default async function ProductDetailPage({
                       >
                         {qty > 0 ? `+${qty}` : qty}
                       </td>
-                      <td className="py-3 text-nexora-text">
+                      <td className="py-3 text-barber-text">
                         {(movement.warehouse as { name: string } | null)?.name ??
                           "—"}
                       </td>
-                      <td className="max-w-[200px] truncate py-3 text-nexora-text" title={movement.reason ?? ""}>
+                      <td className="max-w-[200px] truncate py-3 text-barber-text" title={movement.reason ?? ""}>
                         {movement.reason || "—"}
                       </td>
-                      <td className="py-3 text-nexora-text">
+                      <td className="py-3 text-barber-text">
                         {(movement.creator as { full_name: string } | null)
                           ?.full_name ?? "—"}
                       </td>

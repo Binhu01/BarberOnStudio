@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Edit, Printer, DollarSign } from "lucide-react";
@@ -111,7 +114,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Back Link */}
       <Link
         href="/dashboard/vendas/pedidos"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-dark"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-dark"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para pedidos
@@ -120,7 +123,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-bold text-nexora-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-dark">
             Pedido {order.document_number}
           </h1>
           <StatusBadge status={order.status} />
@@ -128,14 +131,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <div className="flex items-center gap-2">
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-lg border border-nexora-border px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary print:hidden"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary print:hidden"
           >
             <Printer className="h-4 w-4" />
             Imprimir
           </button>
           <Link
             href={`/dashboard/vendas/pedidos/${order.id}/editar`}
-            className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 print:hidden"
+            className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 print:hidden"
           >
             <Edit className="h-4 w-4" />
             Editar
@@ -146,75 +149,75 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Info Grid + Financial Summary */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Order Info */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Informações do pedido</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Informações do pedido</h2>
           <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-4">
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Cliente</dt>
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Cliente</dt>
               <dd className="mt-1">
                 <Link
                   href={`/dashboard/clientes/${order.customer.id}`}
-                  className="text-sm font-medium text-nexora-blue hover:underline"
+                  className="text-sm font-medium text-barber-blue hover:underline"
                 >
                   {order.customer.name}
                 </Link>
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Canal</dt>
-              <dd className="mt-1 text-sm text-nexora-dark">
-                {order.channel?.name ?? <span className="text-nexora-text-secondary">—</span>}
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Canal</dt>
+              <dd className="mt-1 text-sm text-barber-dark">
+                {order.channel?.name ?? <span className="text-barber-text-secondary">—</span>}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Criado por</dt>
-              <dd className="mt-1 text-sm text-nexora-dark">
-                {order.creator.full_name ?? <span className="text-nexora-text-secondary">—</span>}
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Criado por</dt>
+              <dd className="mt-1 text-sm text-barber-dark">
+                {order.creator.full_name ?? <span className="text-barber-text-secondary">—</span>}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Data de emissão</dt>
-              <dd className="mt-1 text-sm text-nexora-dark">{formatDate(order.issued_at)}</dd>
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Data de emissão</dt>
+              <dd className="mt-1 text-sm text-barber-dark">{formatDate(order.issued_at)}</dd>
             </div>
             {order.completed_at && (
               <div>
-                <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Data de conclusão</dt>
-                <dd className="mt-1 text-sm text-nexora-dark">{formatDate(order.completed_at)}</dd>
+                <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Data de conclusão</dt>
+                <dd className="mt-1 text-sm text-barber-dark">{formatDate(order.completed_at)}</dd>
               </div>
             )}
             {order.cancelled_at && (
               <div>
-                <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Data de cancelamento</dt>
-                <dd className="mt-1 text-sm text-nexora-dark">{formatDate(order.cancelled_at)}</dd>
+                <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Data de cancelamento</dt>
+                <dd className="mt-1 text-sm text-barber-dark">{formatDate(order.cancelled_at)}</dd>
               </div>
             )}
           </dl>
           {order.notes && (
-            <div className="mt-4 border-t border-nexora-border pt-4">
-              <dt className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Observações</dt>
-              <dd className="mt-1 text-sm text-nexora-dark whitespace-pre-line">{order.notes}</dd>
+            <div className="mt-4 border-t border-barber-border pt-4">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Observações</dt>
+              <dd className="mt-1 text-sm text-barber-dark whitespace-pre-line">{order.notes}</dd>
             </div>
           )}
         </div>
 
         {/* Financial Summary */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Resumo financeiro</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Resumo financeiro</h2>
           <dl className="mt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <dt className="text-sm text-nexora-text-secondary">Subtotal</dt>
-              <dd className="text-sm font-medium text-nexora-dark">{formatCurrency(order.subtotal)}</dd>
+              <dt className="text-sm text-barber-text-secondary">Subtotal</dt>
+              <dd className="text-sm font-medium text-barber-dark">{formatCurrency(order.subtotal)}</dd>
             </div>
             <div className="flex items-center justify-between">
-              <dt className="text-sm text-nexora-text-secondary">Desconto</dt>
-              <dd className="text-sm font-medium text-nexora-dark">
+              <dt className="text-sm text-barber-text-secondary">Desconto</dt>
+              <dd className="text-sm font-medium text-barber-dark">
                 {order.discount > 0 ? `- ${formatCurrency(order.discount)}` : formatCurrency(0)}
               </dd>
             </div>
-            <div className="border-t border-nexora-border pt-3">
+            <div className="border-t border-barber-border pt-3">
               <div className="flex items-center justify-between">
-                <dt className="text-base font-semibold text-nexora-dark">Total</dt>
-                <dd className="text-xl font-bold text-nexora-blue">{formatCurrency(order.total)}</dd>
+                <dt className="text-base font-semibold text-barber-dark">Total</dt>
+                <dd className="text-xl font-bold text-barber-blue">{formatCurrency(order.total)}</dd>
               </div>
             </div>
           </dl>
@@ -222,31 +225,31 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* Items Table */}
-      <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
         <div className="px-6 py-4">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Itens do pedido</h2>
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Itens do pedido</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-nexora-border bg-nexora-bg-secondary">
+            <thead className="border-b border-barber-border bg-barber-bg-secondary">
               <tr>
-                <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">Descrição</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-text-secondary">Qtd</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-text-secondary">Preço unitário</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-text-secondary">Desconto</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-text-secondary">Total</th>
+                <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">Descrição</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Qtd</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Preço unitário</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Desconto</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-nexora-border">
+            <tbody className="divide-y divide-barber-border">
               {order.items.map((item) => (
-                <tr key={item.id} className="transition-colors hover:bg-nexora-bg-secondary/50">
-                  <td className="px-4 py-3 font-medium text-nexora-dark">{item.description}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-nexora-text">{item.quantity}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-nexora-text">{formatCurrency(item.unit_price)}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-nexora-text">
+                <tr key={item.id} className="transition-colors hover:bg-barber-bg-secondary/50">
+                  <td className="px-4 py-3 font-medium text-barber-dark">{item.description}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-text">{item.quantity}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-text">{formatCurrency(item.unit_price)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-text">
                     {item.discount > 0 ? formatCurrency(item.discount) : "—"}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-dark">{formatCurrency(item.total)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-dark">{formatCurrency(item.total)}</td>
                 </tr>
               ))}
             </tbody>
@@ -256,15 +259,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
       {/* Financial Section — Receivables linked to this order */}
       {receivables.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm print:hidden">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm print:hidden">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-nexora-blue" />
-              <h2 className="font-display text-lg font-semibold text-nexora-dark">Financeiro</h2>
+              <DollarSign className="h-5 w-5 text-barber-blue" />
+              <h2 className="font-display text-lg font-semibold text-barber-dark">Financeiro</h2>
             </div>
             <Link
               href="/dashboard/financeiro/receber"
-              className="text-sm font-medium text-nexora-blue hover:underline"
+              className="text-sm font-medium text-barber-blue hover:underline"
             >
               Ver todos os recebíveis
             </Link>
@@ -272,16 +275,16 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
           <div className="mt-4 grid grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-nexora-text-secondary">Total do pedido</p>
-              <p className="text-lg font-bold text-nexora-dark">{formatCurrency(totalReceivable)}</p>
+              <p className="text-xs text-barber-text-secondary">Total do pedido</p>
+              <p className="text-lg font-bold text-barber-dark">{formatCurrency(totalReceivable)}</p>
             </div>
             <div>
-              <p className="text-xs text-nexora-text-secondary">Recebido</p>
+              <p className="text-xs text-barber-text-secondary">Recebido</p>
               <p className="text-lg font-bold text-green-600">{formatCurrency(totalReceived)}</p>
             </div>
             <div>
-              <p className="text-xs text-nexora-text-secondary">Pendente</p>
-              <p className={`text-lg font-bold ${totalReceivable - totalReceived > 0 ? "text-nexora-error" : "text-green-600"}`}>
+              <p className="text-xs text-barber-text-secondary">Pendente</p>
+              <p className={`text-lg font-bold ${totalReceivable - totalReceived > 0 ? "text-barber-error" : "text-green-600"}`}>
                 {formatCurrency(totalReceivable - totalReceived)}
               </p>
             </div>
@@ -289,16 +292,16 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-nexora-border bg-nexora-bg-secondary">
+              <thead className="border-b border-barber-border bg-barber-bg-secondary">
                 <tr>
-                  <th className="px-4 py-2 font-medium text-nexora-text-secondary">Parcela</th>
-                  <th className="px-4 py-2 font-medium text-nexora-text-secondary">Vencimento</th>
-                  <th className="px-4 py-2 text-right font-medium text-nexora-text-secondary">Valor</th>
-                  <th className="px-4 py-2 text-right font-medium text-nexora-text-secondary">Recebido</th>
-                  <th className="px-4 py-2 text-center font-medium text-nexora-text-secondary">Status</th>
+                  <th className="px-4 py-2 font-medium text-barber-text-secondary">Parcela</th>
+                  <th className="px-4 py-2 font-medium text-barber-text-secondary">Vencimento</th>
+                  <th className="px-4 py-2 text-right font-medium text-barber-text-secondary">Valor</th>
+                  <th className="px-4 py-2 text-right font-medium text-barber-text-secondary">Recebido</th>
+                  <th className="px-4 py-2 text-center font-medium text-barber-text-secondary">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {receivables.map((r) => {
                   const stLabel: Record<string, string> = {
                     open: "Em aberto",
@@ -315,17 +318,17 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                     cancelled: "bg-gray-100 text-gray-600",
                   };
                   return (
-                    <tr key={r.id} className="hover:bg-nexora-bg-secondary/50">
-                      <td className="px-4 py-2 text-nexora-dark">
+                    <tr key={r.id} className="hover:bg-barber-bg-secondary/50">
+                      <td className="px-4 py-2 text-barber-dark">
                         {r.installment_number ? `${r.installment_number}ª` : "—"}
                       </td>
-                      <td className="px-4 py-2 text-nexora-text">
+                      <td className="px-4 py-2 text-barber-text">
                         {new Date(r.due_date + "T00:00:00").toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono text-nexora-text">
+                      <td className="px-4 py-2 text-right font-mono text-barber-text">
                         {formatCurrency(Number(r.original_amount))}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono text-nexora-text">
+                      <td className="px-4 py-2 text-right font-mono text-barber-text">
                         {formatCurrency(Number(r.amount_received))}
                       </td>
                       <td className="px-4 py-2 text-center">

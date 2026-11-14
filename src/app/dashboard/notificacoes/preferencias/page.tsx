@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft, Bell, Mail, Smartphone } from "lucide-react";
@@ -50,31 +53,31 @@ export default async function PreferenciasNotificacoesPage() {
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/notificacoes"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Preferências de notificação</h1>
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Preferências de notificação</h1>
       </div>
 
-      <p className="text-sm text-nexora-text-secondary">
+      <p className="text-sm text-barber-text-secondary">
         Configure como e quando deseja receber notificações por categoria e canal.
       </p>
 
       {/* Preferences Matrix */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-nexora-border bg-nexora-bg-secondary/50">
+            <thead className="border-b border-barber-border bg-barber-bg-secondary/50">
               <tr>
-                <th className="px-4 py-3 font-semibold text-nexora-dark">Categoria</th>
+                <th className="px-4 py-3 font-semibold text-barber-dark">Categoria</th>
                 {channels.map((ch) => {
                   const Icon = CHANNEL_ICONS[ch];
                   return (
-                    <th key={ch} className="px-4 py-3 text-center font-semibold text-nexora-dark">
+                    <th key={ch} className="px-4 py-3 text-center font-semibold text-barber-dark">
                       <div className="flex flex-col items-center gap-1">
-                        {Icon && <Icon className="h-4 w-4 text-nexora-blue" />}
+                        {Icon && <Icon className="h-4 w-4 text-barber-blue" />}
                         <span className="text-xs">{CHANNEL_LABELS[ch]}</span>
                       </div>
                     </th>
@@ -82,17 +85,17 @@ export default async function PreferenciasNotificacoesPage() {
                 })}
               </tr>
             </thead>
-            <tbody className="divide-y divide-nexora-border">
+            <tbody className="divide-y divide-barber-border">
               {categories.map((cat) => (
-                <tr key={cat} className="transition-colors hover:bg-nexora-bg-secondary/30">
-                  <td className="px-4 py-3 font-medium text-nexora-dark">
+                <tr key={cat} className="transition-colors hover:bg-barber-bg-secondary/30">
+                  <td className="px-4 py-3 font-medium text-barber-dark">
                     {CATEGORY_LABELS[cat] ?? cat}
                   </td>
                   {channels.map((ch) => {
                     const enabled = matrix[cat]?.[ch] ?? false;
                     return (
                       <td key={ch} className="px-4 py-3 text-center">
-                        <div className={`mx-auto inline-flex h-5 w-9 items-center rounded-full ${enabled ? "bg-nexora-blue" : "bg-gray-200"} relative cursor-default`}>
+                        <div className={`mx-auto inline-flex h-5 w-9 items-center rounded-full ${enabled ? "bg-barber-blue" : "bg-gray-200"} relative cursor-default`}>
                           <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform ${enabled ? "translate-x-[18px]" : "translate-x-[3px]"}`} />
                         </div>
                       </td>
@@ -104,7 +107,7 @@ export default async function PreferenciasNotificacoesPage() {
           </table>
         </div>
 
-        <p className="mt-4 text-xs text-nexora-text-secondary">
+        <p className="mt-4 text-xs text-barber-text-secondary">
           As alterações nas preferências são salvas automaticamente. Ajustes individuais podem ser feitos via API ou server actions.
         </p>
       </div>

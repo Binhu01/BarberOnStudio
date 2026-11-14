@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ScrollText, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
@@ -55,21 +58,21 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Auditoria</h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Auditoria</h1>
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Registro imutável de todas as operações realizadas na organização
         </p>
       </div>
 
       {/* Filters */}
-      <div className="rounded-xl border border-nexora-border bg-white p-4">
+      <div className="rounded-xl border border-barber-border bg-white p-4">
         <form method="GET" action="/dashboard/equipe/auditoria" className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Módulo</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Módulo</label>
             <select
               name="module"
               defaultValue={params.module || ""}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Todos os módulos</option>
               {modules.map((m) => (
@@ -78,11 +81,11 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Ação</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Ação</label>
             <select
               name="action"
               defaultValue={params.action || ""}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Todas as ações</option>
               {actions.map((a) => (
@@ -91,29 +94,29 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">De</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">De</label>
             <input
               type="date"
               name="date_from"
               defaultValue={params.date_from || ""}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Até</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Até</label>
             <input
               type="date"
               name="date_to"
               defaultValue={params.date_to || ""}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
           <div className="flex items-end gap-2">
-            <button type="submit" className="rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white hover:opacity-90">
+            <button type="submit" className="rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white hover:opacity-90">
               Filtrar
             </button>
             {(params.module || params.action || params.date_from || params.date_to) && (
-              <Link href="/dashboard/equipe/auditoria" className="rounded-lg border border-nexora-border px-4 py-2 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary">
+              <Link href="/dashboard/equipe/auditoria" className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary">
                 Limpar
               </Link>
             )}
@@ -122,12 +125,12 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
       </div>
 
       {/* Audit Table */}
-      <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
         {logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <ScrollText className="mb-4 h-12 w-12 text-nexora-text-secondary/40" />
-            <p className="text-lg font-medium text-nexora-dark">Nenhum registro encontrado</p>
-            <p className="text-sm text-nexora-text-secondary">
+            <ScrollText className="mb-4 h-12 w-12 text-barber-text-secondary/40" />
+            <p className="text-lg font-medium text-barber-dark">Nenhum registro encontrado</p>
+            <p className="text-sm text-barber-text-secondary">
               {params.module || params.action || params.date_from || params.date_to
                 ? "Tente ajustar os filtros de busca."
                 : "As atividades realizadas aparecerão aqui."}
@@ -136,31 +139,31 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-nexora-border bg-nexora-bg">
+              <thead className="border-b border-barber-border bg-barber-bg">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Data/Hora</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Usuário</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Ação</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Módulo</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Recurso</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Data/Hora</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Usuário</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Ação</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Módulo</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Recurso</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {logs.map((log) => (
-                  <tr key={log.id} className="transition-colors hover:bg-nexora-bg-secondary">
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-nexora-text">
+                  <tr key={log.id} className="transition-colors hover:bg-barber-bg-secondary">
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-text">
                       {new Date(log.created_at).toLocaleString("pt-BR")}
                     </td>
-                    <td className="px-4 py-3 text-sm font-medium text-nexora-dark">
+                    <td className="px-4 py-3 text-sm font-medium text-barber-dark">
                       {log.actor?.email ?? log.actor_user_id.slice(0, 8)}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex rounded-full bg-nexora-bg-secondary px-2.5 py-0.5 text-xs font-medium text-nexora-dark">
+                      <span className="inline-flex rounded-full bg-barber-bg-secondary px-2.5 py-0.5 text-xs font-medium text-barber-dark">
                         {log.action.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text">{log.module}</td>
-                    <td className="px-4 py-3 text-sm text-nexora-text-secondary">
+                    <td className="px-4 py-3 text-sm text-barber-text">{log.module}</td>
+                    <td className="px-4 py-3 text-sm text-barber-text-secondary">
                       {log.resource_type ? `${log.resource_type}${log.resource_id ? ` #${log.resource_id.slice(0, 8)}` : ""}` : "—"}
                     </td>
                   </tr>
@@ -174,18 +177,18 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-nexora-text-secondary">
+          <p className="text-sm text-barber-text-secondary">
             Mostrando página {page} de {totalPages} ({total} registros)
           </p>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link href={buildFilterUrl({ page: String(page - 1) })} className="inline-flex items-center gap-1 rounded-lg border border-nexora-border px-3 py-1.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary">
+              <Link href={buildFilterUrl({ page: String(page - 1) })} className="inline-flex items-center gap-1 rounded-lg border border-barber-border px-3 py-1.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary">
                 <ChevronLeft className="h-3.5 w-3.5" />
                 Anterior
               </Link>
             )}
             {page < totalPages && (
-              <Link href={buildFilterUrl({ page: String(page + 1) })} className="inline-flex items-center gap-1 rounded-lg border border-nexora-border px-3 py-1.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary">
+              <Link href={buildFilterUrl({ page: String(page + 1) })} className="inline-flex items-center gap-1 rounded-lg border border-barber-border px-3 py-1.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary">
                 Próxima
                 <ChevronRight className="h-3.5 w-3.5" />
               </Link>

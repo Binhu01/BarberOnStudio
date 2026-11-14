@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -12,15 +15,15 @@ export default async function NovaTarefaPage() {
     <div className="space-y-6">
       <Link
         href="/dashboard/tarefas"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para tarefas
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Nova tarefa</h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Nova tarefa</h1>
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Crie uma tarefa e atribua a um membro da equipe.
         </p>
       </div>

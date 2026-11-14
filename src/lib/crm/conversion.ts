@@ -27,7 +27,7 @@ export type CustomerOverrides = z.infer<typeof customerOverridesSchema>;
 async function getActiveOrgId(userId: string): Promise<string> {
   const supabase = await createClient();
   const cookieStore = await cookies();
-  const activeOrgCookie = cookieStore.get("nexora_active_org")?.value;
+  const activeOrgCookie = cookieStore.get("barber_active_org")?.value;
 
   if (activeOrgCookie) {
     const { data: membership } = await supabase

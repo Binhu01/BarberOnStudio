@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft, Settings, Shield, AlertTriangle, Save } from "lucide-react";
@@ -18,7 +21,7 @@ export default async function AiConfiguracoesPage() {
       <div className="space-y-6">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
@@ -58,61 +61,61 @@ export default async function AiConfiguracoesPage() {
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-nexora-bg-secondary">
-            <Settings className="h-3.5 w-3.5 text-nexora-text-secondary" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-barber-bg-secondary">
+            <Settings className="h-3.5 w-3.5 text-barber-text-secondary" />
           </div>
-          <h1 className="font-display text-lg font-bold text-nexora-dark">Configurações da IA</h1>
+          <h1 className="font-display text-lg font-bold text-barber-dark">Configurações da IA</h1>
         </div>
       </div>
 
       {/* Usage Stats */}
       {usage && (
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl border border-nexora-border bg-white p-5 shadow-sm">
-            <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Uso hoje</p>
-            <p className="mt-1 font-display text-2xl font-bold text-nexora-dark">
+          <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Uso hoje</p>
+            <p className="mt-1 font-display text-2xl font-bold text-barber-dark">
               {usage.today_count ?? usage.today_requests}{" "}
-              <span className="text-sm font-normal text-nexora-text-secondary">consultas</span>
+              <span className="text-sm font-normal text-barber-text-secondary">consultas</span>
             </p>
           </div>
-          <div className="rounded-xl border border-nexora-border bg-white p-5 shadow-sm">
-            <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Limite diário</p>
-            <p className="mt-1 font-display text-2xl font-bold text-nexora-dark">
+          <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Limite diário</p>
+            <p className="mt-1 font-display text-2xl font-bold text-barber-dark">
               {settings.daily_limit}{" "}
-              <span className="text-sm font-normal text-nexora-text-secondary">consultas</span>
+              <span className="text-sm font-normal text-barber-text-secondary">consultas</span>
             </p>
           </div>
-          <div className="rounded-xl border border-nexora-border bg-white p-5 shadow-sm">
-            <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">Total histórico</p>
-            <p className="mt-1 font-display text-2xl font-bold text-nexora-dark">
+          <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Total histórico</p>
+            <p className="mt-1 font-display text-2xl font-bold text-barber-dark">
               {usage.total_count ?? usage.month_requests}{" "}
-              <span className="text-sm font-normal text-nexora-text-secondary">consultas</span>
+              <span className="text-sm font-normal text-barber-text-secondary">consultas</span>
             </p>
           </div>
         </div>
       )}
 
       {/* Settings Form */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">Configurações gerais</h2>
-        <p className="mt-1 text-xs text-nexora-text-secondary">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">Configurações gerais</h2>
+        <p className="mt-1 text-xs text-barber-text-secondary">
           Controle o comportamento e os limites do assistente de IA para toda a organização.
         </p>
 
         <form action={handleUpdate} className="mt-6 space-y-5">
           {/* Enable/Disable */}
-          <div className="flex items-start justify-between rounded-lg border border-nexora-border p-4">
+          <div className="flex items-start justify-between rounded-lg border border-barber-border p-4">
             <div>
-              <label htmlFor="enabled" className="text-sm font-medium text-nexora-dark">
+              <label htmlFor="enabled" className="text-sm font-medium text-barber-dark">
                 Nexora Intelligence ativo
               </label>
-              <p className="mt-0.5 text-xs text-nexora-text-secondary">
+              <p className="mt-0.5 text-xs text-barber-text-secondary">
                 Quando desativado, nenhum membro poderá usar o assistente de IA.
               </p>
             </div>
@@ -121,16 +124,16 @@ export default async function AiConfiguracoesPage() {
               id="enabled"
               name="enabled"
               defaultChecked={settings.is_enabled}
-              className="mt-1 h-5 w-5 rounded border-nexora-border text-nexora-blue focus:ring-nexora-blue"
+              className="mt-1 h-5 w-5 rounded border-barber-border text-barber-blue focus:ring-barber-blue"
             />
           </div>
 
           {/* Daily Limit */}
           <div>
-            <label htmlFor="daily_limit" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="daily_limit" className="block text-sm font-medium text-barber-dark">
               Limite diário de consultas por usuário
             </label>
-            <p className="mt-0.5 text-xs text-nexora-text-secondary">
+            <p className="mt-0.5 text-xs text-barber-text-secondary">
               Número máximo de mensagens que cada usuário pode enviar por dia.
             </p>
             <input
@@ -140,16 +143,16 @@ export default async function AiConfiguracoesPage() {
               defaultValue={settings.daily_limit}
               min={1}
               max={1000}
-              className="mt-2 block w-40 rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-2 block w-40 rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
           {/* Max Tokens */}
           <div>
-            <label htmlFor="max_tokens_per_message" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="max_tokens_per_message" className="block text-sm font-medium text-barber-dark">
               Tokens máximos por resposta
             </label>
-            <p className="mt-0.5 text-xs text-nexora-text-secondary">
+            <p className="mt-0.5 text-xs text-barber-text-secondary">
               Limite de tokens na resposta da IA. Valores maiores permitem respostas mais longas.
             </p>
             <input
@@ -160,14 +163,14 @@ export default async function AiConfiguracoesPage() {
               min={256}
               max={16384}
               step={256}
-              className="mt-2 block w-40 rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-2 block w-40 rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
           {/* Allowed Roles */}
           <fieldset>
-            <legend className="text-sm font-medium text-nexora-dark">Papéis com acesso à IA</legend>
-            <p className="mt-0.5 text-xs text-nexora-text-secondary">
+            <legend className="text-sm font-medium text-barber-dark">Papéis com acesso à IA</legend>
+            <p className="mt-0.5 text-xs text-barber-text-secondary">
               Selecione quais papéis podem utilizar o assistente.
             </p>
             <div className="mt-3 flex flex-wrap gap-4">
@@ -178,9 +181,9 @@ export default async function AiConfiguracoesPage() {
                     name="allowed_roles"
                     value={role}
                     defaultChecked={(settings.allowed_roles ?? ["OWNER", "ADMIN", "MANAGER", "EMPLOYEE"]).includes(role)}
-                    className="h-4 w-4 rounded border-nexora-border text-nexora-blue focus:ring-nexora-blue"
+                    className="h-4 w-4 rounded border-barber-border text-barber-blue focus:ring-barber-blue"
                   />
-                  <span className="text-sm text-nexora-dark">{role}</span>
+                  <span className="text-sm text-barber-dark">{role}</span>
                 </label>
               ))}
             </div>
@@ -188,10 +191,10 @@ export default async function AiConfiguracoesPage() {
 
           {/* Custom Instructions */}
           <div>
-            <label htmlFor="custom_instructions" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="custom_instructions" className="block text-sm font-medium text-barber-dark">
               Instruções personalizadas
             </label>
-            <p className="mt-0.5 text-xs text-nexora-text-secondary">
+            <p className="mt-0.5 text-xs text-barber-text-secondary">
               Contexto adicional sobre a empresa para melhorar as respostas da IA.
             </p>
             <textarea
@@ -200,7 +203,7 @@ export default async function AiConfiguracoesPage() {
               defaultValue={settings.custom_instructions ?? ""}
               rows={3}
               placeholder="Ex: Somos uma distribuidora de alimentos orgânicos com foco em varejo..."
-              className="mt-2 block w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary/50 focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-2 block w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary/50 focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
@@ -208,7 +211,7 @@ export default async function AiConfiguracoesPage() {
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-nexora-blue px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-barber-blue px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               <Save className="h-4 w-4" />
               Salvar configurações

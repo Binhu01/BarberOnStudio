@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -51,7 +54,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       <div className="flex items-center gap-4">
         <Link
           href={`/dashboard/produtos/${id}`}
-          className="inline-flex items-center gap-1.5 text-sm text-nexora-text-secondary hover:text-nexora-blue transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-barber-text-secondary hover:text-barber-blue transition-colors"
         >
           <ChevronLeft size={16} />
           Voltar ao Produto
@@ -59,10 +62,10 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       </div>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Editar Produto
         </h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Atualize as informações do produto abaixo.
         </p>
       </div>

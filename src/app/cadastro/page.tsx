@@ -62,16 +62,16 @@ export default function CadastroPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-nexora-bg px-4">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-nexora-border bg-white p-8 shadow-sm">
+    <div className="flex min-h-screen items-center justify-center bg-barber-bg px-4">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-barber-border bg-white p-8 shadow-sm">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-nexora-blue font-display text-lg font-bold text-white">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-barber-blue font-display text-lg font-bold text-white">
             N
           </div>
-          <h1 className="font-display text-2xl font-bold text-nexora-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-dark">
             Criar conta
           </h1>
-          <p className="mt-2 text-sm text-nexora-text-secondary">
+          <p className="mt-2 text-sm text-barber-text-secondary">
             Comece a usar o Nexora gratuitamente
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function CadastroPage() {
           <div>
             <label
               htmlFor="name"
-              className="mb-1 block text-sm font-medium text-nexora-text"
+              className="mb-1 block text-sm font-medium text-barber-text"
             >
               Nome completo
             </label>
@@ -88,11 +88,11 @@ export default function CadastroPage() {
               id="name"
               type="text"
               {...register("name")}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm outline-none transition-colors focus:border-nexora-blue focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
               placeholder="Seu nome"
             />
             {errors.name && (
-              <p className="mt-1 text-xs text-nexora-error">
+              <p className="mt-1 text-xs text-barber-error">
                 {errors.name.message}
               </p>
             )}
@@ -101,7 +101,7 @@ export default function CadastroPage() {
           <div>
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-nexora-text"
+              className="mb-1 block text-sm font-medium text-barber-text"
             >
               E-mail
             </label>
@@ -109,11 +109,11 @@ export default function CadastroPage() {
               id="email"
               type="email"
               {...register("email")}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm outline-none transition-colors focus:border-nexora-blue focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
               placeholder="seu@email.com"
             />
             {errors.email && (
-              <p className="mt-1 text-xs text-nexora-error">
+              <p className="mt-1 text-xs text-barber-error">
                 {errors.email.message}
               </p>
             )}
@@ -122,7 +122,7 @@ export default function CadastroPage() {
           <div>
             <label
               htmlFor="password"
-              className="mb-1 block text-sm font-medium text-nexora-text"
+              className="mb-1 block text-sm font-medium text-barber-text"
             >
               Senha
             </label>
@@ -130,11 +130,11 @@ export default function CadastroPage() {
               id="password"
               type="password"
               {...register("password")}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm outline-none transition-colors focus:border-nexora-blue focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
               placeholder="Mínimo 6 caracteres"
             />
             {errors.password && (
-              <p className="mt-1 text-xs text-nexora-error">
+              <p className="mt-1 text-xs text-barber-error">
                 {errors.password.message}
               </p>
             )}
@@ -143,7 +143,7 @@ export default function CadastroPage() {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="mb-1 block text-sm font-medium text-nexora-text"
+              className="mb-1 block text-sm font-medium text-barber-text"
             >
               Confirmar senha
             </label>
@@ -151,18 +151,18 @@ export default function CadastroPage() {
               id="confirmPassword"
               type="password"
               {...register("confirmPassword")}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm outline-none transition-colors focus:border-nexora-blue focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
               placeholder="Repita a senha"
             />
             {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-nexora-error">
+              <p className="mt-1 text-xs text-barber-error">
                 {errors.confirmPassword.message}
               </p>
             )}
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-nexora-error">
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-barber-error">
               {error}
             </div>
           )}
@@ -170,18 +170,18 @@ export default function CadastroPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-nexora-blue py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-barber-blue py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Criar conta
           </button>
         </form>
 
-        <p className="text-center text-sm text-nexora-text-secondary">
+        <p className="text-center text-sm text-barber-text-secondary">
           Já tem conta?{" "}
           <Link
             href="/login"
-            className="font-medium text-nexora-blue hover:underline"
+            className="font-medium text-barber-blue hover:underline"
           >
             Fazer login
           </Link>

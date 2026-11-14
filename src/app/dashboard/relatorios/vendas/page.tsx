@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import { ShoppingCart, DollarSign, TrendingUp, Package, Users } from "lucide-react";
 import {
@@ -32,10 +35,10 @@ export default async function RelatoriosVendasPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Relatórios Comerciais
         </h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Análise de pedidos, receita, canais e produtos · Últimos 30 dias
         </p>
       </div>
@@ -55,13 +58,13 @@ export default async function RelatoriosVendasPage() {
           label="Ticket médio"
           value={brl.format(kpis.avgTicket)}
           icon={<ShoppingCart className="h-5 w-5" />}
-          accentColor="bg-nexora-blue/10 text-nexora-blue"
+          accentColor="bg-barber-blue/10 text-barber-blue"
         />
         <KPICard
           label="Margem bruta"
           value={brl.format(kpis.grossMargin)}
           icon={<TrendingUp className="h-5 w-5" />}
-          accentColor="bg-nexora-cyan/10 text-nexora-cyan"
+          accentColor="bg-barber-cyan/10 text-barber-cyan"
           subtitle={`${kpis.marginRate.toFixed(1)}% da receita`}
         />
         <KPICard
@@ -75,14 +78,14 @@ export default async function RelatoriosVendasPage() {
       </div>
 
       {/* Sales by Channel */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">
           Receita por canal
         </h2>
         {byChannel.length === 0 ? (
           <div className="mt-8 flex flex-col items-center justify-center text-center">
-            <ShoppingCart className="mb-3 h-10 w-10 text-nexora-text-secondary/40" />
-            <p className="text-sm text-nexora-text-secondary">
+            <ShoppingCart className="mb-3 h-10 w-10 text-barber-text-secondary/40" />
+            <p className="text-sm text-barber-text-secondary">
               Sem dados de vendas no período
             </p>
           </div>
@@ -90,7 +93,7 @@ export default async function RelatoriosVendasPage() {
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-nexora-border text-xs uppercase tracking-wide text-nexora-text-secondary">
+                <tr className="border-b border-barber-border text-xs uppercase tracking-wide text-barber-text-secondary">
                   <th className="pb-3 pr-4 font-medium">Canal</th>
                   <th className="pb-3 pr-4 text-right font-medium">Pedidos</th>
                   <th className="pb-3 pr-4 text-right font-medium">Receita</th>
@@ -98,22 +101,22 @@ export default async function RelatoriosVendasPage() {
                   <th className="pb-3 text-right font-medium">%</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border/50">
+              <tbody className="divide-y divide-barber-border/50">
                 {byChannel.map((ch) => (
                   <tr key={ch.channelName}>
-                    <td className="py-3 pr-4 font-medium text-nexora-dark">
+                    <td className="py-3 pr-4 font-medium text-barber-dark">
                       {ch.channelName}
                     </td>
-                    <td className="py-3 pr-4 text-right text-nexora-text-secondary">
+                    <td className="py-3 pr-4 text-right text-barber-text-secondary">
                       {ch.orderCount}
                     </td>
-                    <td className="py-3 pr-4 text-right font-semibold text-nexora-dark">
+                    <td className="py-3 pr-4 text-right font-semibold text-barber-dark">
                       {brl.format(ch.totalRevenue)}
                     </td>
-                    <td className="py-3 pr-4 text-right text-nexora-text-secondary">
+                    <td className="py-3 pr-4 text-right text-barber-text-secondary">
                       {brl.format(ch.avgTicket)}
                     </td>
-                    <td className="py-3 text-right text-nexora-text-secondary">
+                    <td className="py-3 text-right text-barber-text-secondary">
                       {ch.percentage.toFixed(1)}%
                     </td>
                   </tr>
@@ -127,17 +130,17 @@ export default async function RelatoriosVendasPage() {
       {/* Top Customers + Top Products side by side */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Top Customers */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-nexora-blue" />
-            <h2 className="font-display text-lg font-semibold text-nexora-dark">
+            <Users className="h-5 w-5 text-barber-blue" />
+            <h2 className="font-display text-lg font-semibold text-barber-dark">
               Top clientes
             </h2>
           </div>
           {topCustomers.length === 0 ? (
             <div className="mt-8 flex flex-col items-center justify-center text-center">
-              <Users className="mb-3 h-8 w-8 text-nexora-text-secondary/40" />
-              <p className="text-sm text-nexora-text-secondary">
+              <Users className="mb-3 h-8 w-8 text-barber-text-secondary/40" />
+              <p className="text-sm text-barber-text-secondary">
                 Nenhum cliente com pedidos no período
               </p>
             </div>
@@ -146,22 +149,22 @@ export default async function RelatoriosVendasPage() {
               {topCustomers.map((c, i) => (
                 <div
                   key={c.customerId}
-                  className="flex items-center justify-between rounded-lg border border-nexora-border/50 p-3"
+                  className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3"
                 >
                   <div className="min-w-0 flex items-center gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-nexora-blue/10 text-xs font-bold text-nexora-blue">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-barber-blue/10 text-xs font-bold text-barber-blue">
                       {i + 1}
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-nexora-dark">
+                      <p className="truncate text-sm font-medium text-barber-dark">
                         {c.customerName}
                       </p>
-                      <p className="text-xs text-nexora-text-secondary">
+                      <p className="text-xs text-barber-text-secondary">
                         {c.orderCount} pedidos
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm font-semibold text-nexora-dark">
+                  <p className="text-sm font-semibold text-barber-dark">
                     {brl.format(c.totalRevenue)}
                   </p>
                 </div>
@@ -171,17 +174,17 @@ export default async function RelatoriosVendasPage() {
         </div>
 
         {/* Top Products */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <Package className="h-5 w-5 text-amber-600" />
-            <h2 className="font-display text-lg font-semibold text-nexora-dark">
+            <h2 className="font-display text-lg font-semibold text-barber-dark">
               Top produtos
             </h2>
           </div>
           {topProducts.length === 0 ? (
             <div className="mt-8 flex flex-col items-center justify-center text-center">
-              <Package className="mb-3 h-8 w-8 text-nexora-text-secondary/40" />
-              <p className="text-sm text-nexora-text-secondary">
+              <Package className="mb-3 h-8 w-8 text-barber-text-secondary/40" />
+              <p className="text-sm text-barber-text-secondary">
                 Nenhum produto vendido no período
               </p>
             </div>
@@ -190,23 +193,23 @@ export default async function RelatoriosVendasPage() {
               {topProducts.map((p, i) => (
                 <div
                   key={p.productId}
-                  className="flex items-center justify-between rounded-lg border border-nexora-border/50 p-3"
+                  className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3"
                 >
                   <div className="min-w-0 flex items-center gap-3">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-xs font-bold text-amber-600">
                       {i + 1}
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-nexora-dark">
+                      <p className="truncate text-sm font-medium text-barber-dark">
                         {p.productName}
                       </p>
-                      <p className="text-xs text-nexora-text-secondary">
+                      <p className="text-xs text-barber-text-secondary">
                         {p.quantitySold} un. vendidas
                         {p.sku && ` · ${p.sku}`}
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm font-semibold text-nexora-dark">
+                  <p className="text-sm font-semibold text-barber-dark">
                     {brl.format(p.totalRevenue)}
                   </p>
                 </div>

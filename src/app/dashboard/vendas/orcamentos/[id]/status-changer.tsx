@@ -50,8 +50,8 @@ export function StatusChanger({
   const hasChanged = selectedStatus !== currentStatus;
 
   return (
-    <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-      <h2 className="font-display text-base font-semibold text-nexora-dark">
+    <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+      <h2 className="font-display text-base font-semibold text-barber-dark">
         Alterar status
       </h2>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -63,7 +63,7 @@ export function StatusChanger({
               setSuccess(false);
             }}
             disabled={loading}
-            className="w-full appearance-none rounded-lg border border-nexora-border bg-nexora-bg-secondary py-2 pl-3 pr-9 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue disabled:opacity-50 sm:w-48"
+            className="w-full appearance-none rounded-lg border border-barber-border bg-barber-bg-secondary py-2 pl-3 pr-9 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue disabled:opacity-50 sm:w-48"
           >
             {statusOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -71,12 +71,12 @@ export function StatusChanger({
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nexora-text-secondary" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-text-secondary" />
         </div>
         <button
           onClick={handleUpdate}
           disabled={!hasChanged || loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {loading ? "Atualizando..." : "Atualizar status"}

@@ -39,14 +39,14 @@ function TableSkeleton({ rows = 5 }: { rows?: number }) {
     <div className="space-y-3 p-6">
       {Array.from({ length: rows }).map((_, i) => (
         <div key={i} className="flex items-center gap-4">
-          <div className="h-4 w-32 animate-pulse rounded bg-nexora-border" />
-          <div className="h-4 w-16 animate-pulse rounded bg-nexora-border" />
-          <div className="h-4 w-40 animate-pulse rounded bg-nexora-border" />
-          <div className="h-4 w-28 animate-pulse rounded bg-nexora-border" />
-          <div className="h-4 w-20 animate-pulse rounded bg-nexora-border" />
-          <div className="h-4 w-16 animate-pulse rounded bg-nexora-border" />
-          <div className="h-4 w-24 animate-pulse rounded bg-nexora-border" />
-          <div className="ml-auto h-4 w-16 animate-pulse rounded bg-nexora-border" />
+          <div className="h-4 w-32 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-16 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-40 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-28 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-20 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-16 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-24 animate-pulse rounded bg-barber-border" />
+          <div className="ml-auto h-4 w-16 animate-pulse rounded bg-barber-border" />
         </div>
       ))}
     </div>
@@ -74,16 +74,16 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-xl border border-nexora-border bg-white p-6 shadow-lg">
-        <h3 className="font-display text-lg font-semibold text-nexora-dark">
+      <div className="w-full max-w-sm rounded-xl border border-barber-border bg-white p-6 shadow-lg">
+        <h3 className="font-display text-lg font-semibold text-barber-dark">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-nexora-text-secondary">{message}</p>
+        <p className="mt-2 text-sm text-barber-text-secondary">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onCancel}
             disabled={loading}
-            className="rounded-lg border border-nexora-border px-4 py-2 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:opacity-50"
+            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -236,10 +236,10 @@ export default function ClientesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-nexora-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-dark">
             Clientes
           </h1>
-          <p className="mt-1 text-sm text-nexora-text-secondary">
+          <p className="mt-1 text-sm text-barber-text-secondary">
             {stats.total > 0
               ? `${stats.total} clientes cadastrados`
               : "Gerencie seus clientes"}
@@ -247,7 +247,7 @@ export default function ClientesPage() {
         </div>
         <Link
           href="/dashboard/clientes/novo"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-nexora-blue px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-barber-blue px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90"
         >
           <Plus className="h-4 w-4" />
           Novo cliente
@@ -255,17 +255,17 @@ export default function ClientesPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nexora-text-secondary" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-text-secondary" />
             <input
               type="text"
               placeholder="Buscar por nome, e-mail ou telefone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-nexora-border bg-nexora-bg-secondary py-2 pl-9 pr-3 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-bg-secondary py-2 pl-9 pr-3 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
@@ -273,7 +273,7 @@ export default function ClientesPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           >
             <option value="">Todos os tipos</option>
             <option value="pf">Pessoa Física</option>
@@ -284,7 +284,7 @@ export default function ClientesPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           >
             <option value="">Todos os status</option>
             <option value="active">Ativos</option>
@@ -297,14 +297,14 @@ export default function ClientesPage() {
             placeholder="Categoria..."
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue lg:w-40"
+            className="w-full rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue lg:w-40"
           />
 
           {/* Clear Filters */}
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-nexora-border px-3 py-2 text-sm font-medium text-nexora-text-secondary hover:bg-nexora-bg-secondary hover:text-nexora-dark"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-text-secondary hover:bg-barber-bg-secondary hover:text-barber-dark"
             >
               <Filter className="h-3.5 w-3.5" />
               Limpar
@@ -314,19 +314,19 @@ export default function ClientesPage() {
       </div>
 
       {/* Table Card */}
-      <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
         {loading ? (
           <TableSkeleton />
         ) : customers.length === 0 ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-nexora-bg-secondary text-nexora-text-secondary">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-barber-bg-secondary text-barber-text-secondary">
               <Users className="h-6 w-6" />
             </div>
-            <h3 className="mt-4 font-display text-lg font-semibold text-nexora-dark">
+            <h3 className="mt-4 font-display text-lg font-semibold text-barber-dark">
               Nenhum cliente encontrado
             </h3>
-            <p className="mt-1 max-w-xs text-sm text-nexora-text-secondary">
+            <p className="mt-1 max-w-xs text-sm text-barber-text-secondary">
               {hasActiveFilters
                 ? "Tente ajustar os filtros ou buscar por outro termo."
                 : "Comece adicionando seu primeiro cliente."}
@@ -334,7 +334,7 @@ export default function ClientesPage() {
             {!hasActiveFilters && (
               <Link
                 href="/dashboard/clientes/novo"
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white hover:bg-nexora-blue/90"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white hover:bg-barber-blue/90"
               >
                 <Plus className="h-4 w-4" />
                 Novo cliente
@@ -345,41 +345,41 @@ export default function ClientesPage() {
           /* Responsive Table */
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-nexora-border bg-nexora-bg-secondary">
+              <thead className="border-b border-barber-border bg-barber-bg-secondary">
                 <tr>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Nome
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Tipo
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     E-mail
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Telefone
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Categoria
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Status
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
                     Cadastrado em
                   </th>
-                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-nexora-text-secondary">
+                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">
                     Ações
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {customers.map((customer) => (
                   <tr
                     key={customer.id}
-                    className="transition-colors hover:bg-nexora-bg-secondary/50"
+                    className="transition-colors hover:bg-barber-bg-secondary/50"
                   >
-                    <td className="whitespace-nowrap px-4 py-3 font-medium text-nexora-dark">
+                    <td className="whitespace-nowrap px-4 py-3 font-medium text-barber-dark">
                       {customer.name}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
@@ -393,19 +393,19 @@ export default function ClientesPage() {
                         {customer.customer_type === "pj" ? "PJ" : "PF"}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-nexora-text">
+                    <td className="whitespace-nowrap px-4 py-3 text-barber-text">
                       {customer.email || (
-                        <span className="text-nexora-text-secondary">—</span>
+                        <span className="text-barber-text-secondary">—</span>
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-nexora-text">
+                    <td className="whitespace-nowrap px-4 py-3 text-barber-text">
                       {customer.phone || (
-                        <span className="text-nexora-text-secondary">—</span>
+                        <span className="text-barber-text-secondary">—</span>
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-nexora-text">
+                    <td className="whitespace-nowrap px-4 py-3 text-barber-text">
                       {customer.category || (
-                        <span className="text-nexora-text-secondary">—</span>
+                        <span className="text-barber-text-secondary">—</span>
                       )}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
@@ -419,21 +419,21 @@ export default function ClientesPage() {
                         {customer.status === "active" ? "Ativo" : "Inativo"}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-nexora-text">
+                    <td className="whitespace-nowrap px-4 py-3 text-barber-text">
                       {formatDate(customer.created_at)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <Link
                           href={`/dashboard/clientes/${customer.id}/editar`}
-                          className="rounded-md p-1.5 text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-blue"
+                          className="rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-blue"
                           title="Editar"
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
                         <button
                           onClick={() => setArchiveTarget(customer.id)}
-                          className="rounded-md p-1.5 text-nexora-text-secondary transition-colors hover:bg-nexora-bg-secondary hover:text-red-600"
+                          className="rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-red-600"
                           title="Arquivar"
                         >
                           <Archive className="h-4 w-4" />
@@ -449,27 +449,27 @@ export default function ClientesPage() {
 
         {/* Pagination */}
         {!loading && customers.length > 0 && totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-nexora-border px-4 py-3">
-            <p className="text-sm text-nexora-text-secondary">
+          <div className="flex items-center justify-between border-t border-barber-border px-4 py-3">
+            <p className="text-sm text-barber-text-secondary">
               Mostrando{" "}
-              <span className="font-medium text-nexora-dark">
+              <span className="font-medium text-barber-dark">
                 {(currentPage - 1) * pageSize + 1}
               </span>{" "}
               –{" "}
-              <span className="font-medium text-nexora-dark">
+              <span className="font-medium text-barber-dark">
                 {Math.min(currentPage * pageSize, total)}
               </span>{" "}
-              de <span className="font-medium text-nexora-dark">{total}</span>
+              de <span className="font-medium text-barber-dark">{total}</span>
             </p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage <= 1}
-                className="rounded-lg border border-nexora-border px-3 py-1.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg border border-barber-border px-3 py-1.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Anterior
               </button>
-              <span className="text-sm text-nexora-text-secondary">
+              <span className="text-sm text-barber-text-secondary">
                 Página {currentPage} de {totalPages}
               </span>
               <button
@@ -477,7 +477,7 @@ export default function ClientesPage() {
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
                 disabled={currentPage >= totalPages}
-                className="rounded-lg border border-nexora-border px-3 py-1.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg border border-barber-border px-3 py-1.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Próxima
               </button>

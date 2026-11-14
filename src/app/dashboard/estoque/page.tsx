@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import Link from "next/link";
 import {
   Warehouse,
@@ -31,20 +34,20 @@ export default async function EstoquePage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Controle de Estoque
         </h1>
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/estoque/movimentacoes"
-            className="inline-flex items-center gap-2 rounded-lg border border-nexora-border bg-white px-4 py-2 text-sm font-medium text-nexora-dark hover:bg-nexora-light transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-white px-4 py-2 text-sm font-medium text-barber-dark hover:bg-barber-light transition-colors"
           >
             <ArrowLeftRight className="w-4 h-4" />
             Movimentações
           </Link>
           <Link
             href="/dashboard/estoque/depositos"
-            className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
           >
             <Warehouse className="w-4 h-4" />
             Depósitos
@@ -54,56 +57,56 @@ export default async function EstoquePage() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
               <Warehouse className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm text-nexora-muted">Depósitos Ativos</p>
-              <p className="text-2xl font-bold text-nexora-dark">
+              <p className="text-sm text-barber-muted">Depósitos Ativos</p>
+              <p className="text-2xl font-bold text-barber-dark">
                 {stats.total_warehouses}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm text-nexora-muted">Movimentações (Mês)</p>
-              <p className="text-2xl font-bold text-nexora-dark">
+              <p className="text-sm text-barber-muted">Movimentações (Mês)</p>
+              <p className="text-2xl font-bold text-barber-dark">
                 {stats.total_movements_month}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
               <Box className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm text-nexora-muted">Itens com Reserva</p>
-              <p className="text-2xl font-bold text-nexora-dark">
+              <p className="text-sm text-barber-muted">Itens com Reserva</p>
+              <p className="text-2xl font-bold text-barber-dark">
                 {stats.items_with_reservations}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-600">
               <Package className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm text-nexora-muted">Qtd. Reservada</p>
-              <p className="text-2xl font-bold text-nexora-dark">
+              <p className="text-sm text-barber-muted">Qtd. Reservada</p>
+              <p className="text-2xl font-bold text-barber-dark">
                 {stats.total_reserved_quantity}
               </p>
             </div>
@@ -113,7 +116,7 @@ export default async function EstoquePage() {
 
       {/* Alerts Section */}
       <section>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-nexora-dark">
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-barber-dark">
           <AlertTriangle className="w-5 h-5 text-amber-500" />
           Alertas de Estoque
         </h2>
@@ -129,18 +132,18 @@ export default async function EstoquePage() {
             {alerts.map((alert, idx) => (
               <div
                 key={`${alert.product_id}-${alert.warehouse_id}-${alert.variant_id ?? "base"}-${idx}`}
-                className="rounded-xl border border-nexora-border bg-white p-4 shadow-sm"
+                className="rounded-xl border border-barber-border bg-white p-4 shadow-sm"
               >
                 <div className="mb-3 flex items-start justify-between">
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/dashboard/produtos/${alert.product_id}`}
-                      className="truncate text-sm font-semibold text-nexora-dark hover:text-nexora-blue hover:underline"
+                      className="truncate text-sm font-semibold text-barber-dark hover:text-barber-blue hover:underline"
                     >
                       {alert.product_name}
                     </Link>
                     {alert.product_sku && (
-                      <p className="text-xs text-nexora-muted">
+                      <p className="text-xs text-barber-muted">
                         SKU: {alert.product_sku}
                       </p>
                     )}
@@ -160,20 +163,20 @@ export default async function EstoquePage() {
 
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-nexora-muted">Depósito:</span>
-                    <span className="font-medium text-nexora-dark">
+                    <span className="text-barber-muted">Depósito:</span>
+                    <span className="font-medium text-barber-dark">
                       {alert.warehouse_name}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-nexora-muted">Disponível:</span>
-                    <span className="font-medium text-nexora-dark">
+                    <span className="text-barber-muted">Disponível:</span>
+                    <span className="font-medium text-barber-dark">
                       {alert.quantity_available}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-nexora-muted">Mínimo:</span>
-                    <span className="font-medium text-nexora-dark">
+                    <span className="text-barber-muted">Mínimo:</span>
+                    <span className="font-medium text-barber-dark">
                       {alert.minimum_stock}
                     </span>
                   </div>
@@ -186,42 +189,42 @@ export default async function EstoquePage() {
 
       {/* Quick Balance Table */}
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-nexora-dark">
+        <h2 className="mb-3 text-lg font-semibold text-barber-dark">
           Saldo de Estoque
         </h2>
 
         {topBalances.length === 0 ? (
-          <div className="rounded-xl border border-nexora-border bg-white p-6 text-center">
-            <p className="text-nexora-muted">
+          <div className="rounded-xl border border-barber-border bg-white p-6 text-center">
+            <p className="text-barber-muted">
               Nenhum saldo de estoque registrado.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-nexora-border bg-white shadow-sm">
+          <div className="overflow-x-auto rounded-xl border border-barber-border bg-white shadow-sm">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-nexora-border bg-nexora-light/50">
+              <thead className="border-b border-barber-border bg-barber-light/50">
                 <tr>
-                  <th className="px-4 py-3 font-semibold text-nexora-dark">
+                  <th className="px-4 py-3 font-semibold text-barber-dark">
                     Produto
                   </th>
-                  <th className="px-4 py-3 font-semibold text-nexora-dark">
+                  <th className="px-4 py-3 font-semibold text-barber-dark">
                     SKU
                   </th>
-                  <th className="px-4 py-3 font-semibold text-nexora-dark">
+                  <th className="px-4 py-3 font-semibold text-barber-dark">
                     Depósito
                   </th>
-                  <th className="px-4 py-3 text-right font-semibold text-nexora-dark">
+                  <th className="px-4 py-3 text-right font-semibold text-barber-dark">
                     Em Mão
                   </th>
-                  <th className="px-4 py-3 text-right font-semibold text-nexora-dark">
+                  <th className="px-4 py-3 text-right font-semibold text-barber-dark">
                     Reservado
                   </th>
-                  <th className="px-4 py-3 text-right font-semibold text-nexora-dark">
+                  <th className="px-4 py-3 text-right font-semibold text-barber-dark">
                     Disponível
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {topBalances.map((balance) => {
                   const onHand = Number(balance.quantity_on_hand);
                   const reserved = Number(balance.quantity_reserved);
@@ -230,34 +233,34 @@ export default async function EstoquePage() {
                   return (
                     <tr
                       key={balance.id}
-                      className="hover:bg-nexora-light/30 transition-colors"
+                      className="hover:bg-barber-light/30 transition-colors"
                     >
                       <td className="px-4 py-3">
                         <Link
                           href={`/dashboard/produtos/${balance.product.id}`}
-                          className="font-medium text-nexora-dark hover:text-nexora-blue hover:underline"
+                          className="font-medium text-barber-dark hover:text-barber-blue hover:underline"
                         >
                           {balance.product.name}
                         </Link>
                         {balance.variant && (
-                          <span className="ml-1 text-xs text-nexora-muted">
+                          <span className="ml-1 text-xs text-barber-muted">
                             ({balance.variant.name})
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-nexora-muted">
+                      <td className="px-4 py-3 text-barber-muted">
                         {balance.variant?.sku ?? balance.product.sku ?? "—"}
                       </td>
-                      <td className="px-4 py-3 text-nexora-dark">
+                      <td className="px-4 py-3 text-barber-dark">
                         {balance.warehouse.name}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-nexora-dark">
+                      <td className="px-4 py-3 text-right tabular-nums text-barber-dark">
                         {onHand}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-nexora-muted">
+                      <td className="px-4 py-3 text-right tabular-nums text-barber-muted">
                         {reserved}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums font-medium text-nexora-dark">
+                      <td className="px-4 py-3 text-right tabular-nums font-medium text-barber-dark">
                         {available}
                       </td>
                     </tr>
@@ -272,7 +275,7 @@ export default async function EstoquePage() {
           <div className="mt-3 text-center">
             <Link
               href="/dashboard/estoque/saldos"
-              className="text-sm font-medium text-nexora-blue hover:underline"
+              className="text-sm font-medium text-barber-blue hover:underline"
             >
               Ver todos os saldos ({balances.length})
             </Link>

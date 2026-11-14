@@ -153,7 +153,12 @@ export interface BarberProfile {
  commission_type: CommissionType;
  commission_rate: number;
  bio: string | null;
+ instagram: string | null;
  is_available_for_booking: boolean;
+ total_appointments: number;
+ total_revenue: number;
+ avg_rating: number | null;
+ last_appointment_at: string | null;
  created_at: string;
  updated_at: string;
 }

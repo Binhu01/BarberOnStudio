@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import { ShieldAlert, CheckCircle2, XCircle, Clock, Ban, Users } from "lucide-react";
 import { getApprovalRequests } from "../actions";
@@ -27,22 +30,22 @@ export default async function AprovacoesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Aprovações</h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Aprovações</h1>
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Solicitações de operações críticas que requerem aprovação unânime dos proprietários
         </p>
       </div>
 
       {/* Pending Requests */}
       <div className="space-y-3">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">
           Pendentes ({pending.length})
         </h2>
         {pending.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-nexora-border bg-white py-12">
-            <ShieldAlert className="mb-4 h-10 w-10 text-nexora-text-secondary/40" />
-            <p className="text-base font-medium text-nexora-dark">Nenhuma aprovação pendente</p>
-            <p className="text-sm text-nexora-text-secondary">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-barber-border bg-white py-12">
+            <ShieldAlert className="mb-4 h-10 w-10 text-barber-text-secondary/40" />
+            <p className="text-base font-medium text-barber-dark">Nenhuma aprovação pendente</p>
+            <p className="text-sm text-barber-text-secondary">
               Operações críticas como promoção ou remoção de proprietários aparecerão aqui.
             </p>
           </div>
@@ -59,20 +62,20 @@ export default async function AprovacoesPage() {
                       <ShieldAlert className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
-                      <h3 className="font-display text-base font-semibold text-nexora-dark">
+                      <h3 className="font-display text-base font-semibold text-barber-dark">
                         {typeLabels[req.request_type] ?? req.request_type}
                       </h3>
-                      <p className="mt-1 text-sm text-nexora-text-secondary">
+                      <p className="mt-1 text-sm text-barber-text-secondary">
                         Solicitado por{" "}
-                        <span className="font-medium text-nexora-dark">
+                        <span className="font-medium text-barber-dark">
                           {req.requester_name ?? req.requested_by.slice(0, 8)}
                         </span>{" "}
                         · Alvo:{" "}
-                        <span className="font-medium text-nexora-dark">
+                        <span className="font-medium text-barber-dark">
                           {req.target_member_name ?? req.target_membership_id.slice(0, 8)}
                         </span>
                       </p>
-                      <p className="mt-2 text-sm text-nexora-text">{req.description}</p>
+                      <p className="mt-2 text-sm text-barber-text">{req.description}</p>
                     </div>
                   </div>
                   <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
@@ -82,8 +85,8 @@ export default async function AprovacoesPage() {
                 </div>
 
                 {/* Votes Summary */}
-                <div className="mt-4 rounded-lg bg-nexora-bg-secondary p-3">
-                  <div className="flex items-center gap-2 text-xs font-medium text-nexora-text-secondary">
+                <div className="mt-4 rounded-lg bg-barber-bg-secondary p-3">
+                  <div className="flex items-center gap-2 text-xs font-medium text-barber-text-secondary">
                     <Users className="h-3.5 w-3.5" />
                     Votos registrados: {req.votes?.length ?? 0}
                   </div>
@@ -92,7 +95,7 @@ export default async function AprovacoesPage() {
                       {req.votes.map((vote, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center gap-2 text-xs text-nexora-text"
+                          className="flex items-center gap-2 text-xs text-barber-text"
                         >
                           {vote.decision === "approve" ? (
                             <CheckCircle2 className="h-3 w-3 text-green-600" />
@@ -102,11 +105,11 @@ export default async function AprovacoesPage() {
                           <span className="font-medium">
                             {vote.voter_name ?? "Votador"}
                           </span>
-                          <span className="text-nexora-text-secondary">
+                          <span className="text-barber-text-secondary">
                             — {vote.decision === "approve" ? "Aprovou" : "Rejeitou"}
                           </span>
                           {vote.note && (
-                            <span className="truncate text-nexora-text-secondary/70">
+                            <span className="truncate text-barber-text-secondary/70">
                               · {vote.note}
                             </span>
                           )}
@@ -140,37 +143,37 @@ export default async function AprovacoesPage() {
       {/* Resolved Requests */}
       {resolved.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-display text-lg font-semibold text-nexora-text-secondary">
+          <h2 className="font-display text-lg font-semibold text-barber-text-secondary">
             Histórico
           </h2>
-          <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm opacity-80">
+          <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm opacity-80">
             <table className="w-full">
-              <thead className="border-b border-nexora-border bg-nexora-bg">
+              <thead className="border-b border-barber-border bg-barber-bg">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
                     Tipo
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
                     Solicitante
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
                     Data
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {resolved.slice(0, 20).map((req) => {
                   const config = statusConfig[req.status] ?? statusConfig.pending;
                   const Icon = config.icon;
                   return (
                     <tr key={req.id}>
-                      <td className="px-4 py-3 text-sm font-medium text-nexora-dark">
+                      <td className="px-4 py-3 text-sm font-medium text-barber-dark">
                         {typeLabels[req.request_type] ?? req.request_type}
                       </td>
-                      <td className="px-4 py-3 text-sm text-nexora-text">
+                      <td className="px-4 py-3 text-sm text-barber-text">
                         {req.requester_name ?? req.requested_by.slice(0, 8)}
                       </td>
                       <td className="px-4 py-3">
@@ -181,7 +184,7 @@ export default async function AprovacoesPage() {
                           {config.label}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-nexora-text-secondary">
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-text-secondary">
                         {new Date(req.created_at).toLocaleDateString("pt-BR")}
                       </td>
                     </tr>

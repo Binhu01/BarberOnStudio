@@ -35,7 +35,7 @@ export function ConvertButton({ quoteId }: { quoteId: string }) {
       <button
         onClick={() => setShowConfirm(true)}
         disabled={loading}
-        className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:opacity-50"
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
         Converter em Pedido
@@ -43,11 +43,11 @@ export function ConvertButton({ quoteId }: { quoteId: string }) {
 
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-sm rounded-xl border border-nexora-border bg-white p-6 shadow-lg">
-            <h3 className="font-display text-lg font-semibold text-nexora-dark">
+          <div className="w-full max-w-sm rounded-xl border border-barber-border bg-white p-6 shadow-lg">
+            <h3 className="font-display text-lg font-semibold text-barber-dark">
               Converter em Pedido
             </h3>
-            <p className="mt-2 text-sm text-nexora-text-secondary">
+            <p className="mt-2 text-sm text-barber-text-secondary">
               Esta ação criará um novo pedido com base neste orçamento e marcará o orçamento como convertido. Deseja continuar?
             </p>
             {error && (
@@ -62,14 +62,14 @@ export function ConvertButton({ quoteId }: { quoteId: string }) {
                   setError(null);
                 }}
                 disabled={loading}
-                className="rounded-lg border border-nexora-border px-4 py-2 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:opacity-50"
+                className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConvert}
                 disabled={loading}
-                className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white hover:bg-nexora-blue/90 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white hover:bg-barber-blue/90 disabled:opacity-50"
               >
                 {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {loading ? "Convertendo..." : "Confirmar"}

@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -48,18 +51,18 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
       {/* Breadcrumb */}
       <Link
         href="/dashboard/tarefas"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para tarefas
       </Link>
 
       {/* Header Card */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-display text-2xl font-bold text-nexora-dark">{task.title}</h1>
+              <h1 className="font-display text-2xl font-bold text-barber-dark">{task.title}</h1>
               <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-bold ${statusInfo.color}`}>
                 {statusInfo.label}
               </span>
@@ -67,25 +70,25 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
                 {priorityInfo.label}
               </span>
             </div>
-            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-nexora-text-secondary">
+            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-barber-text-secondary">
               <span className="flex items-center gap-1.5">
-                <User className="h-4 w-4 text-nexora-blue" />
+                <User className="h-4 w-4 text-barber-blue" />
                 Criado por: {task.creator_name}
               </span>
               {task.assignee_name && (
                 <span className="flex items-center gap-1.5">
-                  <User className="h-4 w-4 text-nexora-cyan" />
+                  <User className="h-4 w-4 text-barber-cyan" />
                   Responsável: {task.assignee_name}
                 </span>
               )}
               {task.due_date && (
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4 text-nexora-blue" />
+                  <Calendar className="h-4 w-4 text-barber-blue" />
                   Prazo: {new Date(task.due_date).toLocaleDateString("pt-BR")}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-nexora-blue" />
+                <Clock className="h-4 w-4 text-barber-blue" />
                 Criado em: {new Date(task.created_at).toLocaleDateString("pt-BR")}
               </span>
             </div>
@@ -93,29 +96,29 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
         </div>
 
         {task.description && (
-          <div className="mt-6 rounded-lg bg-nexora-bg-secondary/50 p-4">
-            <p className="whitespace-pre-line text-sm text-nexora-text-secondary">{task.description}</p>
+          <div className="mt-6 rounded-lg bg-barber-bg-secondary/50 p-4">
+            <p className="whitespace-pre-line text-sm text-barber-text-secondary">{task.description}</p>
           </div>
         )}
       </div>
 
       {/* Checklist */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">
           Checklist ({task.checklist_completed}/{task.checklist_total})
         </h2>
         {checklists.length === 0 ? (
-          <p className="mt-4 text-sm text-nexora-text-secondary">Nenhum item no checklist.</p>
+          <p className="mt-4 text-sm text-barber-text-secondary">Nenhum item no checklist.</p>
         ) : (
           <div className="mt-4 space-y-2">
             {checklists.map((item) => (
-              <div key={item.id} className="flex items-center gap-3 rounded-lg border border-nexora-border p-3">
+              <div key={item.id} className="flex items-center gap-3 rounded-lg border border-barber-border p-3">
                 {item.is_completed ? (
                   <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
                 ) : (
-                  <Circle className="h-5 w-5 shrink-0 text-nexora-border" />
+                  <Circle className="h-5 w-5 shrink-0 text-barber-border" />
                 )}
-                <span className={`text-sm ${item.is_completed ? "text-nexora-text-secondary line-through" : "text-nexora-dark"}`}>
+                <span className={`text-sm ${item.is_completed ? "text-barber-text-secondary line-through" : "text-barber-dark"}`}>
                   {item.title}
                 </span>
               </div>
@@ -126,8 +129,8 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
 
       {/* Subtasks */}
       {subtasks.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">
             Subtarefas ({subtasks.length})
           </h2>
           <div className="mt-4 space-y-2">
@@ -137,9 +140,9 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
                 <Link
                   key={sub.id}
                   href={`/dashboard/tarefas/${sub.id}`}
-                  className="flex items-center justify-between rounded-lg border border-nexora-border p-3 transition-colors hover:bg-nexora-bg-secondary/30"
+                  className="flex items-center justify-between rounded-lg border border-barber-border p-3 transition-colors hover:bg-barber-bg-secondary/30"
                 >
-                  <span className="text-sm font-medium text-nexora-dark">{sub.title}</span>
+                  <span className="text-sm font-medium text-barber-dark">{sub.title}</span>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${subStatus.color}`}>
                     {subStatus.label}
                   </span>

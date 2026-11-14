@@ -862,3 +862,194 @@ export async function getFinancialDashboard() {
     projected_balance: totalBalance + receivablesAmountOpen - payablesAmountOpen,
   };
 }
+
+// ============================================================================
+// MONTHLY CLOSING — Fechamento mensal automatizado
+// ============================================================================
+
+export async function generateMonthlyClosing(params: {
+  year: number;
+  month: number;
+}): Promise<{ success: true; closing_id: string }> {
+  const { supabase, orgId } = await getCtx();
+
+  const { data, error } = await supabase.rpc("generate_monthly_closing", {
+    p_org_id: orgId,
+    p_year: params.year,
+    p_month: params.month,
+  });
+
+  if (error) throw error;
+
+  reval();
+  return { success: true, closing_id: data };
+}
+
+export async function getMonthlyClosings(params?: {
+  year?: number;
+}): Promise<{
+  id: string;
+  period_year: number;
+  period_month: number;
+  period_label: string;
+  total_income: number;
+  total_expense: number;
+  net_flow: number;
+  commissions_total: number;
+  orders_count: number;
+  appointments_count: number;
+  closing_balance: number;
+  status: string;
+  closed_at: string | null;
+  net_margin_pct: number;
+  avg_ticket: number;
+}[]> {
+  const { supabase, orgId } = await getCtx();
+
+  let query = supabase
+    .from("v_financial_dre")
+    .select("*")
+    .eq("organization_id", orgId)
+    .order("period_year", { ascending: false })
+    .order("period_month", { ascending: false })
+    .limit(24);
+
+  if (params?.year) {
+    query = query.eq("period_year", params.year);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    // View pode não existir se migration pendente
+    if (error.code === "42P01") return [];
+    throw error;
+  }
+
+  return (data ?? []).map((row: any) => ({
+    ...row,
+    total_income: Number(row.total_income ?? 0),
+    total_expense: Number(row.total_expense ?? 0),
+    net_flow: Number(row.net_flow ?? 0),
+    commissions_total: Number(row.commissions_total ?? 0),
+    closing_balance: Number(row.closing_balance ?? 0),
+    net_margin_pct: Number(row.net_margin_pct ?? 0),
+    avg_ticket: Number(row.avg_ticket ?? 0),
+  }));
+}
+
+export async function closeMonthlyPeriod(params: {
+  closing_id: string;
+  notes?: string | null;
+}): Promise<{ success: true }> {
+  const { supabase, orgId, user } = await getCtx();
+
+  const { error } = await supabase
+    .from("financial_monthly_closings")
+    .update({
+      status: "closed",
+      closed_by: user.id,
+      closed_at: new Date().toISOString(),
+      notes: params.notes ?? null,
+    })
+    .eq("id", params.closing_id)
+    .eq("organization_id", orgId);
+
+  if (error) throw error;
+
+  await supabase.rpc("log_audit", {
+    p_org_id: orgId,
+    p_actor: user.id,
+    p_action: "monthly_closing_closed",
+    p_module: "financial",
+    p_resource_type: "financial_monthly_closing",
+    p_resource_id: params.closing_id,
+  });
+
+  reval();
+  return { success: true };
+}
+
+export async function reopenMonthlyPeriod(closingId: string): Promise<{ success: true }> {
+  const { supabase, orgId, user } = await getCtx();
+
+  const { error } = await supabase
+    .from("financial_monthly_closings")
+    .update({
+      status: "reopened",
+      closed_by: null,
+      closed_at: null,
+    })
+    .eq("id", closingId)
+    .eq("organization_id", orgId);
+
+  if (error) throw error;
+
+  await supabase.rpc("log_audit", {
+    p_org_id: orgId,
+    p_actor: user.id,
+    p_action: "monthly_closing_reopened",
+    p_module: "financial",
+    p_resource_type: "financial_monthly_closing",
+    p_resource_id: closingId,
+  });
+
+  reval();
+  return { success: true };
+}
+
+// ============================================================================
+// ORDER → RECEIVABLE — Geração manual de recebível a partir de comanda
+// ============================================================================
+
+export async function generateReceivableFromOrder(orderId: string): Promise<{ success: true; receivable_id: string | null }> {
+  const { supabase, orgId } = await getCtx();
+
+  // Verificar se a comanda existe e está completada
+  const { data: order } = await supabase
+    .from("orders")
+    .select("id, status, total, receivable_generated")
+    .eq("id", orderId)
+    .eq("organization_id", orgId)
+    .single();
+
+  if (!order) throw new Error("Comanda não encontrada");
+  if (order.status !== "completed") throw new Error("Apenas comandas finalizadas podem gerar recebíveis");
+  if ((order as any).receivable_generated) throw new Error("Recebível já foi gerado para esta comanda");
+
+  const { data, error } = await supabase.rpc("generate_receivable_from_completed_order", {
+    p_order_id: orderId,
+  });
+
+  if (error) {
+    // Fallback: se RPC não existir, criar manualmente
+    if (error.message?.includes("does not exist")) {
+      const { data: recv, error: recvErr } = await supabase
+        .from("receivables")
+        .insert({
+          organization_id: orgId,
+          order_id: orderId,
+          description: `Comanda #${orderId.slice(0, 8)}`,
+          original_amount: order.total,
+          issue_date: new Date().toISOString().split("T")[0],
+          due_date: new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
+          status: "open",
+        })
+        .select("id")
+        .single();
+
+      if (recvErr) throw recvErr;
+
+      await supabase
+        .from("orders")
+        .update({ receivable_generated: true, receivable_id: recv.id })
+        .eq("id", orderId);
+
+      reval();
+      return { success: true, receivable_id: recv.id };
+    }
+    throw new Error(error.message);
+  }
+
+  reval();
+  return { success: true, receivable_id: data };
+}

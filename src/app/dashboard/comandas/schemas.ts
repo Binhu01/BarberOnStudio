@@ -28,11 +28,20 @@ export const updateComandaItemSchema = z.object({
   notes: z.string().max(300).nullable().optional(),
 });
 
+export const orderPaymentSchema = z.object({
+  payment_method: z.enum(["cash", "pix", "debit", "credit", "other"]),
+  amount: z.number().positive("Valor deve ser maior que zero"),
+  change_amount: z.number().min(0).optional().default(0),
+  reference: z.string().max(200).nullable().optional(),
+});
+
 export const completeComandaSchema = z.object({
   order_id: z.string().uuid(),
   payment_method: z.enum(["cash", "pix", "debit", "credit", "other"]),
   discount: z.number().min(0).optional().default(0),
   notes: z.string().max(500).nullable().optional(),
+  payments: z.array(orderPaymentSchema).min(1).optional(),
+  linked_appointment_id: z.string().uuid().nullable().optional(),
 });
 
 // -----------------------------------------------------------------------------

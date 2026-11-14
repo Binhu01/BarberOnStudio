@@ -71,16 +71,16 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-nexora-bg px-4">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-nexora-border bg-white p-8 shadow-sm">
+    <div className="flex min-h-screen items-center justify-center bg-barber-bg px-4">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-barber-border bg-white p-8 shadow-sm">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-nexora-blue/10 text-nexora-blue">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-barber-blue/10 text-barber-blue">
             <Building2 className="h-7 w-7" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-nexora-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-dark">
             Crie sua empresa
           </h1>
-          <p className="mt-2 text-sm text-nexora-text-secondary">
+          <p className="mt-2 text-sm text-barber-text-secondary">
             Configure o ambiente da sua organização para começar a usar o Nexora.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
           <div>
             <label
               htmlFor="name"
-              className="mb-1 block text-sm font-medium text-nexora-text"
+              className="mb-1 block text-sm font-medium text-barber-text"
             >
               Nome da empresa
             </label>
@@ -101,11 +101,11 @@ export default function OnboardingPage() {
                 register("name").onChange(e);
                 handleNameChange(e);
               }}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2.5 text-sm outline-none transition-colors focus:border-nexora-blue focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2.5 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
               placeholder="Ex: Minha Empresa Ltda"
             />
             {errors.name && (
-              <p className="mt-1 text-xs text-nexora-error">
+              <p className="mt-1 text-xs text-barber-error">
                 {errors.name.message}
               </p>
             )}
@@ -114,36 +114,36 @@ export default function OnboardingPage() {
           <div>
             <label
               htmlFor="slug"
-              className="mb-1 block text-sm font-medium text-nexora-text"
+              className="mb-1 block text-sm font-medium text-barber-text"
             >
               Identificador
             </label>
             <div className="flex items-center gap-2">
-              <span className="shrink-0 rounded-lg border border-nexora-border bg-nexora-bg-secondary px-3 py-2.5 text-sm text-nexora-text-secondary">
-                nexora.com/
+              <span className="shrink-0 rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2.5 text-sm text-barber-text-secondary">
+                barberon.com.br/
               </span>
               <input
                 id="slug"
                 type="text"
                 {...register("slug")}
                 onFocus={() => setSlugEdited(true)}
-                className="w-full rounded-lg border border-nexora-border px-3 py-2.5 text-sm outline-none transition-colors focus:border-nexora-blue focus:ring-1 focus:ring-nexora-blue"
+                className="w-full rounded-lg border border-barber-border px-3 py-2.5 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
                 placeholder="minha-empresa"
               />
             </div>
             {errors.slug ? (
-              <p className="mt-1 text-xs text-nexora-error">
+              <p className="mt-1 text-xs text-barber-error">
                 {errors.slug.message}
               </p>
             ) : (
-              <p className="mt-1 text-xs text-nexora-text-secondary">
+              <p className="mt-1 text-xs text-barber-text-secondary">
                 Usado na URL da sua organização. Pode ser editado.
               </p>
             )}
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-nexora-error">
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-barber-error">
               {error}
             </div>
           )}
@@ -151,7 +151,7 @@ export default function OnboardingPage() {
           <button
             type="submit"
             disabled={loading || !slugValue}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-nexora-blue py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-barber-blue py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Criar organização

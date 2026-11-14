@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveOrganization, getOrganizationMemberCount } from "@/lib/organizations";

@@ -110,20 +110,20 @@ export function ReportDateFilter({ value, onChange, className = "" }: ReportDate
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-lg border border-nexora-border bg-white px-3 py-2 text-sm font-medium text-nexora-dark shadow-sm transition-colors hover:bg-nexora-bg-secondary"
+        className="flex items-center gap-2 rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-dark shadow-sm transition-colors hover:bg-barber-bg-secondary"
       >
-        <Calendar className="h-4 w-4 text-nexora-text-secondary" />
+        <Calendar className="h-4 w-4 text-barber-text-secondary" />
         <span className="max-w-[180px] truncate">{activeLabel}</span>
-        <ChevronDown className={`h-3.5 w-3.5 text-nexora-text-secondary transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-3.5 w-3.5 text-barber-text-secondary transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-nexora-border bg-white p-3 shadow-lg">
+          <div className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-barber-border bg-white p-3 shadow-lg">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-semibold text-nexora-text-secondary uppercase tracking-wide">Período</span>
-              <button type="button" onClick={() => setOpen(false)} className="rounded p-0.5 text-nexora-text-secondary hover:bg-nexora-bg-secondary">
+              <span className="text-xs font-semibold text-barber-text-secondary uppercase tracking-wide">Período</span>
+              <button type="button" onClick={() => setOpen(false)} className="rounded p-0.5 text-barber-text-secondary hover:bg-barber-bg-secondary">
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
@@ -136,8 +136,8 @@ export function ReportDateFilter({ value, onChange, className = "" }: ReportDate
                   onClick={() => handlePreset(preset.key)}
                   className={`rounded-md px-2.5 py-1.5 text-left text-sm transition-colors ${
                     value.preset === preset.key
-                      ? "bg-nexora-blue text-white"
-                      : "text-nexora-dark hover:bg-nexora-bg-secondary"
+                      ? "bg-barber-blue text-white"
+                      : "text-barber-dark hover:bg-barber-bg-secondary"
                   }`}
                 >
                   {preset.label}
@@ -145,23 +145,23 @@ export function ReportDateFilter({ value, onChange, className = "" }: ReportDate
               ))}
             </div>
 
-            <div className="mt-3 border-t border-nexora-border pt-3">
-              <p className="mb-1.5 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wide">Personalizado</p>
+            <div className="mt-3 border-t border-barber-border pt-3">
+              <p className="mb-1.5 text-xs font-semibold text-barber-text-secondary uppercase tracking-wide">Personalizado</p>
               <div className="flex items-center gap-2">
                 <input
                   type="date"
                   value={value.from}
                   max={value.to}
                   onChange={(e) => handleCustomChange("from", e.target.value)}
-                  className="w-full rounded-md border border-nexora-border px-2 py-1.5 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                  className="w-full rounded-md border border-barber-border px-2 py-1.5 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                 />
-                <span className="text-xs text-nexora-text-secondary">até</span>
+                <span className="text-xs text-barber-text-secondary">até</span>
                 <input
                   type="date"
                   value={value.to}
                   min={value.from}
                   onChange={(e) => handleCustomChange("to", e.target.value)}
-                  className="w-full rounded-md border border-nexora-border px-2 py-1.5 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                  className="w-full rounded-md border border-barber-border px-2 py-1.5 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                 />
               </div>
             </div>

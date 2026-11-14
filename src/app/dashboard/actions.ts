@@ -27,7 +27,7 @@ export async function switchOrganization(organizationId: string) {
   }
 
   const cookieStore = await cookies();
-  cookieStore.set("nexora_active_org", organizationId, {
+  cookieStore.set("barber_active_org", organizationId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

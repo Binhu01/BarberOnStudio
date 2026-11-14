@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import {
@@ -36,8 +39,8 @@ export default async function IntelligencePage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="font-display text-2xl font-bold text-nexora-dark">Nexora Intelligence</h1>
-          <p className="mt-1 text-sm text-nexora-text-secondary">
+          <h1 className="font-display text-2xl font-bold text-barber-dark">Nexora Intelligence</h1>
+          <p className="mt-1 text-sm text-barber-text-secondary">
             Assistente empresarial com inteligência artificial integrado à plataforma.
           </p>
         </div>
@@ -71,12 +74,12 @@ export default async function IntelligencePage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexora-blue to-nexora-cyan shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-barber-blue to-barber-cyan shadow-md">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-display text-2xl font-bold text-nexora-dark">Nexora Intelligence</h1>
-            <p className="text-xs text-nexora-text-secondary">
+            <h1 className="font-display text-2xl font-bold text-barber-dark">Nexora Intelligence</h1>
+            <p className="text-xs text-barber-text-secondary">
               Assistente empresarial · {conversations.length} conversa{conversations.length !== 1 ? "s" : ""}
             </p>
           </div>
@@ -84,14 +87,14 @@ export default async function IntelligencePage() {
         <div className="flex gap-2">
           <Link
             href="/dashboard/intelligence/configuracoes"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-nexora-border bg-white px-4 py-2 text-sm font-medium text-nexora-dark transition-colors hover:bg-nexora-bg-secondary"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-white px-4 py-2 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-bg-secondary"
           >
             <Settings className="h-4 w-4" />
             Configurações
           </Link>
           <Link
             href="/dashboard/intelligence/novo"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
           >
             <MessageSquarePlus className="h-4 w-4" />
             Nova conversa
@@ -101,24 +104,24 @@ export default async function IntelligencePage() {
 
       {/* Insights Section */}
       {insights.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Insights recentes</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Insights recentes</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {insights.slice(0, 6).map((insight) => (
               <div
                 key={insight.id}
-                className="rounded-lg border border-nexora-border bg-nexora-bg-secondary/30 p-4 transition-colors hover:bg-nexora-bg-secondary/60"
+                className="rounded-lg border border-barber-border bg-barber-bg-secondary/30 p-4 transition-colors hover:bg-barber-bg-secondary/60"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <span className="rounded-full bg-nexora-blue/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexora-blue">
+                  <span className="rounded-full bg-barber-blue/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-barber-blue">
                     {insight.insight_type.replace(/_/g, " ")}
                   </span>
-                  <span className="text-[10px] text-nexora-text-secondary">
+                  <span className="text-[10px] text-barber-text-secondary">
                     {new Date(insight.generated_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
-                <h3 className="mt-2 text-sm font-medium text-nexora-dark">{insight.title}</h3>
-                <p className="mt-1 line-clamp-2 text-xs text-nexora-text-secondary">{insight.description}</p>
+                <h3 className="mt-2 text-sm font-medium text-barber-dark">{insight.title}</h3>
+                <p className="mt-1 line-clamp-2 text-xs text-barber-text-secondary">{insight.description}</p>
               </div>
             ))}
           </div>
@@ -126,9 +129,9 @@ export default async function IntelligencePage() {
       )}
 
       {/* Suggested Questions */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">Perguntas sugeridas</h2>
-        <p className="mt-1 text-xs text-nexora-text-secondary">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">Perguntas sugeridas</h2>
+        <p className="mt-1 text-xs text-barber-text-secondary">
           Clique em uma pergunta para iniciar uma conversa com o Nexora Intelligence.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -138,10 +141,10 @@ export default async function IntelligencePage() {
               <Link
                 key={q.text}
                 href={`/dashboard/intelligence/novo?q=${encodeURIComponent(q.text)}`}
-                className={`group flex items-center gap-3 rounded-lg border border-nexora-border p-4 transition-all hover:border-nexora-blue/30 hover:shadow-sm ${q.color}`}
+                className={`group flex items-center gap-3 rounded-lg border border-barber-border p-4 transition-all hover:border-barber-blue/30 hover:shadow-sm ${q.color}`}
               >
                 <Icon className="h-5 w-5 shrink-0 opacity-70" />
-                <span className="text-sm font-medium text-nexora-dark group-hover:text-nexora-blue">
+                <span className="text-sm font-medium text-barber-dark group-hover:text-barber-blue">
                   {q.text}
                 </span>
               </Link>
@@ -152,18 +155,18 @@ export default async function IntelligencePage() {
 
       {/* Recent Conversations */}
       {conversations.length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Conversas recentes</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Conversas recentes</h2>
           <div className="mt-4 space-y-2">
             {conversations.slice(0, 10).map((conv) => (
               <Link
                 key={conv.id}
                 href={`/dashboard/intelligence/${conv.id}`}
-                className="flex items-center justify-between rounded-lg border border-nexora-border p-4 transition-colors hover:bg-nexora-bg-secondary/30"
+                className="flex items-center justify-between rounded-lg border border-barber-border p-4 transition-colors hover:bg-barber-bg-secondary/30"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-nexora-dark">{conv.title}</p>
-                  <p className="text-xs text-nexora-text-secondary">
+                  <p className="truncate text-sm font-medium text-barber-dark">{conv.title}</p>
+                  <p className="text-xs text-barber-text-secondary">
                     {new Date(conv.updated_at).toLocaleDateString("pt-BR", {
                       day: "2-digit",
                       month: "short",
@@ -172,7 +175,7 @@ export default async function IntelligencePage() {
                     })}
                   </p>
                 </div>
-                <MessageSquarePlus className="h-4 w-4 shrink-0 text-nexora-text-secondary" />
+                <MessageSquarePlus className="h-4 w-4 shrink-0 text-barber-text-secondary" />
               </Link>
             ))}
           </div>

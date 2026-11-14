@@ -18,6 +18,8 @@ import {
   ChevronRight,
   Building2,
   CalendarDays,
+  Bell,
+  RefreshCw,
   CreditCard,
   MessageCircle,
   Repeat,
@@ -65,19 +67,46 @@ const NAV_ITEMS: NavItem[] = [
       { label: "Caixa", href: "/dashboard/caixa", icon: Wallet },
     ],
   },
-  { label: "WhatsApp", href: "/dashboard/whatsapp", icon: MessageCircle, comingSoon: true },
+  {
+    label: "WhatsApp",
+    icon: MessageCircle,
+    children: [
+      { label: "Central de mensagens", href: "/dashboard/whatsapp", icon: MessageCircle },
+      { label: "Modelos", href: "/dashboard/whatsapp/modelos", icon: ScrollText },
+      { label: "Lembretes", href: "/dashboard/whatsapp/lembretes", icon: Clock },
+      { label: "Campanhas", href: "/dashboard/whatsapp/campanhas", icon: UserPlus },
+      { label: "Histórico", href: "/dashboard/whatsapp/historico", icon: ScrollText },
+      { label: "Configurações", href: "/dashboard/whatsapp/configuracoes", icon: Settings },
+    ],
+  },
   { label: "Recorrências", href: "/dashboard/recorrencias", icon: Repeat },
   {
     label: "Relatórios",
     icon: BarChart3,
     children: [
       { label: "Visão geral", href: "/dashboard/relatorios", icon: LayoutDashboard },
-      { label: "Vendas", href: "/dashboard/relatorios/vendas", icon: Receipt },
       { label: "Financeiro", href: "/dashboard/relatorios/financeiro", icon: DollarSign },
-      { label: "Equipe", href: "/dashboard/relatorios/equipe", icon: UserCog },
+      { label: "Agendamentos", href: "/dashboard/relatorios/agendamentos", icon: CalendarDays },
+      { label: "Profissionais", href: "/dashboard/relatorios/equipe", icon: UserCog },
+      { label: "Serviços", href: "/dashboard/relatorios/servicos", icon: Scissors },
+      { label: "Produtos", href: "/dashboard/relatorios/produtos", icon: Package },
+      { label: "Clientes", href: "/dashboard/relatorios/clientes", icon: Users },
+      { label: "Assinaturas", href: "/dashboard/relatorios/assinaturas", icon: CreditCard },
+      { label: "Comissões", href: "/dashboard/relatorios/comissoes", icon: DollarSign },
+      { label: "Estoque", href: "/dashboard/relatorios/estoque", icon: Package },
     ],
   },
-  { label: "Assinaturas", href: "/dashboard/assinaturas", icon: CreditCard },
+  {
+    label: "Assinaturas",
+    icon: CreditCard,
+    children: [
+      { label: "Visão geral", href: "/dashboard/assinaturas", icon: LayoutDashboard },
+      { label: "Planos", href: "/dashboard/assinaturas/planos", icon: CreditCard },
+      { label: "Ativas", href: "/dashboard/assinaturas/ativas", icon: Users },
+      { label: "Vencimentos", href: "/dashboard/assinaturas/vencimentos", icon: Clock },
+      { label: "Pagamentos", href: "/dashboard/assinaturas/pagamentos", icon: DollarSign },
+    ],
+  },
   { label: "Profissionais", href: "/dashboard/profissionais", icon: UserCog },
   { label: "Clientes", href: "/dashboard/clientes", icon: Users },
   { label: "Reativar Clientes", href: "/dashboard/reativar", icon: UserPlus },
@@ -88,8 +117,21 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Bloquear Horários", href: "/dashboard/bloqueios", icon: Ban },
   { label: "Agenda Pública", href: "/dashboard/agenda-publica", icon: Globe },
   { label: "Logs", href: "/dashboard/equipe/auditoria", icon: ScrollText },
-  { label: "Configurações", href: "/dashboard/configuracoes", icon: Settings },
-  { label: "Integrações", href: "/dashboard/integracoes", icon: Puzzle, comingSoon: true },
+  {
+    label: "Configurações",
+    icon: Settings,
+    children: [
+      { label: "Dados da barbearia", href: "/dashboard/configuracoes", icon: Building2 },
+      { label: "Horários", href: "/dashboard/expedientes", icon: Clock },
+      { label: "Agendamento", href: "/dashboard/agenda-publica", icon: CalendarDays },
+      { label: "Usuários e permissões", href: "/dashboard/equipe", icon: Users },
+      { label: "Notificações", href: "/dashboard/notificacoes", icon: Bell },
+      { label: "Landing page", href: "/dashboard/agenda-publica", icon: Globe },
+    ],
+  },
+  { label: "Integrações", href: "/dashboard/integracoes", icon: Puzzle },
+  { label: "Meu plano", href: "/dashboard/billing", icon: CreditCard },
+  { label: "Renovar assinatura", href: "/dashboard/billing", icon: RefreshCw },
 ];
 
 interface DashboardShellProps {
@@ -201,7 +243,7 @@ export function DashboardShell({
                     />
                   </button>
                   {isOpen && (
-                    <div className="ml-4 mt-0.5 space-y-0.5 border-l border-nexora-border pl-2">
+                    <div className="ml-4 mt-0.5 space-y-0.5 border-l border-barber-border pl-2">
                       {item.children.map((child) => {
                         const childActive = pathname.startsWith(child.href);
                         return (

@@ -10,7 +10,7 @@ import { processMpWebhookEvent, verifyWebhookSignature } from "@/lib/billing/mer
  * - Reembolsos e chargebacks
  *
  * URL: POST /api/billing/webhook
- * Configurar no painel MP: https://nexora.app/api/billing/webhook
+ * Configurar no painel MP: https://barberon.com.br/api/billing/webhook
  */
 export async function POST(request: NextRequest) {
   try {

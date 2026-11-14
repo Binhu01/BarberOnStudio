@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";

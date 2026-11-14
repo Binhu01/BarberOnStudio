@@ -25,7 +25,7 @@ async function getActiveOrg(supabase: Awaited<ReturnType<typeof createClient>>) 
   }
 
   const cookieStore = await cookies();
-  const activeOrgCookie = cookieStore.get("nexora_active_org")?.value;
+  const activeOrgCookie = cookieStore.get("barber_active_org")?.value;
 
   let organizationId: string | undefined;
 

@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -10,15 +13,15 @@ export default async function NovoFornecedorPage() {
     <div className="space-y-6">
       <Link
         href="/dashboard/compras/fornecedores"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para fornecedores
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Novo fornecedor</h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Novo fornecedor</h1>
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Cadastre um novo fornecedor para vincular a ordens de compra.
         </p>
       </div>

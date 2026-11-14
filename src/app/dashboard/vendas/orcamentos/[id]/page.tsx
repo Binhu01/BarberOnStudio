@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -113,7 +116,7 @@ export default async function QuoteDetailPage({
       {/* Back Link */}
       <Link
         href="/dashboard/vendas/orcamentos"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-dark print:hidden"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-dark print:hidden"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para orçamentos
@@ -123,7 +126,7 @@ export default async function QuoteDetailPage({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="font-display text-2xl font-bold text-nexora-dark">
+            <h1 className="font-display text-2xl font-bold text-barber-dark">
               {quote.document_number}
             </h1>
             <span
@@ -133,7 +136,7 @@ export default async function QuoteDetailPage({
               {config.label}
             </span>
           </div>
-          <p className="text-sm text-nexora-text-secondary">
+          <p className="text-sm text-barber-text-secondary">
             Criado em {formatDate(quote.created_at)}
           </p>
         </div>
@@ -141,14 +144,14 @@ export default async function QuoteDetailPage({
         <div className="flex items-center gap-2 print:hidden">
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-lg border border-nexora-border px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-dark"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
           >
             <Printer className="h-4 w-4" />
             Imprimir
           </button>
           <Link
             href={`/dashboard/vendas/orcamentos/${quote.id}/editar`}
-            className="inline-flex items-center gap-2 rounded-lg border border-nexora-border px-3 py-2 text-sm font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary hover:text-nexora-dark"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
           >
             <Edit className="h-4 w-4" />
             Editar
@@ -174,47 +177,47 @@ export default async function QuoteDetailPage({
       )}
 
       {/* Info Grid */}
-      <div className="grid gap-4 rounded-xl border border-nexora-border bg-white p-6 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 rounded-xl border border-barber-border bg-white p-6 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">
+          <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
             Cliente
           </p>
-          <p className="mt-1 text-sm font-medium text-nexora-dark">
+          <p className="mt-1 text-sm font-medium text-barber-dark">
             {quote.customer.name}
           </p>
           {quote.customer.email && (
-            <p className="text-xs text-nexora-text-secondary">
+            <p className="text-xs text-barber-text-secondary">
               {quote.customer.email}
             </p>
           )}
         </div>
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">
+          <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
             Canal
           </p>
-          <p className="mt-1 text-sm font-medium text-nexora-dark">
+          <p className="mt-1 text-sm font-medium text-barber-dark">
             {quote.channel?.name ?? (
-              <span className="text-nexora-text-secondary">—</span>
+              <span className="text-barber-text-secondary">—</span>
             )}
           </p>
         </div>
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">
+          <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
             Criado por
           </p>
-          <p className="mt-1 text-sm font-medium text-nexora-dark">
+          <p className="mt-1 text-sm font-medium text-barber-dark">
             {quote.creator.full_name ?? "—"}
           </p>
         </div>
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-nexora-text-secondary">
+          <p className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
             Válido até
           </p>
           <p
             className={`mt-1 text-sm font-medium ${
               expired && status !== "converted"
                 ? "text-red-600"
-                : "text-nexora-dark"
+                : "text-barber-dark"
             }`}
           >
             {formatDate(quote.valid_until)}
@@ -229,52 +232,52 @@ export default async function QuoteDetailPage({
       </div>
 
       {/* Items Table + Financial Summary */}
-      <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm">
-        <div className="border-b border-nexora-border px-6 py-4">
-          <h2 className="font-display text-base font-semibold text-nexora-dark">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
+        <div className="border-b border-barber-border px-6 py-4">
+          <h2 className="font-display text-base font-semibold text-barber-dark">
             Itens do orçamento
           </h2>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-nexora-border bg-nexora-bg-secondary">
+            <thead className="border-b border-barber-border bg-barber-bg-secondary">
               <tr>
-                <th className="whitespace-nowrap px-6 py-3 font-medium text-nexora-text-secondary">
+                <th className="whitespace-nowrap px-6 py-3 font-medium text-barber-text-secondary">
                   Descrição
                 </th>
-                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-nexora-text-secondary">
+                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-barber-text-secondary">
                   Qtd
                 </th>
-                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-nexora-text-secondary">
+                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-barber-text-secondary">
                   Preço unitário
                 </th>
-                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-nexora-text-secondary">
+                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-barber-text-secondary">
                   Desconto
                 </th>
-                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-nexora-text-secondary">
+                <th className="whitespace-nowrap px-6 py-3 text-right font-medium text-barber-text-secondary">
                   Total
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-nexora-border">
+            <tbody className="divide-y divide-barber-border">
               {quote.items.map((item) => (
                 <tr key={item.id}>
-                  <td className="px-6 py-3 font-medium text-nexora-dark">
+                  <td className="px-6 py-3 font-medium text-barber-dark">
                     {item.description}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-right text-nexora-text">
+                  <td className="whitespace-nowrap px-6 py-3 text-right text-barber-text">
                     {item.quantity}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-right text-nexora-text">
+                  <td className="whitespace-nowrap px-6 py-3 text-right text-barber-text">
                     {formatCurrency(item.unit_price)}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-right text-nexora-text">
+                  <td className="whitespace-nowrap px-6 py-3 text-right text-barber-text">
                     {item.discount > 0
                       ? `- ${formatCurrency(item.discount)}`
                       : "—"}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-right font-medium text-nexora-dark">
+                  <td className="whitespace-nowrap px-6 py-3 text-right font-medium text-barber-dark">
                     {formatCurrency(item.total)}
                   </td>
                 </tr>
@@ -284,25 +287,25 @@ export default async function QuoteDetailPage({
         </div>
 
         {/* Financial Summary */}
-        <div className="border-t border-nexora-border bg-nexora-bg-secondary/50 px-6 py-4">
+        <div className="border-t border-barber-border bg-barber-bg-secondary/50 px-6 py-4">
           <div className="flex flex-col items-end gap-2">
             <div className="flex w-64 justify-between text-sm">
-              <span className="text-nexora-text-secondary">Subtotal</span>
-              <span className="font-medium text-nexora-dark">
+              <span className="text-barber-text-secondary">Subtotal</span>
+              <span className="font-medium text-barber-dark">
                 {formatCurrency(quote.subtotal)}
               </span>
             </div>
             {quote.discount > 0 && (
               <div className="flex w-64 justify-between text-sm">
-                <span className="text-nexora-text-secondary">Desconto</span>
+                <span className="text-barber-text-secondary">Desconto</span>
                 <span className="font-medium text-red-600">
                   - {formatCurrency(quote.discount)}
                 </span>
               </div>
             )}
-            <div className="flex w-64 justify-between border-t border-nexora-border pt-2 text-sm">
-              <span className="font-semibold text-nexora-dark">Total</span>
-              <span className="font-bold text-nexora-dark">
+            <div className="flex w-64 justify-between border-t border-barber-border pt-2 text-sm">
+              <span className="font-semibold text-barber-dark">Total</span>
+              <span className="font-bold text-barber-dark">
                 {formatCurrency(quote.total)}
               </span>
             </div>
@@ -312,11 +315,11 @@ export default async function QuoteDetailPage({
 
       {/* Notes */}
       {quote.notes && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-base font-semibold text-nexora-dark">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-base font-semibold text-barber-dark">
             Observações
           </h2>
-          <p className="mt-2 whitespace-pre-wrap text-sm text-nexora-text">
+          <p className="mt-2 whitespace-pre-wrap text-sm text-barber-text">
             {quote.notes}
           </p>
         </div>

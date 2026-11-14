@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { BookingForm } from "./_components/booking-form";
 
+// This page is fully dynamic (depends on barbershop slug + DB data)
+export const instant = false;
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

@@ -121,6 +121,7 @@ export async function updateBarberProfile(
  if (parsed.commission_rate !== undefined)
  updateData.commission_rate = parsed.commission_rate;
  if (parsed.bio !== undefined) updateData.bio = parsed.bio;
+ if (parsed.instagram !== undefined) updateData.instagram = parsed.instagram;
  if (parsed.is_available_for_booking !== undefined)
  updateData.is_available_for_booking = parsed.is_available_for_booking;
  if (parsed.job_title !== undefined)
@@ -169,6 +170,34 @@ export async function updateBarberProfile(
  avatar_url: data.membership?.profiles?.avatar_url ?? null,
  role: data.membership?.role ?? "EMPLOYEE",
  };
+}
+
+// -----------------------------------------------------------------------------
+// GET — Desempenho individual do profissional (via view v_barber_performance)
+// -----------------------------------------------------------------------------
+export async function getBarberPerformance(membershipId: string): Promise<{
+ monthly_appointments: number;
+ monthly_revenue: number;
+ monthly_commission: number;
+ total_appointments: number;
+ total_revenue: number;
+ avg_rating: number | null;
+ last_appointment_at: string | null;
+} | null> {
+ const supabase = await createClient();
+ const org = await getOrg();
+
+ const { data, error } = await supabase
+ .from("v_barber_performance")
+ .select(
+ "monthly_appointments, monthly_revenue, monthly_commission, total_appointments, total_revenue, avg_rating, last_appointment_at"
+ )
+ .eq("organization_id", org.id)
+ .eq("membership_id", membershipId)
+ .maybeSingle();
+
+ if (error) throw error;
+ return data ?? null;
 }
 
 // -----------------------------------------------------------------------------

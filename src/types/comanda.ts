@@ -21,6 +21,16 @@ export interface ComandaItem {
   created_at: string;
 }
 
+export interface OrderPayment {
+  id: string;
+  order_id: string;
+  payment_method: "cash" | "pix" | "debit" | "credit" | "other";
+  amount: number;
+  change_amount: number;
+  reference: string | null;
+  created_at: string;
+}
+
 export interface Comanda {
   id: string;
   organization_id: string;
@@ -28,6 +38,7 @@ export interface Comanda {
   assigned_barber_id: string | null;
   cash_session_id: string | null;
   appointment_id: string | null;
+  linked_appointment_id: string | null;
   status: ComandaStatus;
   subtotal: number;
   discount: number;
@@ -35,6 +46,8 @@ export interface Comanda {
   total: number;
   payment_method: string | null;
   notes: string | null;
+  stock_reserved: boolean;
+  commission_calculated: boolean;
   issued_at: string;
   completed_at: string | null;
   created_at: string;
@@ -43,6 +56,7 @@ export interface Comanda {
   customer_name?: string | null;
   barber_name?: string | null;
   items?: ComandaItem[];
+  payments?: OrderPayment[];
 }
 
 export interface CreateComandaInput {

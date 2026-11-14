@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
@@ -21,7 +24,7 @@ export default async function ConversaPage(props: {
       <div className="space-y-6">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
@@ -43,7 +46,7 @@ export default async function ConversaPage(props: {
       <div className="space-y-6">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
@@ -61,16 +64,16 @@ export default async function ConversaPage(props: {
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-nexora-text-secondary transition-colors hover:text-nexora-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-nexora-blue to-nexora-cyan">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-barber-blue to-barber-cyan">
             <Sparkles className="h-3.5 w-3.5 text-white" />
           </div>
-          <h1 className="font-display text-lg font-bold text-nexora-dark">
+          <h1 className="font-display text-lg font-bold text-barber-dark">
             {conversation.title || "Conversa"}
           </h1>
         </div>

@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import { UserCog, Users, Mail, Building2 } from "lucide-react";
 import { getTeamKPIs, getTeamPerformance } from "../actions";
@@ -29,10 +32,10 @@ export default async function RelatoriosEquipePage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Relatórios de Equipe
         </h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Desempenho dos membros, departamentos e atividades · Últimos 30 dias
         </p>
       </div>
@@ -43,7 +46,7 @@ export default async function RelatoriosEquipePage() {
           label="Membros ativos"
           value={kpis.activeMembers}
           icon={<Users className="h-5 w-5" />}
-          accentColor="bg-nexora-blue/10 text-nexora-blue"
+          accentColor="bg-barber-blue/10 text-barber-blue"
         />
         <KPICard
           label="Convites pendentes"
@@ -56,7 +59,7 @@ export default async function RelatoriosEquipePage() {
           label="Departamentos"
           value={Object.keys(kpis.membersByDepartment).length}
           icon={<Building2 className="h-5 w-5" />}
-          accentColor="bg-nexora-cyan/10 text-nexora-cyan"
+          accentColor="bg-barber-cyan/10 text-barber-cyan"
         />
         <KPICard
           label="Total de pedidos (equipe)"
@@ -69,25 +72,25 @@ export default async function RelatoriosEquipePage() {
 
       {/* Members by Department */}
       {Object.keys(kpis.membersByDepartment).length > 0 && (
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">
             Membros por departamento
           </h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(kpis.membersByDepartment).map(([dept, count]) => (
               <div
                 key={dept}
-                className="flex items-center justify-between rounded-lg border border-nexora-border/50 p-4"
+                className="flex items-center justify-between rounded-lg border border-barber-border/50 p-4"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-nexora-blue/10">
-                    <Building2 className="h-4 w-4 text-nexora-blue" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-barber-blue/10">
+                    <Building2 className="h-4 w-4 text-barber-blue" />
                   </div>
-                  <span className="text-sm font-medium text-nexora-dark">
+                  <span className="text-sm font-medium text-barber-dark">
                     {dept}
                   </span>
                 </div>
-                <span className="text-lg font-bold text-nexora-dark">
+                <span className="text-lg font-bold text-barber-dark">
                   {count}
                 </span>
               </div>
@@ -97,14 +100,14 @@ export default async function RelatoriosEquipePage() {
       )}
 
       {/* Team Performance Table */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">
           Desempenho por membro
         </h2>
         {sortedPerformance.length === 0 ? (
           <div className="mt-8 flex flex-col items-center justify-center text-center">
-            <UserCog className="mb-3 h-10 w-10 text-nexora-text-secondary/40" />
-            <p className="text-sm text-nexora-text-secondary">
+            <UserCog className="mb-3 h-10 w-10 text-barber-text-secondary/40" />
+            <p className="text-sm text-barber-text-secondary">
               Nenhum pedido registrado pela equipe no período
             </p>
           </div>
@@ -112,7 +115,7 @@ export default async function RelatoriosEquipePage() {
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-nexora-border text-xs uppercase tracking-wide text-nexora-text-secondary">
+                <tr className="border-b border-barber-border text-xs uppercase tracking-wide text-barber-text-secondary">
                   <th className="pb-3 pr-4 font-medium">Membro</th>
                   <th className="pb-3 pr-4 font-medium">Cargo</th>
                   <th className="pb-3 pr-4 font-medium">Departamento</th>
@@ -121,32 +124,32 @@ export default async function RelatoriosEquipePage() {
                   <th className="pb-3 text-right font-medium">Ticket médio</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border/50">
+              <tbody className="divide-y divide-barber-border/50">
                 {sortedPerformance.map((member) => (
                   <tr key={member.user_id}>
                     <td className="py-3 pr-4">
-                      <p className="font-medium text-nexora-dark">
+                      <p className="font-medium text-barber-dark">
                         {member.full_name ?? member.email}
                       </p>
                       {member.full_name && (
-                        <p className="text-xs text-nexora-text-secondary">
+                        <p className="text-xs text-barber-text-secondary">
                           {member.email}
                         </p>
                       )}
                     </td>
-                    <td className="py-3 pr-4 capitalize text-nexora-text-secondary">
+                    <td className="py-3 pr-4 capitalize text-barber-text-secondary">
                       {member.role.toLowerCase()}
                     </td>
-                    <td className="py-3 pr-4 text-nexora-text-secondary">
+                    <td className="py-3 pr-4 text-barber-text-secondary">
                       {member.department_name ?? "—"}
                     </td>
-                    <td className="py-3 pr-4 text-right text-nexora-dark">
+                    <td className="py-3 pr-4 text-right text-barber-dark">
                       {member.order_count}
                     </td>
-                    <td className="py-3 pr-4 text-right font-semibold text-nexora-dark">
+                    <td className="py-3 pr-4 text-right font-semibold text-barber-dark">
                       {brl.format(member.total_revenue)}
                     </td>
-                    <td className="py-3 text-right text-nexora-text-secondary">
+                    <td className="py-3 text-right text-barber-text-secondary">
                       {brl.format(member.avg_ticket)}
                     </td>
                   </tr>

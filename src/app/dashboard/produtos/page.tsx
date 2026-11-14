@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import Link from "next/link";
 import { Plus, Search, Package, Archive, AlertTriangle, Filter } from "lucide-react";
 import { getProducts, getProductStats, getCategories } from "./actions";
@@ -68,12 +71,12 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">
           Produtos
         </h1>
         <Link
           href="/dashboard/produtos/novo"
-          className="inline-flex items-center gap-2 bg-nexora-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 bg-barber-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
         >
           <Plus className="w-4 h-4" />
           Novo Produto
@@ -82,82 +85,82 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
 
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-nexora-border p-4">
+        <div className="bg-white rounded-xl border border-barber-border p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-nexora-bg-secondary flex items-center justify-center">
-              <Package className="w-5 h-5 text-nexora-text-secondary" />
+            <div className="w-10 h-10 rounded-lg bg-barber-bg-secondary flex items-center justify-center">
+              <Package className="w-5 h-5 text-barber-text-secondary" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-nexora-dark">{stats?.total_products ?? 0}</p>
-              <p className="text-sm text-nexora-text-secondary">Total de Produtos</p>
+              <p className="text-2xl font-bold text-barber-dark">{stats?.total_products ?? 0}</p>
+              <p className="text-sm text-barber-text-secondary">Total de Produtos</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-nexora-border p-4">
+        <div className="bg-white rounded-xl border border-barber-border p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
               <Package className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-nexora-dark">{stats?.active_products ?? 0}</p>
-              <p className="text-sm text-nexora-text-secondary">Produtos Ativos</p>
+              <p className="text-2xl font-bold text-barber-dark">{stats?.active_products ?? 0}</p>
+              <p className="text-sm text-barber-text-secondary">Produtos Ativos</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-nexora-border p-4">
+        <div className="bg-white rounded-xl border border-barber-border p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center">
               <AlertTriangle className="w-5 h-5 text-yellow-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-nexora-dark">{stats?.low_stock_count ?? 0}</p>
-              <p className="text-sm text-nexora-text-secondary">Estoque Baixo</p>
+              <p className="text-2xl font-bold text-barber-dark">{stats?.low_stock_count ?? 0}</p>
+              <p className="text-sm text-barber-text-secondary">Estoque Baixo</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-nexora-border p-4">
+        <div className="bg-white rounded-xl border border-barber-border p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
-              <Archive className="w-5 h-5 text-nexora-error" />
+              <Archive className="w-5 h-5 text-barber-error" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-nexora-dark">{stats?.out_of_stock_count ?? 0}</p>
-              <p className="text-sm text-nexora-text-secondary">Sem Estoque</p>
+              <p className="text-2xl font-bold text-barber-dark">{stats?.out_of_stock_count ?? 0}</p>
+              <p className="text-sm text-barber-text-secondary">Sem Estoque</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-white rounded-xl border border-nexora-border p-4">
+      <div className="bg-white rounded-xl border border-barber-border p-4">
         <form className="flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium text-nexora-text mb-1">
+            <label className="block text-sm font-medium text-barber-text mb-1">
               Buscar
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-nexora-text-secondary" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-barber-text-secondary" />
               <input
                 type="text"
                 name="search"
                 defaultValue={search}
                 placeholder="Nome ou SKU..."
-                className="w-full pl-9 pr-3 py-2 border border-nexora-border rounded-lg bg-nexora-bg text-nexora-text placeholder:text-nexora-text-secondary focus:outline-none focus:ring-2 focus:ring-nexora-blue/20 focus:border-nexora-blue"
+                className="w-full pl-9 pr-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text placeholder:text-barber-text-secondary focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
               />
             </div>
           </div>
 
           <div className="min-w-[160px]">
-            <label className="block text-sm font-medium text-nexora-text mb-1">
+            <label className="block text-sm font-medium text-barber-text mb-1">
               Categoria
             </label>
             <select
               name="category_id"
               defaultValue={category_id}
-              className="w-full px-3 py-2 border border-nexora-border rounded-lg bg-nexora-bg text-nexora-text focus:outline-none focus:ring-2 focus:ring-nexora-blue/20 focus:border-nexora-blue"
+              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
             >
               <option value="">Todas</option>
               {categories.map((cat: { id: string; name: string }) => (
@@ -169,13 +172,13 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
           </div>
 
           <div className="min-w-[160px]">
-            <label className="block text-sm font-medium text-nexora-text mb-1">
+            <label className="block text-sm font-medium text-barber-text mb-1">
               Tipo
             </label>
             <select
               name="product_type"
               defaultValue={product_type}
-              className="w-full px-3 py-2 border border-nexora-border rounded-lg bg-nexora-bg text-nexora-text focus:outline-none focus:ring-2 focus:ring-nexora-blue/20 focus:border-nexora-blue"
+              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
             >
               <option value="">Todos</option>
               <option value="physical">Físico</option>
@@ -184,13 +187,13 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
           </div>
 
           <div className="min-w-[160px]">
-            <label className="block text-sm font-medium text-nexora-text mb-1">
+            <label className="block text-sm font-medium text-barber-text mb-1">
               Status
             </label>
             <select
               name="status"
               defaultValue={status}
-              className="w-full px-3 py-2 border border-nexora-border rounded-lg bg-nexora-bg text-nexora-text focus:outline-none focus:ring-2 focus:ring-nexora-blue/20 focus:border-nexora-blue"
+              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
             >
               <option value="">Todos</option>
               <option value="active">Ativo</option>
@@ -200,7 +203,7 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
 
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-nexora-blue text-white rounded-lg hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-barber-blue text-white rounded-lg hover:opacity-90 transition-opacity"
           >
             <Filter className="w-4 h-4" />
             Filtrar
@@ -209,7 +212,7 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
           {(search || category_id || product_type || status) && (
             <Link
               href="/dashboard/produtos"
-              className="inline-flex items-center px-4 py-2 border border-nexora-border text-nexora-text rounded-lg hover:bg-nexora-bg-secondary transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-barber-border text-barber-text rounded-lg hover:bg-barber-bg-secondary transition-colors"
             >
               Limpar
             </Link>
@@ -218,16 +221,16 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-xl border border-nexora-border overflow-hidden">
+      <div className="bg-white rounded-xl border border-barber-border overflow-hidden">
         {products.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="w-16 h-16 rounded-full bg-nexora-bg-secondary flex items-center justify-center mb-4">
-              <Package className="w-8 h-8 text-nexora-text-secondary" />
+            <div className="w-16 h-16 rounded-full bg-barber-bg-secondary flex items-center justify-center mb-4">
+              <Package className="w-8 h-8 text-barber-text-secondary" />
             </div>
-            <h3 className="text-lg font-semibold text-nexora-dark mb-1">
+            <h3 className="text-lg font-semibold text-barber-dark mb-1">
               Nenhum produto encontrado
             </h3>
-            <p className="text-sm text-nexora-text-secondary text-center max-w-sm">
+            <p className="text-sm text-barber-text-secondary text-center max-w-sm">
               {search || category_id || product_type || status
                 ? "Tente ajustar os filtros ou limpar a busca."
                 : "Comece adicionando seu primeiro produto ao catálogo."}
@@ -235,7 +238,7 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
             {!search && !category_id && !product_type && !status && (
               <Link
                 href="/dashboard/produtos/novo"
-                className="mt-4 inline-flex items-center gap-2 bg-nexora-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
+                className="mt-4 inline-flex items-center gap-2 bg-barber-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
               >
                 <Plus className="w-4 h-4" />
                 Adicionar Produto
@@ -245,65 +248,65 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-nexora-bg border-b border-nexora-border">
+              <thead className="bg-barber-bg border-b border-barber-border">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     Nome
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     SKU
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     Categoria
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     Preço
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     Estoque
                   </th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-nexora-text-secondary uppercase tracking-wider">
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {products.map((product) => {
                   const categoryName = (product.category as { name: string } | null)?.name ?? null;
                   return (
                   <tr
                     key={product.id}
-                    className="hover:bg-nexora-bg-secondary transition-colors"
+                    className="hover:bg-barber-bg-secondary transition-colors"
                   >
                     <td className="px-4 py-3">
                       <Link
                         href={`/dashboard/produtos/${product.id}`}
-                        className="font-medium text-nexora-dark hover:text-nexora-blue transition-colors"
+                        className="font-medium text-barber-dark hover:text-barber-blue transition-colors"
                       >
                         {product.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text">
+                    <td className="px-4 py-3 text-sm text-barber-text">
                       {product.sku || "—"}
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text">
+                    <td className="px-4 py-3 text-sm text-barber-text">
                       {categoryName || "—"}
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text capitalize">
+                    <td className="px-4 py-3 text-sm text-barber-text capitalize">
                       {product.product_type === "physical"
                         ? "Físico"
                         : product.product_type === "service"
                         ? "Serviço"
                         : product.product_type}
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text text-right font-mono">
+                    <td className="px-4 py-3 text-sm text-barber-text text-right font-mono">
                       {brlFormatter.format(Number(product.sale_price))}
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text text-right">
-                      <span className={product.track_inventory ? "" : "text-nexora-text-secondary italic"}>
+                    <td className="px-4 py-3 text-sm text-barber-text text-right">
+                      <span className={product.track_inventory ? "" : "text-barber-text-secondary italic"}>
                         {product.track_inventory ? "—" : "N/A"}
                       </span>
                     </td>
@@ -330,14 +333,14 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-nexora-text-secondary">
+          <p className="text-sm text-barber-text-secondary">
             Mostrando página {page} de {totalPages} ({total} produtos)
           </p>
           <div className="flex items-center gap-2">
             {page > 1 && (
               <Link
                 href={buildFilterUrl({ page: String(page - 1) })}
-                className="px-4 py-2 border border-nexora-border rounded-lg text-sm text-nexora-text hover:bg-nexora-bg-secondary transition-colors"
+                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-text hover:bg-barber-bg-secondary transition-colors"
               >
                 Anterior
               </Link>
@@ -345,7 +348,7 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
             {page < totalPages && (
               <Link
                 href={buildFilterUrl({ page: String(page + 1) })}
-                className="px-4 py-2 border border-nexora-border rounded-lg text-sm text-nexora-text hover:bg-nexora-bg-secondary transition-colors"
+                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-text hover:bg-barber-bg-secondary transition-colors"
               >
                 Próxima
               </Link>

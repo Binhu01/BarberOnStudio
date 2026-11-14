@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { Metadata } from "next";
 import { DashboardShell } from "../shell";
 import { getActiveOrganization } from "@/lib/organizations";

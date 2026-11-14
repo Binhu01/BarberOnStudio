@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import { DollarSign, TrendingUp, TrendingDown, Wallet, AlertTriangle, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import {
@@ -36,8 +39,8 @@ export default async function RelatoriosFinanceiroPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Relatórios Financeiros</h1>
-        <p className="mt-1 text-sm text-nexora-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Relatórios Financeiros</h1>
+        <p className="mt-1 text-sm text-barber-text-secondary">
           Fluxo de caixa, contas a receber/pagar e inadimplência · Últimos 30 dias
         </p>
       </div>
@@ -64,7 +67,7 @@ export default async function RelatoriosFinanceiroPage() {
           label="Saldo em contas"
           value={brl.format(kpis.accountBalance)}
           icon={<Wallet className="h-5 w-5" />}
-          accentColor="bg-nexora-blue/10 text-nexora-blue"
+          accentColor="bg-barber-blue/10 text-barber-blue"
         />
         <KPICard
           label="Fluxo líquido"
@@ -76,50 +79,50 @@ export default async function RelatoriosFinanceiroPage() {
 
       {/* Secondary KPIs Row */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-xl border border-nexora-border bg-white p-4 text-center shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-green-600">{brl.format(kpis.openReceivables)}</p>
-          <p className="text-xs text-nexora-text-secondary">A receber pendente</p>
+          <p className="text-xs text-barber-text-secondary">A receber pendente</p>
         </div>
-        <div className="rounded-xl border border-nexora-border bg-white p-4 text-center shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-red-600">{brl.format(kpis.overdueReceivables)}</p>
-          <p className="text-xs text-nexora-text-secondary">Recebíveis vencidos</p>
+          <p className="text-xs text-barber-text-secondary">Recebíveis vencidos</p>
         </div>
-        <div className="rounded-xl border border-nexora-border bg-white p-4 text-center shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-amber-600">{brl.format(kpis.openPayables)}</p>
-          <p className="text-xs text-nexora-text-secondary">A pagar pendente</p>
+          <p className="text-xs text-barber-text-secondary">A pagar pendente</p>
         </div>
-        <div className="rounded-xl border border-nexora-border bg-white p-4 text-center shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-red-600">{brl.format(kpis.overduePayables)}</p>
-          <p className="text-xs text-nexora-text-secondary">Pagáveis vencidos</p>
+          <p className="text-xs text-barber-text-secondary">Pagáveis vencidos</p>
         </div>
       </div>
 
       {/* Cashflow Monthly Table */}
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">Fluxo de caixa mensal</h2>
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">Fluxo de caixa mensal</h2>
         {cashflow.length === 0 ? (
           <div className="mt-8 flex flex-col items-center justify-center text-center">
-            <DollarSign className="mb-3 h-10 w-10 text-nexora-text-secondary/40" />
-            <p className="text-sm text-nexora-text-secondary">Sem transações financeiras registradas</p>
+            <DollarSign className="mb-3 h-10 w-10 text-barber-text-secondary/40" />
+            <p className="text-sm text-barber-text-secondary">Sem transações financeiras registradas</p>
           </div>
         ) : (
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-nexora-border text-xs uppercase tracking-wide text-nexora-text-secondary">
+                <tr className="border-b border-barber-border text-xs uppercase tracking-wide text-barber-text-secondary">
                   <th className="pb-3 pr-4 font-medium">Mês</th>
                   <th className="pb-3 pr-4 text-right font-medium">Entradas</th>
                   <th className="pb-3 pr-4 text-right font-medium">Saídas</th>
                   <th className="pb-3 text-right font-medium">Líquido</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border/50">
+              <tbody className="divide-y divide-barber-border/50">
                 {cashflow.map((row) => {
                   const monthDate = new Date(row.month_start + "T00:00:00");
                   const label = monthDate.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
                   return (
                     <tr key={row.month_start}>
-                      <td className="py-3 pr-4 font-medium capitalize text-nexora-dark">{label}</td>
+                      <td className="py-3 pr-4 font-medium capitalize text-barber-dark">{label}</td>
                       <td className="py-3 pr-4 text-right text-green-600">{brl.format(row.total_income)}</td>
                       <td className="py-3 pr-4 text-right text-red-600">{brl.format(row.total_expense)}</td>
                       <td className={`py-3 text-right font-semibold ${row.net_flow >= 0 ? "text-green-600" : "text-red-600"}`}>
@@ -137,22 +140,22 @@ export default async function RelatoriosFinanceiroPage() {
       {/* Aging Analysis Side by Side */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Receivables Aging */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-amber-600" />
-            <h2 className="font-display text-lg font-semibold text-nexora-dark">Inadimplência — A receber</h2>
+            <h2 className="font-display text-lg font-semibold text-barber-dark">Inadimplência — A receber</h2>
           </div>
           {receivablesAging.length === 0 ? (
             <div className="mt-6 flex flex-col items-center justify-center text-center">
-              <p className="text-sm text-nexora-text-secondary">Sem recebíveis pendentes</p>
+              <p className="text-sm text-barber-text-secondary">Sem recebíveis pendentes</p>
             </div>
           ) : (
             <div className="mt-4 space-y-2">
               {receivablesAging.map((bucket) => (
-                <div key={bucket.bucket} className="flex items-center justify-between rounded-lg border border-nexora-border/50 p-3">
+                <div key={bucket.bucket} className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3">
                   <div>
-                    <p className="text-sm font-medium text-nexora-dark">{bucket.label}</p>
-                    <p className="text-xs text-nexora-text-secondary">{bucket.count} títulos</p>
+                    <p className="text-sm font-medium text-barber-dark">{bucket.label}</p>
+                    <p className="text-xs text-barber-text-secondary">{bucket.count} títulos</p>
                   </div>
                   <p className={`text-sm font-semibold ${bucket.bucket === "current" ? "text-green-600" : "text-red-600"}`}>
                     {brl.format(bucket.totalAmount)}
@@ -164,22 +167,22 @@ export default async function RelatoriosFinanceiroPage() {
         </div>
 
         {/* Payables Aging */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-red-600" />
-            <h2 className="font-display text-lg font-semibold text-nexora-dark">Obrigações — A pagar</h2>
+            <h2 className="font-display text-lg font-semibold text-barber-dark">Obrigações — A pagar</h2>
           </div>
           {payablesAging.length === 0 ? (
             <div className="mt-6 flex flex-col items-center justify-center text-center">
-              <p className="text-sm text-nexora-text-secondary">Sem obrigações pendentes</p>
+              <p className="text-sm text-barber-text-secondary">Sem obrigações pendentes</p>
             </div>
           ) : (
             <div className="mt-4 space-y-2">
               {payablesAging.map((bucket) => (
-                <div key={bucket.bucket} className="flex items-center justify-between rounded-lg border border-nexora-border/50 p-3">
+                <div key={bucket.bucket} className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3">
                   <div>
-                    <p className="text-sm font-medium text-nexora-dark">{bucket.label}</p>
-                    <p className="text-xs text-nexora-text-secondary">{bucket.count} títulos</p>
+                    <p className="text-sm font-medium text-barber-dark">{bucket.label}</p>
+                    <p className="text-xs text-barber-text-secondary">{bucket.count} títulos</p>
                   </div>
                   <p className={`text-sm font-semibold ${bucket.bucket === "current" ? "text-green-600" : "text-red-600"}`}>
                     {brl.format(bucket.totalAmount)}
@@ -194,24 +197,24 @@ export default async function RelatoriosFinanceiroPage() {
       {/* Expenses by Category + Account Balances */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Expenses by Category */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Despesas por categoria</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Despesas por categoria</h2>
           {expensesByCat.length === 0 ? (
             <div className="mt-8 flex flex-col items-center justify-center text-center">
-              <DollarSign className="mb-3 h-8 w-8 text-nexora-text-secondary/40" />
-              <p className="text-sm text-nexora-text-secondary">Sem despesas no período</p>
+              <DollarSign className="mb-3 h-8 w-8 text-barber-text-secondary/40" />
+              <p className="text-sm text-barber-text-secondary">Sem despesas no período</p>
             </div>
           ) : (
             <div className="mt-4 space-y-3">
               {expensesByCat.map((cat) => (
                 <div key={cat.categoryName}>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-nexora-dark">{cat.categoryName}</span>
-                    <span className="text-nexora-text-secondary">{brl.format(cat.totalAmount)} ({cat.percentage.toFixed(1)}%)</span>
+                    <span className="font-medium text-barber-dark">{cat.categoryName}</span>
+                    <span className="text-barber-text-secondary">{brl.format(cat.totalAmount)} ({cat.percentage.toFixed(1)}%)</span>
                   </div>
-                  <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-nexora-bg-secondary">
+                  <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-barber-bg-secondary">
                     <div
-                      className="h-full rounded-full bg-nexora-blue"
+                      className="h-full rounded-full bg-barber-blue"
                       style={{ width: `${Math.min(cat.percentage, 100)}%` }}
                     />
                   </div>
@@ -222,22 +225,22 @@ export default async function RelatoriosFinanceiroPage() {
         </div>
 
         {/* Account Balances */}
-        <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-nexora-dark">Saldos por conta</h2>
+        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-dark">Saldos por conta</h2>
           {accounts.length === 0 ? (
             <div className="mt-8 flex flex-col items-center justify-center text-center">
-              <Wallet className="mb-3 h-8 w-8 text-nexora-text-secondary/40" />
-              <p className="text-sm text-nexora-text-secondary">Nenhuma conta financeira cadastrada</p>
+              <Wallet className="mb-3 h-8 w-8 text-barber-text-secondary/40" />
+              <p className="text-sm text-barber-text-secondary">Nenhuma conta financeira cadastrada</p>
             </div>
           ) : (
             <div className="mt-4 space-y-2">
               {accounts.map((acc) => (
-                <div key={acc.accountId} className="flex items-center justify-between rounded-lg border border-nexora-border/50 p-3">
+                <div key={acc.accountId} className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-nexora-dark">{acc.accountName}</p>
-                    <p className="text-xs capitalize text-nexora-text-secondary">{acc.accountType}</p>
+                    <p className="truncate text-sm font-medium text-barber-dark">{acc.accountName}</p>
+                    <p className="text-xs capitalize text-barber-text-secondary">{acc.accountType}</p>
                   </div>
-                  <p className={`text-sm font-semibold ${acc.balance >= 0 ? "text-nexora-dark" : "text-red-600"}`}>
+                  <p className={`text-sm font-semibold ${acc.balance >= 0 ? "text-barber-dark" : "text-red-600"}`}>
                     {brl.format(acc.balance)}
                   </p>
                 </div>

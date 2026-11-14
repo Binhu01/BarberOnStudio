@@ -147,6 +147,33 @@ export default async function ProfissionaisPage() {
  </div>
  </div>
 
+ {/* Instagram */}
+ {barber.instagram && (
+ <a
+ href={`https://instagram.com/${barber.instagram.replace("@", "")}`}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="mt-2 inline-flex items-center gap-1 text-xs text-barber-muted hover:text-barber-gold transition-colors"
+ >
+ <span className="text-[10px]">📷</span>
+ @{barber.instagram.replace("@", "")}
+ </a>
+ )}
+
+ {/* Performance Metrics */}
+ {(barber.total_appointments > 0 || barber.total_revenue > 0) && (
+ <div className="mt-3 grid grid-cols-2 gap-2 rounded-lg bg-barber-dark/50 p-2">
+ <div className="text-center">
+ <p className="text-[10px] text-barber-muted">Atendimentos</p>
+ <p className="text-sm font-bold text-barber-white">{barber.total_appointments}</p>
+ </div>
+ <div className="text-center">
+ <p className="text-[10px] text-barber-muted">Receita Total</p>
+ <p className="text-sm font-bold text-barber-gold">{formatCurrency(barber.total_revenue)}</p>
+ </div>
+ </div>
+ )}
+
  {/* Bio preview */}
  {barber.bio && (
  <p className="mt-3 line-clamp-2 text-xs text-barber-muted">{barber.bio}</p>

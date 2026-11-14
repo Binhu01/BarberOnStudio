@@ -1,3 +1,6 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Search, Users, MoreHorizontal, ShieldAlert, UserX, UserCheck } from "lucide-react";
@@ -13,7 +16,7 @@ const roleLabels: Record<string, string> = {
 };
 
 const roleColors: Record<string, string> = {
-  OWNER: "bg-nexora-blue/10 text-nexora-blue",
+  OWNER: "bg-barber-blue/10 text-barber-blue",
   ADMIN: "bg-purple-50 text-purple-700",
   MANAGER: "bg-amber-50 text-amber-700",
   EMPLOYEE: "bg-gray-100 text-gray-700",
@@ -70,37 +73,37 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-nexora-dark">Funcionários</h1>
+        <h1 className="font-display text-2xl font-bold text-barber-dark">Funcionários</h1>
         <Link
           href="/dashboard/equipe/convites"
-          className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
           Convidar membro
         </Link>
       </div>
 
       {/* Filters */}
-      <div className="rounded-xl border border-nexora-border bg-white p-4">
+      <div className="rounded-xl border border-barber-border bg-white p-4">
         <form method="GET" action="/dashboard/equipe/funcionarios" className="grid gap-4 md:grid-cols-4">
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Buscar</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Buscar</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nexora-text-secondary" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-text-secondary" />
               <input
                 type="text"
                 name="search"
                 defaultValue={search}
                 placeholder="Nome ou e-mail..."
-                className="w-full rounded-lg border border-nexora-border py-2 pl-9 pr-3 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                className="w-full rounded-lg border border-barber-border py-2 pl-9 pr-3 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
               />
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Papel</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Papel</label>
             <select
               name="role"
               defaultValue={role}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Todos os papéis</option>
               <option value="OWNER">Proprietário</option>
@@ -110,11 +113,11 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Departamento</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Departamento</label>
             <select
               name="department_id"
               defaultValue={departmentId}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Todos os departamentos</option>
               {departments.filter((d) => d.is_active).map((d) => (
@@ -123,11 +126,11 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-nexora-text-secondary">Status</label>
+            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Status</label>
             <select
               name="status"
               defaultValue={status}
-              className="w-full rounded-lg border border-nexora-border px-3 py-2 text-sm focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Todos</option>
               <option value="active">Ativos</option>
@@ -135,11 +138,11 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
             </select>
           </div>
           <div className="md:col-span-4 flex items-center gap-2">
-            <button type="submit" className="rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white hover:opacity-90">
+            <button type="submit" className="rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white hover:opacity-90">
               Filtrar
             </button>
             {(search || role || departmentId || status) && (
-              <Link href="/dashboard/equipe/funcionarios" className="rounded-lg border border-nexora-border px-4 py-2 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary">
+              <Link href="/dashboard/equipe/funcionarios" className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary">
                 Limpar
               </Link>
             )}
@@ -148,12 +151,12 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
       </div>
 
       {/* Members Table */}
-      <div className="overflow-hidden rounded-xl border border-nexora-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
         {members.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <Users className="mb-4 h-12 w-12 text-nexora-text-secondary/40" />
-            <p className="text-lg font-medium text-nexora-dark">Nenhum membro encontrado</p>
-            <p className="text-sm text-nexora-text-secondary">
+            <Users className="mb-4 h-12 w-12 text-barber-text-secondary/40" />
+            <p className="text-lg font-medium text-barber-dark">Nenhum membro encontrado</p>
+            <p className="text-sm text-barber-text-secondary">
               {search || role || departmentId || status
                 ? "Tente ajustar os filtros de busca."
                 : "Convide membros para começar a construir sua equipe."}
@@ -162,23 +165,23 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-nexora-border bg-nexora-bg">
+              <thead className="border-b border-barber-border bg-barber-bg">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Membro</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Cargo</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Departamento</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Papel</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Entrada</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-nexora-text-secondary">Ações</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Membro</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Cargo</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Departamento</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Papel</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Entrada</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-nexora-border">
+              <tbody className="divide-y divide-barber-border">
                 {members.map((m) => (
-                  <tr key={m.membership_id} className="transition-colors hover:bg-nexora-bg-secondary">
+                  <tr key={m.membership_id} className="transition-colors hover:bg-barber-bg-secondary">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-nexora-blue/10 text-sm font-semibold text-nexora-blue">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-barber-blue/10 text-sm font-semibold text-barber-blue">
                           {m.avatar_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img src={m.avatar_url} alt="" className="h-9 w-9 rounded-full object-cover" />
@@ -187,13 +190,13 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
                           )}
                         </div>
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-medium text-nexora-dark">{m.full_name ?? "Sem nome"}</p>
-                          <p className="truncate text-xs text-nexora-text-secondary">{m.email}</p>
+                          <p className="truncate text-sm font-medium text-barber-dark">{m.full_name ?? "Sem nome"}</p>
+                          <p className="truncate text-xs text-barber-text-secondary">{m.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-nexora-text">{m.job_title ?? "—"}</td>
-                    <td className="px-4 py-3 text-sm text-nexora-text">{m.department_name ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-barber-text">{m.job_title ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-barber-text">{m.department_name ?? "—"}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${roleColors[m.role] ?? "bg-gray-100 text-gray-700"}`}>
                         {roleLabels[m.role] ?? m.role}
@@ -204,13 +207,13 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
                         {statusConfig[m.status]?.label ?? m.status}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-nexora-text">
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-text">
                       {new Date(m.joined_at).toLocaleDateString("pt-BR")}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/dashboard/equipe/funcionarios/${m.membership_id}`}
-                        className="inline-flex items-center gap-1 rounded-lg border border-nexora-border px-3 py-1.5 text-xs font-medium text-nexora-text transition-colors hover:bg-nexora-bg-secondary"
+                        className="inline-flex items-center gap-1 rounded-lg border border-barber-border px-3 py-1.5 text-xs font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary"
                       >
                         <MoreHorizontal className="h-3.5 w-3.5" />
                         Detalhes
@@ -227,17 +230,17 @@ export default async function FuncionariosPage({ searchParams }: PageProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-nexora-text-secondary">
+          <p className="text-sm text-barber-text-secondary">
             Mostrando página {page} de {totalPages} ({total} membros)
           </p>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link href={buildFilterUrl({ page: String(page - 1) })} className="rounded-lg border border-nexora-border px-3 py-1.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary">
+              <Link href={buildFilterUrl({ page: String(page - 1) })} className="rounded-lg border border-barber-border px-3 py-1.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary">
                 Anterior
               </Link>
             )}
             {page < totalPages && (
-              <Link href={buildFilterUrl({ page: String(page + 1) })} className="rounded-lg border border-nexora-border px-3 py-1.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary">
+              <Link href={buildFilterUrl({ page: String(page + 1) })} className="rounded-lg border border-barber-border px-3 py-1.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary">
                 Próxima
               </Link>
             )}

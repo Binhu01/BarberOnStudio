@@ -1,115 +1,309 @@
+// This page uses dynamic server data
+export const instant = false;
+
 import { headers } from "next/headers";
 import Link from "next/link";
-import { Plus, CalendarDays, Clock, MapPin, User } from "lucide-react";
-import { getCalendarEvents } from "../tarefas/actions";
+import {
+  Plus,
+  CalendarDays,
+  Clock,
+  Scissors,
+  User,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  CircleDot,
+  Timer,
+  CalendarCheck,
+} from "lucide-react";
+import { getAppointments, getAppointmentStats } from "./actions";
+import type { AppointmentStatus } from "./actions";
+
+// ---------------------------------------------------------------------------
+// Status helpers
+// ---------------------------------------------------------------------------
+
+const STATUS_CONFIG: Record<
+  AppointmentStatus,
+  { label: string; color: string; bg: string; icon: typeof CheckCircle2 }
+> = {
+  scheduled: {
+    label: "Agendado",
+    color: "text-blue-600",
+    bg: "bg-blue-50 border-blue-200",
+    icon: CalendarDays,
+  },
+  confirmed: {
+    label: "Confirmado",
+    color: "text-emerald-600",
+    bg: "bg-emerald-50 border-emerald-200",
+    icon: CalendarCheck,
+  },
+  arrived: {
+    label: "Cliente chegou",
+    color: "text-amber-600",
+    bg: "bg-amber-50 border-amber-200",
+    icon: CircleDot,
+  },
+  in_progress: {
+    label: "Em andamento",
+    color: "text-indigo-600",
+    bg: "bg-indigo-50 border-indigo-200",
+    icon: Timer,
+  },
+  completed: {
+    label: "Concluído",
+    color: "text-green-600",
+    bg: "bg-green-50 border-green-200",
+    icon: CheckCircle2,
+  },
+  cancelled: {
+    label: "Cancelado",
+    color: "text-red-600",
+    bg: "bg-red-50 border-red-200",
+    icon: XCircle,
+  },
+  no_show: {
+    label: "Não compareceu",
+    color: "text-orange-600",
+    bg: "bg-orange-50 border-orange-200",
+    icon: AlertCircle,
+  },
+};
+
+const ORIGIN_LABELS: Record<string, string> = {
+  manual: "Manual",
+  landing_page: "Site",
+  recurring: "Recorrente",
+  whatsapp: "WhatsApp",
+};
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default async function AgendaPage() {
   await headers();
 
-  // Default to current month view
   const now = new Date();
-  const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+  const startDate = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  ).toISOString();
+  const endDate = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0,
+    23,
+    59,
+    59
+  ).toISOString();
 
-  const events = await getCalendarEvents({ start_date: startDate, end_date: endDate });
+  const [appointments, stats] = await Promise.all([
+    getAppointments({ startDate, endDate }),
+    getAppointmentStats().catch(() => ({
+      today: 0,
+      this_week: 0,
+      pending: 0,
+      completed_this_month: 0,
+      cancelled_this_month: 0,
+      no_show_this_month: 0,
+      revenue_this_month: 0,
+    })),
+  ]);
 
-  const monthName = now.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+  const monthName = now.toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric",
+  });
+
+  // Group by day
+  const groupedByDay = appointments.reduce<
+    Record<string, typeof appointments>
+  >((acc, appt) => {
+    const dayKey = new Date(appt.start_at).toLocaleDateString("pt-BR");
+    if (!acc[dayKey]) acc[dayKey] = [];
+    acc[dayKey].push(appt);
+    return acc;
+  }, {});
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-nexora-dark">Agenda</h1>
-          <p className="mt-1 text-sm text-nexora-text-secondary">{monthName}</p>
+          <h1 className="font-display text-2xl font-bold text-barber-white">
+            Agenda
+          </h1>
+          <p className="mt-1 text-sm capitalize text-barber-muted">
+            {monthName}
+          </p>
         </div>
         <Link
           href="/dashboard/agenda/novo"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-copper"
         >
           <Plus className="h-4 w-4" />
-          Novo evento
+          Novo agendamento
         </Link>
       </div>
 
-      {/* Events List (simplified monthly view) */}
-      {events.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-nexora-border p-12 text-center">
-          <CalendarDays className="mx-auto h-12 w-12 text-nexora-border" />
-          <p className="mt-4 text-sm font-medium text-nexora-dark">Nenhum evento neste mês</p>
-          <p className="mt-1 text-xs text-nexora-text-secondary">Crie um evento para começar a organizar sua agenda.</p>
+      {/* Stats Row */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4">
+          <p className="text-xs text-barber-muted">Hoje</p>
+          <p className="text-2xl font-bold text-barber-white">{stats.today}</p>
+        </div>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4">
+          <p className="text-xs text-barber-muted">Esta semana</p>
+          <p className="text-2xl font-bold text-barber-white">
+            {stats.this_week}
+          </p>
+        </div>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4">
+          <p className="text-xs text-barber-muted">Pendentes</p>
+          <p className="text-2xl font-bold text-barber-gold">{stats.pending}</p>
+        </div>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4">
+          <p className="text-xs text-barber-muted">Receita do mês</p>
+          <p className="text-2xl font-bold text-barber-success">
+            {formatCurrency(stats.revenue_this_month)}
+          </p>
+        </div>
+      </div>
+
+      {/* Appointments List grouped by day */}
+      {appointments.length === 0 ? (
+        <div className="rounded-xl border-2 border-dashed border-barber-border p-12 text-center">
+          <CalendarDays className="mx-auto h-12 w-12 text-barber-muted opacity-40" />
+          <p className="mt-4 text-sm font-medium text-barber-white">
+            Nenhum agendamento neste mês
+          </p>
+          <p className="mt-1 text-xs text-barber-muted">
+            Crie um agendamento para começar a organizar sua agenda.
+          </p>
           <Link
             href="/dashboard/agenda/novo"
-            className="mt-4 inline-block rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="mt-4 inline-block rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-dark hover:bg-barber-copper"
           >
-            Criar evento
+            Criar agendamento
           </Link>
         </div>
       ) : (
-        <div className="space-y-3">
-          {events.map((event) => {
-            const start = new Date(event.start_at);
-            const isAllDay = event.all_day;
-            const colorMap: Record<string, string> = {
-              blue: "border-l-blue-500 bg-blue-50/30",
-              green: "border-l-green-500 bg-green-50/30",
-              red: "border-l-red-500 bg-red-50/30",
-              amber: "border-l-amber-500 bg-amber-50/30",
-              purple: "border-l-purple-500 bg-purple-50/30",
-              cyan: "border-l-cyan-500 bg-cyan-50/30",
-            };
-            const colorClass = colorMap[event.color] ?? colorMap.blue;
+        <div className="space-y-6">
+          {Object.entries(groupedByDay).map(([dayLabel, dayAppts]) => (
+            <div key={dayLabel}>
+              {/* Day header */}
+              <div className="mb-3 flex items-center gap-2">
+                <div className="h-px flex-1 bg-barber-border" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-barber-muted">
+                  {dayLabel}
+                </span>
+                <div className="h-px flex-1 bg-barber-border" />
+              </div>
 
-            return (
-              <Link
-                key={event.id}
-                href={`/dashboard/agenda/${event.id}`}
-                className={`group flex flex-col gap-3 rounded-xl border border-nexora-border border-l-4 bg-white p-4 shadow-sm transition-all hover:shadow-md sm:flex-row sm:items-center ${colorClass}`}
-              >
-                {/* Date/Time */}
-                <div className="min-w-[100px] text-center sm:text-left">
-                  <p className="text-lg font-bold text-nexora-dark">{start.getDate()}</p>
-                  <p className="text-xs uppercase text-nexora-text-secondary">
-                    {start.toLocaleDateString("pt-BR", { weekday: "short" })}
-                  </p>
-                  {!isAllDay && (
-                    <p className="mt-1 flex items-center justify-center gap-1 text-xs text-nexora-text-secondary sm:justify-start">
-                      <Clock className="h-3 w-3" />
-                      {start.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-                    </p>
-                  )}
-                  {isAllDay && (
-                    <span className="mt-1 inline-block rounded bg-nexora-bg-secondary px-1.5 py-0.5 text-[10px] font-medium text-nexora-text-secondary">
-                      Dia inteiro
-                    </span>
-                  )}
-                </div>
+              <div className="space-y-2">
+                {dayAppts.map((appt) => {
+                  const start = new Date(appt.start_at);
+                  const end = new Date(appt.end_at);
+                  const statusCfg =
+                    STATUS_CONFIG[appt.status] ?? STATUS_CONFIG.scheduled;
+                  const StatusIcon = statusCfg.icon;
 
-                {/* Details */}
-                <div className="flex-1">
-                  <h3 className="font-medium text-nexora-dark group-hover:text-nexora-blue">{event.title}</h3>
-                  <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-nexora-text-secondary">
-                    {event.location && (
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {event.location}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-1">
-                      <User className="h-3 w-3" />
-                      {event.creator_name}
-                    </span>
-                    {event.attendee_count > 0 && (
-                      <span>{event.attendee_count} participante{event.attendee_count > 1 ? "s" : ""}</span>
-                    )}
-                    {event.recurrence_rule && (
-                      <span className="rounded bg-nexora-bg-secondary px-1.5 py-0.5 font-medium">Recorrente</span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+                  return (
+                    <Link
+                      key={appt.event_id}
+                      href={`/dashboard/agenda/${appt.event_id}`}
+                      className="group flex flex-col gap-3 rounded-xl border border-barber-border bg-barber-graphite p-4 transition-all hover:border-barber-gold/30 hover:shadow-md sm:flex-row sm:items-center"
+                    >
+                      {/* Time column */}
+                      <div className="min-w-[80px] text-center sm:text-left">
+                        <p className="text-lg font-bold text-barber-white">
+                          {start.toLocaleTimeString("pt-BR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                        <p className="text-xs text-barber-muted">
+                          {end.toLocaleTimeString("pt-BR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </div>
+
+                      {/* Service & Customer info */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start gap-2">
+                          <h3 className="truncate font-medium text-barber-white group-hover:text-barber-gold">
+                            {appt.title}
+                          </h3>
+                        </div>
+
+                        <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-barber-muted">
+                          {/* Barber */}
+                          {appt.barber_name && (
+                            <span className="flex items-center gap-1">
+                              <User className="h-3 w-3" />
+                              {appt.barber_name}
+                            </span>
+                          )}
+
+                          {/* Service */}
+                          {appt.service_name && (
+                            <span className="flex items-center gap-1">
+                              <Scissors className="h-3 w-3" />
+                              {appt.service_name}
+                              {appt.service_duration && (
+                                <span className="opacity-60">
+                                  ({appt.service_duration}min)
+                                </span>
+                              )}
+                            </span>
+                          )}
+
+                          {/* Customer */}
+                          {appt.customer_name && (
+                            <span className="flex items-center gap-1">
+                              👤 {appt.customer_name}
+                            </span>
+                          )}
+
+                          {/* Price */}
+                          {appt.total_price != null && appt.total_price > 0 && (
+                            <span className="font-medium text-barber-gold">
+                              {formatCurrency(appt.total_price)}
+                            </span>
+                          )}
+
+                          {/* Origin */}
+                          {appt.origin !== "manual" && (
+                            <span className="rounded bg-barber-dark px-1.5 py-0.5 text-[10px] text-barber-muted">
+                              {ORIGIN_LABELS[appt.origin] ?? appt.origin}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Status badge */}
+                      <div className="flex items-center gap-2 sm:justify-end">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium ${statusCfg.bg} ${statusCfg.color}`}
+                        >
+                          <StatusIcon className="h-3 w-3" />
+                          {statusCfg.label}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -184,8 +184,8 @@ export default function OrderForm({
       )}
 
       {/* Section: Dados do Pedido */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
           Dados do Pedido
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -193,13 +193,13 @@ export default function OrderForm({
           <div className="relative sm:col-span-2">
             <label
               htmlFor="customer-search"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Cliente <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nexora-text-secondary" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-text-secondary" />
                 <input
                   id="customer-search"
                   type="text"
@@ -214,17 +214,17 @@ export default function OrderForm({
                   }}
                   onFocus={() => setShowCustomerDropdown(true)}
                   onBlur={() => setTimeout(() => setShowCustomerDropdown(false), 200)}
-                  className="w-full rounded-lg border border-nexora-border py-2 pl-9 pr-3 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                  className="w-full rounded-lg border border-barber-border py-2 pl-9 pr-3 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                 />
               </div>
               {showCustomerDropdown && (
-                <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-nexora-border bg-white shadow-lg">
+                <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-barber-border bg-white shadow-lg">
                   {isLoadingCustomers ? (
                     <div className="flex items-center justify-center py-4">
-                      <Loader2 className="h-5 w-5 animate-spin text-nexora-text-secondary" />
+                      <Loader2 className="h-5 w-5 animate-spin text-barber-text-secondary" />
                     </div>
                   ) : customers.length === 0 ? (
-                    <p className="px-3 py-4 text-center text-sm text-nexora-text-secondary">
+                    <p className="px-3 py-4 text-center text-sm text-barber-text-secondary">
                       Nenhum cliente encontrado
                     </p>
                   ) : (
@@ -233,15 +233,15 @@ export default function OrderForm({
                         key={customer.id}
                         type="button"
                         onMouseDown={() => selectCustomer(customer)}
-                        className={`w-full px-3 py-2 text-left text-sm hover:bg-nexora-bg-secondary ${
+                        className={`w-full px-3 py-2 text-left text-sm hover:bg-barber-bg-secondary ${
                           selectedCustomerId === customer.id
-                            ? "bg-nexora-bg-secondary font-medium text-nexora-blue"
-                            : "text-nexora-dark"
+                            ? "bg-barber-bg-secondary font-medium text-barber-blue"
+                            : "text-barber-dark"
                         }`}
                       >
                         <span>{customer.name}</span>
                         {customer.email && (
-                          <span className="ml-2 text-xs text-nexora-text-secondary">
+                          <span className="ml-2 text-xs text-barber-text-secondary">
                             {customer.email}
                           </span>
                         )}
@@ -255,7 +255,7 @@ export default function OrderForm({
               <button
                 type="button"
                 onClick={clearCustomer}
-                className="mt-1 text-xs text-nexora-blue hover:underline"
+                className="mt-1 text-xs text-barber-blue hover:underline"
               >
                 Limpar seleção
               </button>
@@ -270,14 +270,14 @@ export default function OrderForm({
           <div>
             <label
               htmlFor="channel_id"
-              className="block text-sm font-medium text-nexora-dark"
+              className="block text-sm font-medium text-barber-dark"
             >
               Canal de Venda
             </label>
             <select
               id="channel_id"
               {...register("channel_id")}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Selecione um canal (opcional)</option>
               {channels
@@ -293,15 +293,15 @@ export default function OrderForm({
       </section>
 
       {/* Section: Itens */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+          <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
             Itens
           </h2>
           <button
             type="button"
             onClick={() => append({ description: "", quantity: 1, unit_price: 0, discount: 0 })}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-nexora-border px-3 py-1.5 text-xs font-medium text-nexora-dark hover:bg-nexora-bg-secondary"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border px-3 py-1.5 text-xs font-medium text-barber-dark hover:bg-barber-bg-secondary"
           >
             <Plus className="h-3.5 w-3.5" />
             Adicionar Item
@@ -320,20 +320,20 @@ export default function OrderForm({
             return (
               <div
                 key={field.id}
-                className="rounded-lg border border-nexora-border bg-nexora-bg p-4"
+                className="rounded-lg border border-barber-border bg-barber-bg p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 space-y-3">
                     {/* Description */}
                     <div>
-                      <label className="block text-xs font-medium text-nexora-text-secondary">
+                      <label className="block text-xs font-medium text-barber-text-secondary">
                         Descrição <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         placeholder="Descrição do produto/serviço"
                         {...register(`items.${index}.description`)}
-                        className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                        className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                       />
                       {errors.items?.[index]?.description && (
                         <p className="mt-1 text-xs text-red-600">
@@ -345,7 +345,7 @@ export default function OrderForm({
                     <div className="grid gap-3 sm:grid-cols-3">
                       {/* Quantity */}
                       <div>
-                        <label className="block text-xs font-medium text-nexora-text-secondary">
+                        <label className="block text-xs font-medium text-barber-text-secondary">
                           Qtd <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -353,7 +353,7 @@ export default function OrderForm({
                           min="0"
                           step="any"
                           {...register(`items.${index}.quantity`, { valueAsNumber: true })}
-                          className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                          className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                         />
                         {errors.items?.[index]?.quantity && (
                           <p className="mt-1 text-xs text-red-600">
@@ -364,7 +364,7 @@ export default function OrderForm({
 
                       {/* Unit Price */}
                       <div>
-                        <label className="block text-xs font-medium text-nexora-text-secondary">
+                        <label className="block text-xs font-medium text-barber-text-secondary">
                           Preço Unit. <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -372,7 +372,7 @@ export default function OrderForm({
                           min="0"
                           step="0.01"
                           {...register(`items.${index}.unit_price`, { valueAsNumber: true })}
-                          className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                          className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                         />
                         {errors.items?.[index]?.unit_price && (
                           <p className="mt-1 text-xs text-red-600">
@@ -383,7 +383,7 @@ export default function OrderForm({
 
                       {/* Discount */}
                       <div>
-                        <label className="block text-xs font-medium text-nexora-text-secondary">
+                        <label className="block text-xs font-medium text-barber-text-secondary">
                           Desconto
                         </label>
                         <input
@@ -391,7 +391,7 @@ export default function OrderForm({
                           min="0"
                           step="0.01"
                           {...register(`items.${index}.discount`, { valueAsNumber: true })}
-                          className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+                          className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
                         />
                       </div>
                     </div>
@@ -400,8 +400,8 @@ export default function OrderForm({
                   {/* Line Total & Remove */}
                   <div className="flex flex-col items-end gap-2">
                     <div className="text-right">
-                      <p className="text-xs text-nexora-text-secondary">Total</p>
-                      <p className="text-sm font-semibold text-nexora-dark">
+                      <p className="text-xs text-barber-text-secondary">Total</p>
+                      <p className="text-sm font-semibold text-barber-dark">
                         {formatCurrency(lineTotal)}
                       </p>
                     </div>
@@ -409,7 +409,7 @@ export default function OrderForm({
                       <button
                         type="button"
                         onClick={() => remove(index)}
-                        className="rounded p-1.5 text-nexora-text-secondary hover:bg-red-50 hover:text-red-600"
+                        className="rounded p-1.5 text-barber-text-secondary hover:bg-red-50 hover:text-red-600"
                         title="Remover item"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -423,22 +423,22 @@ export default function OrderForm({
         </div>
 
         {/* Running Total */}
-        <div className="mt-6 rounded-lg border border-nexora-border bg-nexora-bg p-4">
+        <div className="mt-6 rounded-lg border border-barber-border bg-barber-bg p-4">
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-nexora-text-secondary">Subtotal</span>
-              <span className="font-medium text-nexora-dark">{formatCurrency(subtotal)}</span>
+              <span className="text-barber-text-secondary">Subtotal</span>
+              <span className="font-medium text-barber-dark">{formatCurrency(subtotal)}</span>
             </div>
             {totalDiscount > 0 && (
               <div className="flex justify-between text-sm">
-                <span className="text-nexora-text-secondary">Descontos</span>
+                <span className="text-barber-text-secondary">Descontos</span>
                 <span className="font-medium text-red-600">-{formatCurrency(totalDiscount)}</span>
               </div>
             )}
-            <div className="border-t border-nexora-border pt-2">
+            <div className="border-t border-barber-border pt-2">
               <div className="flex justify-between">
-                <span className="text-sm font-semibold text-nexora-dark">Total</span>
-                <span className="text-lg font-bold text-nexora-blue">
+                <span className="text-sm font-semibold text-barber-dark">Total</span>
+                <span className="text-lg font-bold text-barber-blue">
                   {formatCurrency(grandTotal)}
                 </span>
               </div>
@@ -448,14 +448,14 @@ export default function OrderForm({
       </section>
 
       {/* Section: Observações */}
-      <section className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-nexora-text-secondary">
+      <section className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-barber-text-secondary">
           Observações
         </h2>
         <div className="mt-4">
           <label
             htmlFor="notes"
-            className="block text-sm font-medium text-nexora-dark"
+            className="block text-sm font-medium text-barber-dark"
           >
             Notas
           </label>
@@ -464,7 +464,7 @@ export default function OrderForm({
             rows={4}
             placeholder="Informações adicionais sobre o pedido..."
             {...register("notes")}
-            className="mt-1 w-full resize-y rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+            className="mt-1 w-full resize-y rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
           />
         </div>
       </section>
@@ -475,14 +475,14 @@ export default function OrderForm({
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="rounded-lg border border-nexora-border px-4 py-2.5 text-sm font-medium text-nexora-text hover:bg-nexora-bg-secondary disabled:opacity-50"
+          className="rounded-lg border border-barber-border px-4 py-2.5 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-nexora-blue/90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 disabled:opacity-50"
         >
           {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
           {isSubmitting ? "Salvando..." : submitLabel}

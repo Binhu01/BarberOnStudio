@@ -33,18 +33,18 @@ export default async function ContasPage() {
  return (
  <div className="space-y-6">
  <div className="flex items-center justify-between">
- <h1 className="font-display text-2xl font-bold text-nexora-dark">Contas Financeiras</h1>
- <button className="inline-flex items-center gap-2 rounded-lg bg-nexora-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">
+ <h1 className="font-display text-2xl font-bold text-barber-dark">Contas Financeiras</h1>
+ <button className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">
  <Plus className="h-4 w-4" />
  Nova Conta
  </button>
  </div>
 
  {accountsWithBalance.length === 0 ? (
- <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-nexora-border bg-white py-16">
- <Landmark className="mb-4 h-12 w-12 text-nexora-text-secondary/50" />
- <p className="text-lg font-medium text-nexora-dark">Nenhuma conta cadastrada</p>
- <p className="text-sm text-nexora-text-secondary">Adicione suas contas bancárias, caixa e carteiras digitais.</p>
+ <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-barber-border bg-white py-16">
+ <Landmark className="mb-4 h-12 w-12 text-barber-text-secondary/50" />
+ <p className="text-lg font-medium text-barber-dark">Nenhuma conta cadastrada</p>
+ <p className="text-sm text-barber-text-secondary">Adicione suas contas bancárias, caixa e carteiras digitais.</p>
  </div>
  ) : (
  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -54,17 +54,17 @@ export default async function ContasPage() {
  <div
  key={account.id}
  className={`rounded-xl border bg-white p-5 transition-shadow hover:shadow-sm ${
- account.is_active ? "border-nexora-border" : "border-nexora-border opacity-60"
+ account.is_active ? "border-barber-border" : "border-barber-border opacity-60"
  }`}
  >
  <div className="flex items-start justify-between">
  <div className="flex items-center gap-3">
- <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-nexora-blue/10">
- <Icon className="h-5 w-5 text-nexora-blue" />
+ <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-blue/10">
+ <Icon className="h-5 w-5 text-barber-blue" />
  </div>
  <div>
- <p className="font-semibold text-nexora-dark">{account.name}</p>
- <p className="text-xs text-nexora-text-secondary">
+ <p className="font-semibold text-barber-dark">{account.name}</p>
+ <p className="text-xs text-barber-text-secondary">
  {typeLabels[account.account_type] ?? account.account_type}
  {account.institution_name && ` · ${account.institution_name}`}
  </p>
@@ -76,14 +76,14 @@ export default async function ContasPage() {
  </div>
 
  <div className="mt-4">
- <p className="text-xs text-nexora-text-secondary">Saldo atual</p>
- <p className={`text-2xl font-bold ${account.balance >= 0 ? "text-nexora-dark" : "text-nexora-error"}`}>
+ <p className="text-xs text-barber-text-secondary">Saldo atual</p>
+ <p className={`text-2xl font-bold ${account.balance >= 0 ? "text-barber-dark" : "text-barber-error"}`}>
  {brl.format(account.balance)}
  </p>
  </div>
 
  {account.description && (
- <p className="mt-3 text-xs text-nexora-text-secondary line-clamp-2">{account.description}</p>
+ <p className="mt-3 text-xs text-barber-text-secondary line-clamp-2">{account.description}</p>
  )}
  </div>
  );

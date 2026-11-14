@@ -37,11 +37,11 @@ export function StatusTimeline({
 }) {
   if (history.length === 0) {
     return (
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-nexora-dark">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-dark">
           Histórico de status
         </h2>
-        <p className="mt-4 text-sm text-nexora-text-secondary">
+        <p className="mt-4 text-sm text-barber-text-secondary">
           Nenhuma alteração registrada.
         </p>
       </div>
@@ -49,8 +49,8 @@ export function StatusTimeline({
   }
 
   return (
-    <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
-      <h2 className="font-display text-lg font-semibold text-nexora-dark">
+    <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+      <h2 className="font-display text-lg font-semibold text-barber-dark">
         Histórico de status
       </h2>
       <div className="mt-4 space-y-0">
@@ -60,26 +60,26 @@ export function StatusTimeline({
             <div key={entry.id} className="relative flex gap-4 pb-6 last:pb-0">
               {/* Timeline connector */}
               {!isLast && (
-                <div className="absolute left-[15px] top-8 h-full w-px bg-nexora-border" />
+                <div className="absolute left-[15px] top-8 h-full w-px bg-barber-border" />
               )}
               {/* Dot */}
-              <div className="relative mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-nexora-border bg-nexora-bg-secondary">
-                <Clock className="h-3.5 w-3.5 text-nexora-text-secondary" />
+              <div className="relative mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-barber-border bg-barber-bg-secondary">
+                <Clock className="h-3.5 w-3.5 text-barber-text-secondary" />
               </div>
               {/* Content */}
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-nexora-dark">
-                  <span className="text-nexora-text-secondary">
+                <p className="text-sm font-medium text-barber-dark">
+                  <span className="text-barber-text-secondary">
                     {getStatusLabel(entry.from_status)}
                   </span>
                   {" → "}
                   <span>{getStatusLabel(entry.to_status)}</span>
                 </p>
-                <p className="mt-0.5 text-xs text-nexora-text-secondary">
+                <p className="mt-0.5 text-xs text-barber-text-secondary">
                   {formatDateTime(entry.created_at)}
                 </p>
                 {entry.reason && (
-                  <p className="mt-1 text-sm text-nexora-text">{entry.reason}</p>
+                  <p className="mt-1 text-sm text-barber-text">{entry.reason}</p>
                 )}
               </div>
             </div>

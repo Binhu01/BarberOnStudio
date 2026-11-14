@@ -451,3 +451,224 @@ async function recalculateOrderTotals(orderId: string): Promise<void> {
     })
     .eq("id", orderId);
 }
+
+// -----------------------------------------------------------------------------
+// PAYMENTS — Adicionar pagamento combinado à comanda via RPC
+// -----------------------------------------------------------------------------
+export async function addOrderPayment(input: {
+  order_id: string;
+  payment_method: "cash" | "pix" | "debit" | "credit" | "other";
+  amount: number;
+  change_amount?: number;
+  reference?: string | null;
+}): Promise<void> {
+  const supabase = await createClient();
+  const org = await getOrg();
+
+  // Verificar se a comanda existe e pertence à org
+  const { data: order } = await supabase
+    .from("orders")
+    .select("id, status")
+    .eq("id", input.order_id)
+    .eq("organization_id", org.id)
+    .single();
+
+  if (!order) throw new Error("Comanda não encontrada");
+  if (order.status === "cancelled") throw new Error("Não é possível adicionar pagamento a comanda cancelada");
+
+  const { error } = await supabase.rpc("add_payment_to_order", {
+    p_order_id: input.order_id,
+    p_payment_method: input.payment_method,
+    p_amount: input.amount,
+    p_change_amount: input.change_amount ?? 0,
+    p_reference: input.reference ?? null,
+  });
+
+  if (error) {
+    // Fallback: inserir diretamente se RPC não existir
+    if (error.message?.includes("does not exist")) {
+      const { error: insertError } = await supabase.from("order_payments").insert({
+        organization_id: org.id,
+        order_id: input.order_id,
+        payment_method: input.payment_method,
+        amount: input.amount,
+        change_amount: input.change_amount ?? 0,
+        reference: input.reference ?? null,
+      });
+      if (insertError) throw insertError;
+    } else {
+      throw new Error(error.message);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// PAYMENTS — Listar pagamentos de uma comanda
+// -----------------------------------------------------------------------------
+export async function getOrderPayments(orderId: string): Promise<{
+  id: string;
+  payment_method: string;
+  amount: number;
+  change_amount: number;
+  reference: string | null;
+  created_at: string;
+}[]> {
+  const supabase = await createClient();
+  const org = await getOrg();
+
+  const { data, error } = await supabase
+    .from("order_payments")
+    .select("id, payment_method, amount, change_amount, reference, created_at")
+    .eq("order_id", orderId)
+    .eq("organization_id", org.id)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    if (error.code === "42P01") return []; // tabela não existe
+    throw error;
+  }
+
+  return (data ?? []).map((row: any) => ({
+    ...row,
+    amount: Number(row.amount),
+    change_amount: Number(row.change_amount),
+  }));
+}
+
+// -----------------------------------------------------------------------------
+// STOCK — Reservar estoque ao adicionar produto na comanda
+// -----------------------------------------------------------------------------
+export async function reserveStockForItem(input: {
+  order_item_id: string;
+  product_id: string;
+  quantity: number;
+}): Promise<void> {
+  const supabase = await createClient();
+
+  const { error } = await supabase.rpc("reserve_stock_for_order_item", {
+    p_order_item_id: input.order_item_id,
+    p_product_id: input.product_id,
+    p_quantity: input.quantity,
+  });
+
+  if (error) {
+    if (!error.message?.includes("does not exist")) {
+      throw new Error(error.message);
+    }
+    // Se RPC não existir, continuar sem reserva
+  }
+}
+
+// -----------------------------------------------------------------------------
+// STOCK — Liberar estoque ao cancelar comanda
+// -----------------------------------------------------------------------------
+export async function releaseStockForOrder(orderId: string): Promise<void> {
+  const supabase = await createClient();
+
+  const { error } = await supabase.rpc("release_stock_for_order", {
+    p_order_id: orderId,
+  });
+
+  if (error && !error.message?.includes("does not exist")) {
+    throw new Error(error.message);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// LINK — Vincular agendamento à comanda
+// -----------------------------------------------------------------------------
+export async function linkAppointmentToOrder(input: {
+  order_id: string;
+  appointment_id: string;
+}): Promise<void> {
+  const supabase = await createClient();
+  const org = await getOrg();
+
+  // Verificar se ambos existem na org
+  const [{ data: order }, { data: appointment }] = await Promise.all([
+    supabase.from("orders").select("id").eq("id", input.order_id).eq("organization_id", org.id).single(),
+    supabase.from("calendar_events").select("id").eq("id", input.appointment_id).eq("organization_id", org.id).single(),
+  ]);
+
+  if (!order) throw new Error("Comanda não encontrada");
+  if (!appointment) throw new Error("Agendamento não encontrado");
+
+  const { error } = await supabase.rpc("link_appointment_to_order", {
+    p_order_id: input.order_id,
+    p_appointment_id: input.appointment_id,
+  });
+
+  if (error) {
+    // Fallback direto
+    if (error.message?.includes("does not exist")) {
+      await supabase
+        .from("orders")
+        .update({ linked_appointment_id: input.appointment_id, updated_at: new Date().toISOString() })
+        .eq("id", input.order_id);
+    } else {
+      throw new Error(error.message);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// OVERRIDE: Cancelar comanda com liberação de estoque
+// -----------------------------------------------------------------------------
+export async function cancelComandaWithStock(orderId: string): Promise<void> {
+  // Liberar estoque reservado primeiro
+  await releaseStockForOrder(orderId);
+  // Depois cancelar normalmente
+  await cancelComanda(orderId);
+}
+
+// -----------------------------------------------------------------------------
+// OVERRIDE: Finalizar comanda com consumo de estoque e pagamentos combinados
+// -----------------------------------------------------------------------------
+export async function completeComandaWithPayments(input: CompleteComandaInput & {
+  payments?: { payment_method: string; amount: number; change_amount?: number; reference?: string }[];
+}): Promise<void> {
+  const supabase = await createClient();
+  const org = await getOrg();
+
+  // Se houver pagamentos combinados, usar fluxo novo
+  if (input.payments && input.payments.length > 0) {
+    for (const payment of input.payments) {
+      await addOrderPayment({
+        order_id: input.order_id,
+        payment_method: payment.payment_method as any,
+        amount: payment.amount,
+        change_amount: payment.change_amount,
+        reference: payment.reference,
+      });
+    }
+  } else {
+    // Fluxo tradicional com payment_method único
+    await completeComanda(input);
+  }
+
+  // Consumir estoque reservado
+  try {
+    await supabase.rpc("consume_stock_for_order", { p_order_id: input.order_id });
+  } catch {
+    // Best-effort
+  }
+
+  // Calcular comissões se ainda não calculadas
+  const { data: order } = await supabase
+    .from("orders")
+    .select("assigned_barber_id, commission_calculated")
+    .eq("id", input.order_id)
+    .single();
+
+  if (order?.assigned_barber_id && !(order as any).commission_calculated) {
+    try {
+      await supabase.rpc("calculate_order_commissions", { p_order_id: input.order_id });
+      await supabase
+        .from("orders")
+        .update({ commission_calculated: true })
+        .eq("id", input.order_id);
+    } catch {
+      // Best-effort
+    }
+  }
+}

@@ -74,11 +74,11 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
         </div>
       )}
 
-      <div className="rounded-xl border border-nexora-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
         <div className="grid gap-6 sm:grid-cols-2">
           {/* Title */}
           <div className="sm:col-span-2">
-            <label htmlFor="title" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="title" className="block text-sm font-medium text-barber-dark">
               Título *
             </label>
             <input
@@ -88,21 +88,21 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
               required
               maxLength={300}
               defaultValue={initialData?.title ?? ""}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary/50 focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary/50 focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
               placeholder="Ex: Revisar proposta comercial"
             />
           </div>
 
           {/* Status */}
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="status" className="block text-sm font-medium text-barber-dark">
               Status
             </label>
             <select
               id="status"
               name="status"
               defaultValue={initialData?.status ?? "todo"}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="todo">A fazer</option>
               <option value="in_progress">Em andamento</option>
@@ -113,14 +113,14 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
 
           {/* Priority */}
           <div>
-            <label htmlFor="priority" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="priority" className="block text-sm font-medium text-barber-dark">
               Prioridade
             </label>
             <select
               id="priority"
               name="priority"
               defaultValue={initialData?.priority ?? "medium"}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="low">Baixa</option>
               <option value="medium">Média</option>
@@ -131,7 +131,7 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
 
           {/* Due Date */}
           <div>
-            <label htmlFor="due_date" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="due_date" className="block text-sm font-medium text-barber-dark">
               Prazo
             </label>
             <input
@@ -139,20 +139,20 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
               name="due_date"
               type="date"
               defaultValue={initialData?.due_date ? initialData.due_date.slice(0, 10) : ""}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             />
           </div>
 
           {/* Assigned To */}
           <div>
-            <label htmlFor="assigned_to" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="assigned_to" className="block text-sm font-medium text-barber-dark">
               Responsável
             </label>
             <select
               id="assigned_to"
               name="assigned_to"
               defaultValue={initialData?.assigned_to ?? ""}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
             >
               <option value="">Sem responsável</option>
               {members.map((m) => (
@@ -165,7 +165,7 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
 
           {/* Description */}
           <div className="sm:col-span-2">
-            <label htmlFor="description" className="block text-sm font-medium text-nexora-dark">
+            <label htmlFor="description" className="block text-sm font-medium text-barber-dark">
               Descrição
             </label>
             <textarea
@@ -174,7 +174,7 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
               rows={4}
               maxLength={5000}
               defaultValue={initialData?.description ?? ""}
-              className="mt-1 w-full rounded-lg border border-nexora-border px-3 py-2 text-sm text-nexora-dark placeholder:text-nexora-text-secondary/50 focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue"
+              className="mt-1 w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-dark placeholder:text-barber-text-secondary/50 focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
               placeholder="Detalhes adicionais sobre a tarefa..."
             />
           </div>
@@ -186,13 +186,13 @@ export function TaskForm({ members, initialData, taskId }: TaskFormProps) {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-nexora-blue px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-barber-blue px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
         >
           {submitting ? "Salvando..." : taskId ? "Atualizar tarefa" : "Criar tarefa"}
         </button>
         <a
           href="/dashboard/tarefas"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-nexora-border bg-white px-6 py-2.5 text-sm font-medium text-nexora-dark transition-colors hover:bg-nexora-bg-secondary"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-white px-6 py-2.5 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-bg-secondary"
         >
           Cancelar
         </a>

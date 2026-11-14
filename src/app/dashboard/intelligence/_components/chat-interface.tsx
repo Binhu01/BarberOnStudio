@@ -227,18 +227,18 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  }
 
  return (
- <div className="flex h-[calc(100vh-12rem)] flex-col rounded-xl border border-nexora-border bg-white shadow-sm">
+ <div className="flex h-[calc(100vh-12rem)] flex-col rounded-xl border border-barber-border bg-white shadow-sm">
  {/* Messages Area */}
  <div className="flex-1 overflow-y-auto p-4 space-y-4">
  {messages.length === 0 && !isStreaming && (
  <div className="flex h-full flex-col items-center justify-center text-center">
- <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-nexora-blue to-nexora-cyan shadow-lg">
+ <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-barber-blue to-barber-cyan shadow-lg">
  <Sparkles className="h-8 w-8 text-white" />
  </div>
- <h2 className="mt-4 font-display text-lg font-semibold text-nexora-dark">
+ <h2 className="mt-4 font-display text-lg font-semibold text-barber-dark">
  Nexora Intelligence
  </h2>
- <p className="mt-2 max-w-md text-sm text-nexora-text-secondary">
+ <p className="mt-2 max-w-md text-sm text-barber-text-secondary">
  Pergunte sobre vendas, estoque, financeiro, clientes ou qualquer aspecto da sua empresa.
  O assistente consulta dados reais e respeita suas permissões.
  </p>
@@ -254,8 +254,8 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  <div
  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
  msg.role === "user"
- ? "bg-nexora-bg-secondary text-nexora-text-secondary"
- : "bg-gradient-to-br from-nexora-blue to-nexora-cyan text-white"
+ ? "bg-barber-bg-secondary text-barber-text-secondary"
+ : "bg-gradient-to-br from-barber-blue to-barber-cyan text-white"
  }`}
  >
  {msg.role === "user" ? (
@@ -269,8 +269,8 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  <div
  className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${
  msg.role === "user"
- ? "bg-nexora-blue text-white"
- : "bg-nexora-bg-secondary text-nexora-dark"
+ ? "bg-barber-blue text-white"
+ : "bg-barber-bg-secondary text-barber-dark"
  }`}
  >
  {/* Tool calls indicator */}
@@ -313,7 +313,7 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  </div>
 
  {/* Input Area */}
- <div className="border-t border-nexora-border p-4">
+ <div className="border-t border-barber-border p-4">
  <form onSubmit={handleSubmit} className="flex gap-3">
  <textarea
  ref={textareaRef}
@@ -323,13 +323,13 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  placeholder="Pergunte algo sobre sua empresa..."
  disabled={isStreaming}
  rows={1}
- className="flex-1 resize-none rounded-xl border border-nexora-border px-4 py-3 text-sm text-nexora-dark placeholder:text-nexora-text-secondary/50 focus:border-nexora-blue focus:outline-none focus:ring-1 focus:ring-nexora-blue disabled:opacity-50"
+ className="flex-1 resize-none rounded-xl border border-barber-border px-4 py-3 text-sm text-barber-dark placeholder:text-barber-text-secondary/50 focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue disabled:opacity-50"
  style={{ minHeight: "48px", maxHeight: "120px" }}
  />
  <button
  type="submit"
  disabled={!inputValue.trim() || isStreaming}
- className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-nexora-blue text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+ className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-barber-blue text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
  >
  {isStreaming ? (
  <Loader2 className="h-5 w-5 animate-spin" />
@@ -340,14 +340,14 @@ export function ChatInterface({ conversationId, initialQuestion }: ChatInterface
  </form>
 
  {/* Footer actions */}
- <div className="mt-2 flex items-center justify-between text-xs text-nexora-text-secondary">
+ <div className="mt-2 flex items-center justify-between text-xs text-barber-text-secondary">
  <span>
  As respostas são geradas por IA com base nos dados da sua organização.
  Sempre verifique informações críticas.
  </span>
  <button
  onClick={handleDeleteConversation}
- className="inline-flex items-center gap-1 text-nexora-text-secondary transition-colors hover:text-red-600"
+ className="inline-flex items-center gap-1 text-barber-text-secondary transition-colors hover:text-red-600"
  >
  <Trash2 className="h-3 w-3" />
  Apagar conversa
