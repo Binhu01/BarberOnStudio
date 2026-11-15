@@ -1,9 +1,7 @@
-// This page uses dynamic server data
-export const instant = false;
-
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { Suspense } from "react";
 import {
   Scissors,
   CalendarDays,
@@ -33,7 +31,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function HomePage() {
+async function LandingContent() {
   const data = await getLandingData();
 
   return (
@@ -499,5 +497,19 @@ export default async function HomePage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-bo-black text-bo-white font-sans flex items-center justify-center">
+          <p className="text-bo-gray">Carregando...</p>
+        </div>
+      }
+    >
+      <LandingContent />
+    </Suspense>
   );
 }
