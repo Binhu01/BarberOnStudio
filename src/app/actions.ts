@@ -1,13 +1,29 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 // =============================================================================
 // LANDING PAGE DATA — Dados dinâmicos do Supabase para a landing page
+// Usa createClient direto (não SSR) para evitar problemas com cookies no Vercel
 // =============================================================================
 
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    throw new Error("Supabase credentials not configured");
+  }
+  return createSupabaseClient(url, key);
+}
+
 export async function getLandingData() {
-  const supabase = await createClient();
+  let supabase;
+  try {
+    supabase = getSupabase();
+  } catch (e: any) {
+    console.error("[getLandingData] Credenciais Supabase não configuradas:", e.message);
+    return { barbers: [], services: [], products: [], settings: null };
+  }
 
   // 1. Buscar organização
   const { data: orgs, error: orgError } = await supabase
@@ -22,7 +38,7 @@ export async function getLandingData() {
 
   const org = orgs[0];
 
-  // 2. Buscar membros da organização (sem filtrar por status para evitar problemas de schema)
+  // 2. Buscar membros da organização
   const { data: activeMembers, error: membersError } = await supabase
     .from("memberships")
     .select("user_id, role")
@@ -39,64 +55,74 @@ export async function getLandingData() {
   }
 
   // 3. Buscar dados em paralelo usando Promise.allSettled para resiliência
-  // Se uma query falhar, as outras ainda retornam dados
-  const [barbersResult, servicesResult, productsResult, settingsResult] = await Promise.allSettled([
-    // Profissionais
-    memberIds.length > 0
-      ? supabase
-          .from("profiles")
-          .select("id, full_name, avatar_url")
-          .in("id", memberIds)
-          .order("full_name")
-      : Promise.resolve({ data: [], error: null }),
+  const [barbersResult, servicesResult, productsResult, settingsResult] =
+    await Promise.allSettled([
+      // Profissionais
+      memberIds.length > 0
+        ? supabase
+            .from("profiles")
+            .select("id, full_name, avatar_url")
+            .in("id", memberIds)
+            .order("full_name")
+        : Promise.resolve({ data: [], error: null }),
 
-    // Serviços ativos
-    supabase
-      .from("barber_services")
-      .select("id, name, description, price, duration_minutes, image_url")
-      .eq("organization_id", org.id)
-      .eq("is_active", true)
-      .order("display_order", { ascending: true })
-      .order("name"),
+      // Serviços ativos
+      supabase
+        .from("barber_services")
+        .select("id, name, description, price, duration_minutes, image_url")
+        .eq("organization_id", org.id)
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+        .order("name"),
 
-    // Produtos ativos — coluna de preço é sale_price, não price
-    supabase
-      .from("products")
-      .select("id, name, description, sale_price, image_url")
-      .eq("organization_id", org.id)
-      .eq("is_active", true)
-      .order("name")
-      .limit(8),
+      // Produtos ativos — coluna de preço é sale_price, não price
+      supabase
+        .from("products")
+        .select("id, name, description, sale_price, image_url")
+        .eq("organization_id", org.id)
+        .eq("is_active", true)
+        .order("name")
+        .limit(8),
 
-    // Configurações da barbearia
-    supabase
-      .from("barbershop_settings")
-      .select("*")
-      .eq("organization_id", org.id)
-      .limit(1),
-  ]);
+      // Configurações da barbearia
+      supabase
+        .from("barbershop_settings")
+        .select("*")
+        .eq("organization_id", org.id)
+        .limit(1),
+    ]);
 
-  // Extrair dados dos resultados, tratando fulfilled/rejected
-  const barbersRes = barbersResult.status === "fulfilled" ? barbersResult.value : { data: [], error: { message: barbersResult.reason?.message ?? "Promise rejected" } };
-  const servicesRes = servicesResult.status === "fulfilled" ? servicesResult.value : { data: [], error: { message: servicesResult.reason?.message ?? "Promise rejected" } };
-  const productsRes = productsResult.status === "fulfilled" ? productsResult.value : { data: [], error: { message: productsResult.reason?.message ?? "Promise rejected" } };
-  const settingsRes = settingsResult.status === "fulfilled" ? settingsResult.value : { data: [], error: { message: settingsResult.reason?.message ?? "Promise rejected" } };
+  // Extrair dados dos resultados
+  const barbersRes =
+    barbersResult.status === "fulfilled"
+      ? barbersResult.value
+      : { data: [], error: { message: String(barbersResult.reason) } };
+  const servicesRes =
+    servicesResult.status === "fulfilled"
+      ? servicesResult.value
+      : { data: [], error: { message: String(servicesResult.reason) } };
+  const productsRes =
+    productsResult.status === "fulfilled"
+      ? productsResult.value
+      : { data: [], error: { message: String(productsResult.reason) } };
+  const settingsRes =
+    settingsResult.status === "fulfilled"
+      ? settingsResult.value
+      : { data: [], error: { message: String(settingsResult.reason) } };
 
   // Log errors for debugging
-  if ((barbersRes as any).error) {
+  if ((barbersRes as any).error)
     console.error("[getLandingData] Erro barbers:", (barbersRes as any).error.message);
-  }
-  if ((servicesRes as any).error) {
+  if ((servicesRes as any).error)
     console.error("[getLandingData] Erro services:", (servicesRes as any).error.message);
-  }
-  if ((productsRes as any).error) {
+  if ((productsRes as any).error)
     console.error("[getLandingData] Erro products:", (productsRes as any).error.message);
-  }
-  if ((settingsRes as any).error) {
+  if ((settingsRes as any).error)
     console.error("[getLandingData] Erro settings:", (settingsRes as any).error.message);
-  }
 
-  const settingsData = Array.isArray(settingsRes.data) ? settingsRes.data[0] : (settingsRes as any).data;
+  const settingsData = Array.isArray(settingsRes.data)
+    ? settingsRes.data[0]
+    : (settingsRes as any).data;
 
   return {
     barbers: ((barbersRes as any).data ?? []).map((b: any) => ({
@@ -135,17 +161,22 @@ export async function getAvailableSlotsForLanding(params: {
   barberId?: string | null;
   date: string; // YYYY-MM-DD
 }) {
-  const supabase = await createClient();
+  let supabase;
+  try {
+    supabase = getSupabase();
+  } catch {
+    return { slots: [], error: "Serviço indisponível" };
+  }
 
   const { data: orgs } = await supabase
     .from("organizations")
     .select("id")
     .limit(1);
 
-  if (!orgs || orgs.length === 0) return { slots: [], error: "Organização não encontrada" };
+  if (!orgs || orgs.length === 0)
+    return { slots: [], error: "Organização não encontrada" };
   const org = orgs[0];
 
-  // Buscar duração do serviço
   const { data: service } = await supabase
     .from("barber_services")
     .select("duration_minutes")
@@ -155,7 +186,6 @@ export async function getAvailableSlotsForLanding(params: {
 
   if (!service) return { slots: [], error: "Serviço não encontrado" };
 
-  // Se barberId fornecido, buscar slots específicos
   if (params.barberId) {
     const { data, error } = await supabase.rpc("get_public_available_slots", {
       p_org_id: org.id,
@@ -163,22 +193,18 @@ export async function getAvailableSlotsForLanding(params: {
       p_service_id: params.serviceId,
       p_date: params.date,
     });
-
     if (error) return { slots: [], error: error.message };
     return { slots: data ?? [], error: null };
   }
 
-  // Sem barberId específico — buscar slots de qualquer profissional disponível
   const { data: members } = await supabase
     .from("memberships")
     .select("user_id")
     .eq("organization_id", org.id);
 
-  if (!members || members.length === 0) {
+  if (!members || members.length === 0)
     return { slots: [], error: "Nenhum profissional disponível" };
-  }
 
-  // Tentar cada profissional até encontrar slots disponíveis
   for (const member of members) {
     const { data, error } = await supabase.rpc("get_public_available_slots", {
       p_org_id: org.id,
@@ -186,7 +212,6 @@ export async function getAvailableSlotsForLanding(params: {
       p_service_id: params.serviceId,
       p_date: params.date,
     });
-
     if (!error && data && data.length > 0) {
       return { slots: data, barberId: member.user_id, error: null };
     }
@@ -199,13 +224,18 @@ export async function createPublicBookingFromLanding(input: {
   serviceId: string;
   barberId?: string | null;
   date: string;
-  timeSlot: string; // HH:MM
+  timeSlot: string;
   customerName: string;
   customerPhone: string;
   customerEmail?: string;
   notes?: string;
 }) {
-  const supabase = await createClient();
+  let supabase;
+  try {
+    supabase = getSupabase();
+  } catch {
+    throw new Error("Serviço indisponível");
+  }
 
   const { data: orgs } = await supabase
     .from("organizations")
@@ -215,7 +245,6 @@ export async function createPublicBookingFromLanding(input: {
   if (!orgs || orgs.length === 0) throw new Error("Organização não encontrada");
   const org = orgs[0];
 
-  // Buscar serviço
   const { data: service } = await supabase
     .from("barber_services")
     .select("id, name, duration_minutes, price")
@@ -225,24 +254,25 @@ export async function createPublicBookingFromLanding(input: {
 
   if (!service) throw new Error("Serviço não encontrado");
 
-  // Construir datetime completo
   const scheduledAt = `${input.date}T${input.timeSlot}:00`;
 
-  // Verificar disponibilidade final no backend (race condition protection)
   if (input.barberId) {
-    const { data: availability } = await supabase.rpc("check_public_availability", {
-      p_org_id: org.id,
-      p_barber_id: input.barberId,
-      p_start_time: scheduledAt,
-      p_duration_minutes: service.duration_minutes,
-    });
-
+    const { data: availability } = await supabase.rpc(
+      "check_public_availability",
+      {
+        p_org_id: org.id,
+        p_barber_id: input.barberId,
+        p_start_time: scheduledAt,
+        p_duration_minutes: service.duration_minutes,
+      }
+    );
     if (!availability?.[0]?.is_available) {
-      throw new Error("Este horário não está mais disponível. Por favor, escolha outro.");
+      throw new Error(
+        "Este horário não está mais disponível. Por favor, escolha outro."
+      );
     }
   }
 
-  // Criar o agendamento
   const { data: booking, error } = await supabase
     .from("public_bookings")
     .insert({
@@ -263,7 +293,6 @@ export async function createPublicBookingFromLanding(input: {
 
   if (error) throw new Error(`Erro ao criar agendamento: ${error.message}`);
 
-  // Log de auditoria (best effort — não deve bloquear)
   try {
     await supabase.rpc("log_audit", {
       p_org_id: org.id,
