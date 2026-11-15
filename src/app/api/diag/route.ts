@@ -59,8 +59,8 @@ export async function GET() {
     error: settings.error?.message ?? null,
   };
 
-  // Test 6: products
-  const products = await supabase.from("products").select("id, name, price").limit(10);
+  // Test 6: products — coluna de preço é sale_price, não price
+  const products = await supabase.from("products").select("id, name, sale_price").limit(10);
   results.products = {
     count: products.data?.length ?? 0,
     data: products.data,

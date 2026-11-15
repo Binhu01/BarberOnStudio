@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 export async function getLandingData() {
   const supabase = await createClient();
 
-  // 1. Buscar organização — NÃO usar .single() pois falha se retornar 0 ou >1 rows
+  // 1. Buscar organização
   const { data: orgs, error: orgError } = await supabase
     .from("organizations")
     .select("id, name, slug")
@@ -22,8 +22,7 @@ export async function getLandingData() {
 
   const org = orgs[0];
 
-  // 2. Buscar membros ativos — não filtrar por status se a coluna não existir
-  //    Usar apenas organization_id para evitar falhas
+  // 2. Buscar membros da organização (sem filtrar por status para evitar problemas de schema)
   const { data: activeMembers, error: membersError } = await supabase
     .from("memberships")
     .select("user_id, role")
@@ -39,8 +38,9 @@ export async function getLandingData() {
     memberRoles[m.user_id] = m.role;
   }
 
-  // 3. Buscar dados em paralelo
-  const [barbersRes, servicesRes, productsRes, settingsRes] = await Promise.all([
+  // 3. Buscar dados em paralelo usando Promise.allSettled para resiliência
+  // Se uma query falhar, as outras ainda retornam dados
+  const [barbersResult, servicesResult, productsResult, settingsResult] = await Promise.allSettled([
     // Profissionais
     memberIds.length > 0
       ? supabase
@@ -59,7 +59,7 @@ export async function getLandingData() {
       .order("display_order", { ascending: true })
       .order("name"),
 
-    // Produtos ativos
+    // Produtos ativos — coluna de preço é sale_price, não price
     supabase
       .from("products")
       .select("id, name, description, sale_price, image_url")
@@ -68,7 +68,7 @@ export async function getLandingData() {
       .order("name")
       .limit(8),
 
-    // Configurações da barbearia — NÃO usar .single()
+    // Configurações da barbearia
     supabase
       .from("barbershop_settings")
       .select("*")
@@ -76,32 +76,38 @@ export async function getLandingData() {
       .limit(1),
   ]);
 
+  // Extrair dados dos resultados, tratando fulfilled/rejected
+  const barbersRes = barbersResult.status === "fulfilled" ? barbersResult.value : { data: [], error: { message: barbersResult.reason?.message ?? "Promise rejected" } };
+  const servicesRes = servicesResult.status === "fulfilled" ? servicesResult.value : { data: [], error: { message: servicesResult.reason?.message ?? "Promise rejected" } };
+  const productsRes = productsResult.status === "fulfilled" ? productsResult.value : { data: [], error: { message: productsResult.reason?.message ?? "Promise rejected" } };
+  const settingsRes = settingsResult.status === "fulfilled" ? settingsResult.value : { data: [], error: { message: settingsResult.reason?.message ?? "Promise rejected" } };
+
   // Log errors for debugging
   if ((barbersRes as any).error) {
     console.error("[getLandingData] Erro barbers:", (barbersRes as any).error.message);
   }
-  if (servicesRes.error) {
-    console.error("[getLandingData] Erro services:", servicesRes.error.message);
+  if ((servicesRes as any).error) {
+    console.error("[getLandingData] Erro services:", (servicesRes as any).error.message);
   }
-  if (productsRes.error) {
-    console.error("[getLandingData] Erro products:", productsRes.error.message);
+  if ((productsRes as any).error) {
+    console.error("[getLandingData] Erro products:", (productsRes as any).error.message);
   }
   if ((settingsRes as any).error) {
     console.error("[getLandingData] Erro settings:", (settingsRes as any).error.message);
   }
 
-  const settingsData = Array.isArray(settingsRes.data) ? settingsRes.data[0] : settingsRes.data;
+  const settingsData = Array.isArray(settingsRes.data) ? settingsRes.data[0] : (settingsRes as any).data;
 
   return {
     barbers: ((barbersRes as any).data ?? []).map((b: any) => ({
       id: b.id,
-      full_name: b.full_name,
+      full_name: b.full_name || "Profissional",
       avatar_url: b.avatar_url,
       phone: null,
       role: memberRoles[b.id] ?? "Barbeiro",
       instagram: null,
     })),
-    services: (servicesRes.data ?? []).map((s: any) => ({
+    services: ((servicesRes as any).data ?? []).map((s: any) => ({
       id: s.id,
       name: s.name,
       description: s.description,
@@ -109,7 +115,7 @@ export async function getLandingData() {
       duration_minutes: s.duration_minutes,
       image_url: s.image_url ?? null,
     })),
-    products: (productsRes.data ?? []).map((p: any) => ({
+    products: ((productsRes as any).data ?? []).map((p: any) => ({
       id: p.id,
       name: p.name,
       description: p.description,
