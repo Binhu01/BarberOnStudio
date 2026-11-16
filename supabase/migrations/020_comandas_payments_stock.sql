@@ -301,13 +301,12 @@ INSERT INTO order_payments (organization_id, order_id, payment_method, amount, c
 SELECT
   o.organization_id,
   o.id,
-  COALESCE(o.payment_method, 'other'),
+  'other',
   o.total,
   NULL
 FROM orders o
 WHERE o.status = 'completed'
   AND o.total > 0
-  AND o.payment_method IS NOT NULL
   AND NOT EXISTS (
     SELECT 1 FROM order_payments op WHERE op.order_id = o.id
   );

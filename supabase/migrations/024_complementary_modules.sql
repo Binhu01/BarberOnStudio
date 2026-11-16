@@ -41,20 +41,18 @@ CREATE POLICY "Admins can manage integration connections"
     is_member_of(organization_id) AND
     EXISTS (
       SELECT 1 FROM memberships m
-      JOIN roles r ON r.id = m.role_id
       WHERE m.user_id = auth.uid()
         AND m.organization_id = integration_connections.organization_id
-        AND r.name IN ('OWNER', 'ADMIN')
+        AND m.role IN ('OWNER', 'ADMIN')
     )
   )
   WITH CHECK (
     is_member_of(organization_id) AND
     EXISTS (
       SELECT 1 FROM memberships m
-      JOIN roles r ON r.id = m.role_id
       WHERE m.user_id = auth.uid()
         AND m.organization_id = integration_connections.organization_id
-        AND r.name IN ('OWNER', 'ADMIN')
+        AND m.role IN ('OWNER', 'ADMIN')
     )
   );
 
@@ -177,8 +175,8 @@ CREATE OR REPLACE VIEW v_report_customer_retention AS
 SELECT
   ce.organization_id,
   ce.customer_id,
-  cp.full_name AS customer_name,
-  cp.phone AS customer_phone,
+  c.name AS customer_name,
+  c.phone AS customer_phone,
   COUNT(*) FILTER (WHERE ce.status = 'completed') AS total_visits,
   MIN(ce.start_at) FILTER (WHERE ce.status = 'completed') AS first_visit,
   MAX(ce.start_at) FILTER (WHERE ce.status = 'completed') AS last_visit,
@@ -192,9 +190,9 @@ SELECT
   EXTRACT(DAY FROM MAX(ce.start_at) FILTER (WHERE ce.status = 'completed') - MIN(ce.start_at) FILTER (WHERE ce.status = 'completed')) /
     NULLIF(COUNT(*) FILTER (WHERE ce.status = 'completed') - 1, 0) AS avg_days_between_visits
 FROM calendar_events ce
-LEFT JOIN profiles cp ON cp.id = ce.customer_id
+LEFT JOIN customers c ON c.id = ce.customer_id
 WHERE ce.customer_id IS NOT NULL
-GROUP BY ce.organization_id, ce.customer_id, cp.full_name, cp.phone;
+GROUP BY ce.organization_id, ce.customer_id, c.name, c.phone;
 
 -- -----------------------------------------------------------------------------
 -- 7. VIEW: V_REPORT_PRODUCT_SALES
@@ -206,7 +204,7 @@ SELECT
   DATE_TRUNC('month', o.completed_at) AS period,
   oi.product_id,
   p.name AS product_name,
-  p.category,
+  pc.name AS category,
   SUM(oi.quantity) AS units_sold,
   COALESCE(SUM(oi.unit_price * oi.quantity), 0) AS total_revenue,
   ROUND(AVG(oi.unit_price), 2) AS avg_unit_price,
@@ -214,10 +212,11 @@ SELECT
 FROM order_items oi
 JOIN orders o ON o.id = oi.order_id
 LEFT JOIN products p ON p.id = oi.product_id
+LEFT JOIN product_categories pc ON pc.id = p.category_id
 WHERE o.status = 'completed'
-  AND oi.item_type = 'product'
+  AND oi.product_id IS NOT NULL
   AND o.completed_at IS NOT NULL
-GROUP BY o.organization_id, DATE_TRUNC('month', o.completed_at), oi.product_id, p.name, p.category;
+GROUP BY o.organization_id, DATE_TRUNC('month', o.completed_at), oi.product_id, p.name, pc.name;
 
 -- -----------------------------------------------------------------------------
 -- 8. RPC: GET_DASHBOARD_KPIs

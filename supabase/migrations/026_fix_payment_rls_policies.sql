@@ -7,72 +7,72 @@
 -- 1. ORDER_PAYMENTS — Tabela tinha RLS ativado mas ZERO policies (I4)
 -- ============================================================================
 
--- SELECT: membros da organização podem ver pagamentos dos seus pedidos
-CREATE POLICY IF NOT EXISTS "order_payments_select_member"
-  ON order_payments FOR SELECT
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM orders o
-      WHERE o.id = order_payments.order_id
-        AND is_member_of(o.organization_id)
-    )
-  );
+-- Policies idempotentes: drop + recreate
+DO $$
+BEGIN
+  -- ORDER_PAYMENTS SELECT
+  DROP POLICY IF EXISTS "order_payments_select_member" ON order_payments;
+  CREATE POLICY "order_payments_select_member"
+    ON order_payments FOR SELECT
+    TO authenticated
+    USING (
+      EXISTS (
+        SELECT 1 FROM orders o
+        WHERE o.id = order_payments.order_id
+          AND is_member_of(o.organization_id)
+      )
+    );
 
--- INSERT: apenas service role (Edge Functions) pode inserir pagamentos
--- Não criamos policy de INSERT para authenticated — pagamentos são criados
--- exclusivamente via Edge Function com service role key.
+  -- ORDER_PAYMENTS UPDATE
+  DROP POLICY IF EXISTS "order_payments_update_member" ON order_payments;
+  CREATE POLICY "order_payments_update_member"
+    ON order_payments FOR UPDATE
+    TO authenticated
+    USING (
+      EXISTS (
+        SELECT 1 FROM orders o
+        WHERE o.id = order_payments.order_id
+          AND is_member_of(o.organization_id)
+      )
+    );
 
--- UPDATE: membros com permissão financeira podem atualizar status
-CREATE POLICY IF NOT EXISTS "order_payments_update_member"
-  ON order_payments FOR UPDATE
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM orders o
-      WHERE o.id = order_payments.order_id
-        AND is_member_of(o.organization_id)
-    )
-  );
+  -- ORDER_PAYMENTS DELETE
+  DROP POLICY IF EXISTS "order_payments_delete_admin" ON order_payments;
+  CREATE POLICY "order_payments_delete_admin"
+    ON order_payments FOR DELETE
+    TO authenticated
+    USING (
+      EXISTS (
+        SELECT 1 FROM orders o
+        JOIN memberships m ON m.organization_id = o.organization_id
+        WHERE o.id = order_payments.order_id
+          AND m.user_id = auth.uid()
+          AND m.role IN ('OWNER', 'ADMIN')
+      )
+    );
 
--- DELETE: apenas admin da organização pode deletar (correção de erros)
-CREATE POLICY IF NOT EXISTS "order_payments_delete_admin"
-  ON order_payments FOR DELETE
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM orders o
-      JOIN organization_members om ON om.organization_id = o.organization_id
-      WHERE o.id = order_payments.order_id
-        AND om.user_id = auth.uid()
-        AND om.role IN ('owner', 'admin')
-    )
-  );
+  -- FINANCIAL_PAYMENTS UPDATE
+  DROP POLICY IF EXISTS "financial_payments_update_member" ON financial_payments;
+  CREATE POLICY "financial_payments_update_member"
+    ON financial_payments FOR UPDATE
+    TO authenticated
+    USING (is_member_of(organization_id));
 
--- ============================================================================
--- 2. FINANCIAL_PAYMENTS — Adicionar UPDATE e DELETE policies (I3)
---    Já tinha SELECT e INSERT, mas faltavam UPDATE e DELETE.
--- ============================================================================
-
--- UPDATE: membros da organização podem atualizar pagamentos
-CREATE POLICY IF NOT EXISTS "financial_payments_update_member"
-  ON financial_payments FOR UPDATE
-  TO authenticated
-  USING (is_member_of(organization_id));
-
--- DELETE: apenas admin/owner pode deletar (reversão/correção)
-CREATE POLICY IF NOT EXISTS "financial_payments_delete_admin"
-  ON financial_payments FOR DELETE
-  TO authenticated
-  USING (
-    is_member_of(organization_id)
-    AND EXISTS (
-      SELECT 1 FROM organization_members
-      WHERE organization_id = financial_payments.organization_id
-        AND user_id = auth.uid()
-        AND role IN ('owner', 'admin')
-    )
-  );
+  -- FINANCIAL_PAYMENTS DELETE
+  DROP POLICY IF EXISTS "financial_payments_delete_admin" ON financial_payments;
+  CREATE POLICY "financial_payments_delete_admin"
+    ON financial_payments FOR DELETE
+    TO authenticated
+    USING (
+      is_member_of(organization_id)
+      AND EXISTS (
+        SELECT 1 FROM memberships
+        WHERE organization_id = financial_payments.organization_id
+          AND user_id = auth.uid()
+          AND role IN ('OWNER', 'ADMIN')
+      )
+    );
+END $$;
 
 -- ============================================================================
 -- 3. Garantir que a coluna external_payment_id existe em order_payments

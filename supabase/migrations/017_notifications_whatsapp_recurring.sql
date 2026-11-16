@@ -132,20 +132,18 @@ CREATE POLICY "Admins can manage whatsapp config"
     is_member_of(organization_id) AND
     EXISTS (
       SELECT 1 FROM memberships m
-      JOIN roles r ON r.id = m.role_id
       WHERE m.user_id = auth.uid()
         AND m.organization_id = whatsapp_config.organization_id
-        AND r.name IN ('OWNER', 'ADMIN')
+        AND m.role IN ('OWNER', 'ADMIN')
     )
   )
   WITH CHECK (
     is_member_of(organization_id) AND
     EXISTS (
       SELECT 1 FROM memberships m
-      JOIN roles r ON r.id = m.role_id
       WHERE m.user_id = auth.uid()
         AND m.organization_id = whatsapp_config.organization_id
-        AND r.name IN ('OWNER', 'ADMIN')
+        AND m.role IN ('OWNER', 'ADMIN')
     )
   );
 

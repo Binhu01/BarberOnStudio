@@ -63,38 +63,47 @@ CREATE TRIGGER set_public_bookings_updated_at
 -- -----------------------------------------------------------------------------
 -- 2. SCHEDULE BLOCKS (Bloqueios de horário — folgas, férias, manutenção)
 -- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS schedule_blocks (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  membership_id UUID REFERENCES memberships(id) ON DELETE CASCADE,
-  title TEXT NOT NULL,
-  reason TEXT,
-  starts_at TIMESTAMPTZ NOT NULL,
-  ends_at TIMESTAMPTZ NOT NULL,
-  is_recurring BOOLEAN NOT NULL DEFAULT false,
-  recurring_days INT[], -- array of day_of_week (0-6)
-  recurring_until TIMESTAMPTZ,
-  created_by UUID NOT NULL REFERENCES memberships(id),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  CONSTRAINT chk_block_dates CHECK (ends_at > starts_at)
-);
+-- Tabela schedule_blocks já criada na migration 012 com colunas start_at/end_at.
+-- Adicionar apenas colunas extras que esta migration precisa, se não existirem.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_blocks' AND column_name = 'reason') THEN
+    ALTER TABLE schedule_blocks ADD COLUMN reason TEXT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_blocks' AND column_name = 'recurring_days') THEN
+    ALTER TABLE schedule_blocks ADD COLUMN recurring_days INT[];
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_blocks' AND column_name = 'recurring_until') THEN
+    ALTER TABLE schedule_blocks ADD COLUMN recurring_until TIMESTAMPTZ;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_blocks' AND column_name = 'created_by') THEN
+    ALTER TABLE schedule_blocks ADD COLUMN created_by UUID REFERENCES memberships(id);
+  END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_schedule_blocks_org ON schedule_blocks(organization_id);
 CREATE INDEX IF NOT EXISTS idx_schedule_blocks_member ON schedule_blocks(membership_id);
-CREATE INDEX IF NOT EXISTS idx_schedule_blocks_dates ON schedule_blocks(organization_id, starts_at, ends_at);
+CREATE INDEX IF NOT EXISTS idx_schedule_blocks_dates ON schedule_blocks(organization_id, start_at, end_at);
 
-ALTER TABLE schedule_blocks ENABLE ROW LEVEL SECURITY;
+-- Políticas e trigger já criadas na migration 012 — apenas garantir idempotência
+DO $$
+BEGIN
+  -- Drop e recria policies para garantir consistência
+  DROP POLICY IF EXISTS "Members can view schedule blocks" ON schedule_blocks;
+  DROP POLICY IF EXISTS "Members can manage schedule blocks" ON schedule_blocks;
 
-CREATE POLICY "Members can view schedule blocks"
-  ON schedule_blocks FOR SELECT
-  USING (is_member_of(organization_id));
+  CREATE POLICY "Members can view schedule blocks"
+    ON schedule_blocks FOR SELECT
+    USING (is_member_of(organization_id));
 
-CREATE POLICY "Members can manage schedule blocks"
-  ON schedule_blocks FOR ALL
-  USING (is_member_of(organization_id))
-  WITH CHECK (is_member_of(organization_id));
+  CREATE POLICY "Members can manage schedule blocks"
+    ON schedule_blocks FOR ALL
+    USING (is_member_of(organization_id))
+    WITH CHECK (is_member_of(organization_id));
+END $$;
 
+-- Trigger já existe da migration 012, mas garantir idempotência
+DROP TRIGGER IF EXISTS set_schedule_blocks_updated_at ON schedule_blocks;
 CREATE TRIGGER set_schedule_blocks_updated_at
   BEFORE UPDATE ON schedule_blocks
   FOR EACH ROW

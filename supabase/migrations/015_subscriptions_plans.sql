@@ -6,38 +6,58 @@
 -- -----------------------------------------------------------------------------
 -- 1. SUBSCRIPTION PLANS (Planos de assinatura da barbearia)
 -- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS subscription_plans (
- id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
- organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
- name TEXT NOT NULL,
- description TEXT,
- price DECIMAL(12,2) NOT NULL CHECK (price >= 0),
- billing_cycle TEXT NOT NULL DEFAULT 'monthly' CHECK (billing_cycle IN ('monthly', 'quarterly', 'annual')),
- trial_days INT NOT NULL DEFAULT 0 CHECK (trial_days >= 0),
- max_services_per_month INT CHECK (max_services_per_month IS NULL OR max_services_per_month > 0),
- included_services JSONB DEFAULT '[]', -- array of barber_service_ids
- discount_percentage DECIMAL(5,2) DEFAULT 0 CHECK (discount_percentage >= 0 AND discount_percentage <= 100),
- priority_booking BOOLEAN NOT NULL DEFAULT false,
- is_active BOOLEAN NOT NULL DEFAULT true,
- display_order INT NOT NULL DEFAULT 0,
- created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
- updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
+-- Tabela já criada na migration 011 SEM organization_id.
+-- Adicionar colunas novas que esta migration precisa.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'organization_id') THEN
+    ALTER TABLE subscription_plans ADD COLUMN organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'price') THEN
+    ALTER TABLE subscription_plans ADD COLUMN price DECIMAL(12,2) CHECK (price >= 0);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'billing_cycle') THEN
+    ALTER TABLE subscription_plans ADD COLUMN billing_cycle TEXT DEFAULT 'monthly' CHECK (billing_cycle IN ('monthly', 'quarterly', 'annual'));
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'trial_days') THEN
+    ALTER TABLE subscription_plans ADD COLUMN trial_days INT DEFAULT 0 CHECK (trial_days >= 0);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'max_services_per_month') THEN
+    ALTER TABLE subscription_plans ADD COLUMN max_services_per_month INT CHECK (max_services_per_month IS NULL OR max_services_per_month > 0);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'included_services') THEN
+    ALTER TABLE subscription_plans ADD COLUMN included_services JSONB DEFAULT '[]';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'discount_percentage') THEN
+    ALTER TABLE subscription_plans ADD COLUMN discount_percentage DECIMAL(5,2) DEFAULT 0 CHECK (discount_percentage >= 0 AND discount_percentage <= 100);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'subscription_plans' AND column_name = 'priority_booking') THEN
+    ALTER TABLE subscription_plans ADD COLUMN priority_booking BOOLEAN DEFAULT false;
+  END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_subscription_plans_org ON subscription_plans(organization_id);
 CREATE INDEX IF NOT EXISTS idx_subscription_plans_active ON subscription_plans(organization_id, is_active);
 
 ALTER TABLE subscription_plans ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Members can view subscription plans"
- ON subscription_plans FOR SELECT
- USING (is_member_of(organization_id));
+-- Políticas idempotentes (drop + recreate)
+DO $$
+BEGIN
+  DROP POLICY IF EXISTS "Members can view subscription plans" ON subscription_plans;
+  DROP POLICY IF EXISTS "Members can manage subscription plans" ON subscription_plans;
 
-CREATE POLICY "Members can manage subscription plans"
- ON subscription_plans FOR ALL
- USING (is_member_of(organization_id))
- WITH CHECK (is_member_of(organization_id));
+  CREATE POLICY "Members can view subscription plans"
+    ON subscription_plans FOR SELECT
+    USING (is_member_of(organization_id));
 
+  CREATE POLICY "Members can manage subscription plans"
+    ON subscription_plans FOR ALL
+    USING (is_member_of(organization_id))
+    WITH CHECK (is_member_of(organization_id));
+END $$;
+
+DROP TRIGGER IF EXISTS set_subscription_plans_updated_at ON subscription_plans;
 CREATE TRIGGER set_subscription_plans_updated_at
  BEFORE UPDATE ON subscription_plans
  FOR EACH ROW
