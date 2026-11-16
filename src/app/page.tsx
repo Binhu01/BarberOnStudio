@@ -146,7 +146,7 @@ async function LandingContent() {
 
           {/* Right - Video showcase */}
           <div className="relative flex items-center justify-center">
-            <div className="relative z-10 w-full max-w-[650px] overflow-hidden rounded-2xl border border-bo-border/30 shadow-[0_0_40px_rgba(8,102,232,0.2)]">
+            <div className="relative z-10 w-full max-w-[800px] overflow-hidden rounded-2xl border border-bo-border/30 shadow-[0_0_40px_rgba(8,102,232,0.2)]">
               <video
                 autoPlay
                 loop
