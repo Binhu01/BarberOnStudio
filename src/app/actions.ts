@@ -38,11 +38,14 @@ export async function getLandingData() {
 
   const org = orgs[0];
 
-  // 2. Buscar membros da organização
+  // 2. Buscar membros da organização (apenas EMPLOYEE/MANAGER para a landing page)
+  // OWNER e ADMIN ficam fora da lista pública de barbeiros
   const { data: activeMembers, error: membersError } = await supabase
     .from("memberships")
     .select("user_id, role")
-    .eq("organization_id", org.id);
+    .eq("organization_id", org.id)
+    .eq("status", "active")
+    .in("role", ["EMPLOYEE", "MANAGER"]);
 
   if (membersError) {
     console.error("[getLandingData] Erro ao buscar membros:", membersError.message);
