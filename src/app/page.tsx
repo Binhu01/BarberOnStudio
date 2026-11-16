@@ -189,76 +189,116 @@ async function LandingContent() {
       </div>
 
       {/* ================================================================== */}
-      {/* BARBEIROS SECTION */}
+      {/* PROFISSIONAIS E SERVIÇOS SECTION */}
       {/* ================================================================== */}
       <section id="barbeiros" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
-            {/* Section header */}
-            <div className="space-y-4">
-              <h2 className="font-display text-4xl font-bold">
-                Nossos
-                <br />
-                <span className="text-bo-blue-bright">Barbeiros</span>
-              </h2>
-              <div className="h-1 w-12 bg-bo-blue" />
-              <p className="text-sm leading-relaxed text-bo-gray">
-                Profissionais experientes, prontos para oferecer o melhor
-                atendimento.
+          <div className="mb-12 space-y-4">
+            <h2 className="font-display text-4xl font-bold">
+              Nossos
+              <br />
+              <span className="text-bo-blue-bright">Profissionais e Serviços</span>
+            </h2>
+            <div className="h-1 w-12 bg-bo-blue" />
+            <p className="text-sm leading-relaxed text-bo-gray">
+              Escolha um serviço e agende diretamente com o profissional de sua preferência.
+            </p>
+          </div>
+
+          {data.barbers.length === 0 ? (
+            <div className="flex h-64 items-center justify-center rounded-2xl border border-dashed border-bo-border bg-bo-card/50">
+              <p className="text-bo-gray">
+                Equipe sendo cadastrada. Em breve nossos profissionais estarão disponíveis.
               </p>
             </div>
-
-            {/* Barber cards */}
-            <div className="lg:col-span-3">
-              {data.barbers.length === 0 ? (
-                <div className="flex h-64 items-center justify-center rounded-2xl border border-dashed border-bo-border bg-bo-card/50">
-                  <p className="text-bo-gray">
-                    Equipe sendo cadastrada. Em breve nossos profissionais estarão disponíveis.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.barbers.map((barber: { id: string; full_name: string | null; avatar_url: string | null; phone: string | null; role: string; instagram: string | null }) => (
-                    <div
-                      key={barber.id}
-                      className="group relative overflow-hidden rounded-2xl border border-bo-border bg-bo-card p-6 text-center transition-all hover:border-bo-blue/50 hover:shadow-[0_0_30px_rgba(8,102,232,0.1)]"
-                    >
-                      <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-bo-border bg-bo-graphite">
-                        {barber.avatar_url ? (
-                          <img
-                            src={barber.avatar_url}
-                            alt={barber.full_name ?? "Barbeiro"}
-                            className="h-full w-full object-cover grayscale transition-all group-hover:grayscale-0"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-bo-silver">
-                            {(barber.full_name ?? "B").charAt(0)}
-                          </div>
-                        )}
-                      </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {data.barbers.map((barber: { id: string; full_name: string | null; avatar_url: string | null; phone: string | null; role: string; instagram: string | null }) => (
+                <div
+                  key={barber.id}
+                  className="overflow-hidden rounded-2xl border border-bo-border bg-bo-card transition-all hover:border-bo-blue/30 hover:shadow-[0_0_30px_rgba(8,102,232,0.08)]"
+                >
+                  {/* Barber header */}
+                  <div className="flex items-center gap-4 border-b border-bo-border/50 bg-bo-graphite/30 p-5">
+                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-bo-border bg-bo-graphite">
+                      {barber.avatar_url ? (
+                        <img
+                          src={barber.avatar_url}
+                          alt={barber.full_name ?? "Barbeiro"}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xl font-bold text-bo-silver">
+                          {(barber.full_name ?? "B").charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
                       <h3 className="text-lg font-bold text-bo-white">
                         {barber.full_name ?? "Profissional"}
                       </h3>
-                      <p className="mb-4 text-sm text-bo-gray">
-                        {barber.role ?? "Barbeiro"}
-                      </p>
+                      <p className="text-sm text-bo-gray">{barber.role ?? "Barbeiro"}</p>
                       {barber.instagram && (
                         <a
                           href={barber.instagram}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-bo-blue-bright transition-colors hover:text-bo-blue"
+                          className="mt-0.5 inline-flex items-center gap-1 text-xs text-bo-blue-bright transition-colors hover:text-bo-blue"
                         >
-                          <Instagram className="h-3.5 w-3.5" />
+                          <Instagram className="h-3 w-3" />
                           {barber.instagram.replace("https://instagram.com/", "@")}
                         </a>
                       )}
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Services list for this barber */}
+                  <div className="divide-y divide-bo-border/30">
+                    {data.services.length > 0 ? (
+                      data.services.map((service: { id: string; name: string; description: string | null; price: number; duration_minutes: number }) => (
+                        <div key={service.id} className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-bo-graphite/20">
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-bo-white">{service.name}</p>
+                            <div className="mt-0.5 flex items-center gap-2 text-xs text-bo-gray">
+                              <Clock className="h-3 w-3" />
+                              <span>{service.duration_minutes} min</span>
+                              {service.description && (
+                                <>
+                                  <span className="text-bo-border">•</span>
+                                  <span className="truncate">{service.description}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex shrink-0 items-center gap-3">
+                            <span className="text-sm font-bold text-bo-blue-bright">
+                              R$ {Number(service.price).toFixed(2)}
+                            </span>
+                            <a
+                              href="#agendar"
+                              onClick={() => {
+                                // Dispatch custom event so the booking widget can pre-select this service + barber
+                                window.dispatchEvent(new CustomEvent("barberon-prefill", {
+                                  detail: { serviceId: service.id, barberId: barber.id },
+                                }));
+                              }}
+                              className="rounded-lg bg-bo-blue px-4 py-2 text-xs font-bold text-white transition-all hover:bg-bo-blue-bright hover:shadow-[0_0_15px_rgba(8,102,232,0.3)]"
+                            >
+                              Agendar
+                            </a>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-6 text-center text-sm text-bo-gray">
+                        Serviços sendo configurados para este profissional.
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
-          </div>
+          )}
         </div>
       </section>
 

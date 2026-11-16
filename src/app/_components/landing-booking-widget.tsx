@@ -159,10 +159,11 @@ export function LandingBookingWidget({
     setError(null);
   };
 
-  // Open modal with a pre-selected service
-  const openWithService = (svc: Service) => {
+  // Open modal with a pre-selected service (and optionally a specific barber)
+  const openWithService = (svc: Service, barber?: Barber | null) => {
     setSelectedServices([svc]);
-    setStep("services");
+    setSelectedBarber(barber ?? null);
+    setStep("datetime");
     setSelectedDate("");
     setSelectedTime("");
     setAvailableSlots([]);
@@ -173,6 +174,20 @@ export function LandingBookingWidget({
     setBookingResult(null);
     setIsOpen(true);
   };
+
+  // Listen for barberon-prefill events dispatched from barber cards on the landing page
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { serviceId?: string; barberId?: string } | undefined;
+      if (!detail?.serviceId) return;
+      const svc = services.find((s) => s.id === detail.serviceId);
+      if (!svc) return;
+      const barber = detail.barberId ? barbers.find((b) => b.id === detail.barberId) ?? null : null;
+      openWithService(svc, barber);
+    };
+    window.addEventListener("barberon-prefill", handler);
+    return () => window.removeEventListener("barberon-prefill", handler);
+  }, [services, barbers]);
 
   // Submit handler
   const handleSubmit = async () => {
