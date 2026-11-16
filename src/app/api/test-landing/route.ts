@@ -40,7 +40,6 @@ export async function GET() {
 
     if (orgResult.error || !orgResult.data?.length) {
       return NextResponse.json({
-        success: false,
         step: "organizations",
         ...summarize(orgResult),
       });
