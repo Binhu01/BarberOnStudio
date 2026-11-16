@@ -263,17 +263,26 @@ async function LandingContent() {
       </section>
 
       {/* ================================================================== */}
-      {/* AGENDAMENTO SECTION */}
+      {/* AGENDAMENTO SECTION — Modal de agendamento ao clicar no serviço */}
       {/* ================================================================== */}
       <section id="agendar" className="border-y border-bo-border/50 bg-bo-graphite/30 py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="overflow-hidden rounded-3xl border border-bo-border bg-bo-card p-8 shadow-2xl lg:p-12">
-            <LandingBookingWidget
-              services={data.services}
-              barbers={data.barbers}
-              settings={data.settings}
-            />
+          <div className="mb-10 space-y-3">
+            <h2 className="font-display text-4xl font-bold">
+              Agende seu
+              <br />
+              <span className="text-bo-blue-bright">Horário</span>
+            </h2>
+            <div className="h-1 w-12 bg-bo-blue" />
+            <p className="text-sm leading-relaxed text-bo-gray">
+              Clique em um serviço abaixo para iniciar o agendamento.
+            </p>
           </div>
+          <LandingBookingWidget
+            services={data.services}
+            barbers={data.barbers}
+            settings={data.settings}
+          />
         </div>
       </section>
 

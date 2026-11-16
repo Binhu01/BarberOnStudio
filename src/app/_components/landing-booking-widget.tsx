@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { X, User, Briefcase, Clock, ClipboardCheck, CalendarDays, Scissors, Tag, Hourglass, Phone, Plus } from "lucide-react";
 import { getAvailableSlotsForLanding, createPublicBookingFromLanding } from "../actions";
 
 // =============================================================================
@@ -36,7 +37,7 @@ interface LandingBookingWidgetProps {
   } | null;
 }
 
-type Step = "service" | "barber" | "date" | "time" | "info" | "confirm" | "success";
+type Step = "services" | "datetime" | "summary" | "info";
 
 // =============================================================================
 // COMPONENT
@@ -47,8 +48,9 @@ export function LandingBookingWidget({
   barbers,
   settings,
 }: LandingBookingWidgetProps) {
-  const [step, setStep] = useState<Step>("service");
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [step, setStep] = useState<Step>("services");
+  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [selectedBarber, setSelectedBarber] = useState<Barber | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
@@ -56,8 +58,7 @@ export function LandingBookingWidget({
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
-  const [notes, setNotes] = useState("");
+  const [isForOtherPerson, setIsForOtherPerson] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookingResult, setBookingResult] = useState<{
@@ -78,22 +79,20 @@ export function LandingBookingWidget({
     for (let i = 0; i < maxDays; i++) {
       const d = new Date(today);
       d.setDate(d.getDate() + i);
-      // Pular domingos (opcional — barbearias costumam fechar)
       if (d.getDay() === 0) continue;
-      // Se for hoje, verificar hora mínima
       if (i === 0) {
         const now = new Date();
         const minTime = new Date(now.getTime() + minHours * 60 * 60 * 1000);
-        if (minTime.getHours() >= 20) continue; // muito tarde
+        if (minTime.getHours() >= 20) continue;
       }
       dates.push(d.toISOString().split("T")[0]);
     }
     return dates;
   }, [maxDays, minHours]);
 
-  // Buscar slots quando data/barbeiro/serviço mudarem
+  // Buscar slots quando data/barbeiro/serviços mudarem
   useEffect(() => {
-    if (!selectedDate || !selectedService) {
+    if (!selectedDate || selectedServices.length === 0 || !isOpen) {
       setAvailableSlots([]);
       return;
     }
@@ -103,7 +102,7 @@ export function LandingBookingWidget({
     setError(null);
 
     getAvailableSlotsForLanding({
-      serviceId: selectedService.id,
+      serviceId: selectedServices[0].id,
       barberId: selectedBarber?.id ?? null,
       date: selectedDate,
     })
@@ -129,7 +128,7 @@ export function LandingBookingWidget({
     return () => {
       cancelled = true;
     };
-  }, [selectedDate, selectedService, selectedBarber]);
+  }, [selectedDate, selectedServices, selectedBarber, isOpen]);
 
   // Formatadores
   const formatDate = (dateStr: string) => {
@@ -139,23 +138,45 @@ export function LandingBookingWidget({
     return `${weekdays[date.getDay()]}, ${day}/${month}`;
   };
 
+  const formatDateShort = (dateStr: string) => {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return `${day}/${String(month).padStart(2, "0")}/${String(year).slice(2)}`;
+  };
+
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price);
 
-  const formatDateTime = (isoStr: string) => {
-    const d = new Date(isoStr);
-    return d.toLocaleString("pt-BR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      hour: "2-digit",
-      minute: "2-digit",
+  const totalPrice = selectedServices.reduce((sum, s) => sum + Number(s.price), 0);
+  const totalDuration = selectedServices.reduce((sum, s) => sum + s.duration_minutes, 0);
+
+  // Toggle service selection
+  const toggleService = (svc: Service) => {
+    setSelectedServices((prev) => {
+      const exists = prev.find((s) => s.id === svc.id);
+      if (exists) return prev.filter((s) => s.id !== svc.id);
+      return [...prev, svc];
     });
+    setError(null);
+  };
+
+  // Open modal with a pre-selected service
+  const openWithService = (svc: Service) => {
+    setSelectedServices([svc]);
+    setStep("services");
+    setSelectedDate("");
+    setSelectedTime("");
+    setAvailableSlots([]);
+    setCustomerName("");
+    setCustomerPhone("");
+    setIsForOtherPerson(false);
+    setError(null);
+    setBookingResult(null);
+    setIsOpen(true);
   };
 
   // Submit handler
   const handleSubmit = async () => {
-    if (!selectedService || !selectedDate || !selectedTime || !customerName || !customerPhone) {
+    if (selectedServices.length === 0 || !selectedDate || !selectedTime || !customerName.trim() || !customerPhone.trim()) {
       setError("Preencha todos os campos obrigatórios");
       return;
     }
@@ -165,18 +186,18 @@ export function LandingBookingWidget({
 
     try {
       const result = await createPublicBookingFromLanding({
-        serviceId: selectedService.id,
+        serviceId: selectedServices[0].id,
         barberId: selectedBarber?.id ?? null,
         date: selectedDate,
         timeSlot: selectedTime,
         customerName,
         customerPhone,
-        customerEmail: customerEmail || undefined,
-        notes: notes || undefined,
+        notes: isForOtherPerson ? "Agendamento para outra pessoa" : undefined,
       });
 
       setBookingResult(result);
-      setStep("success");
+      setIsOpen(false);
+      // Show success inline in the section
     } catch (err: any) {
       setError(err.message ?? "Erro ao criar agendamento. Tente novamente.");
     } finally {
@@ -184,38 +205,33 @@ export function LandingBookingWidget({
     }
   };
 
-  // Reset
-  const handleReset = () => {
-    setStep("service");
-    setSelectedService(null);
-    setSelectedBarber(null);
+  // Reset and close
+  const handleClose = () => {
+    setIsOpen(false);
+    setStep("services");
+    setSelectedServices([]);
     setSelectedDate("");
     setSelectedTime("");
     setAvailableSlots([]);
     setCustomerName("");
     setCustomerPhone("");
-    setCustomerEmail("");
-    setNotes("");
+    setIsForOtherPerson(false);
     setError(null);
-    setBookingResult(null);
   };
 
-  // Steps indicator
-  const steps: { key: Step; label: string }[] = [
-    { key: "service", label: "Serviço" },
-    { key: "barber", label: "Profissional" },
-    { key: "date", label: "Data" },
-    { key: "time", label: "Horário" },
-    { key: "info", label: "Dados" },
-    { key: "confirm", label: "Confirmar" },
+  // Steps config
+  const steps: { key: Step; label: string; icon: typeof User }[] = [
+    { key: "services", label: "Serviços", icon: Briefcase },
+    { key: "datetime", label: "Data/Hora", icon: Clock },
+    { key: "summary", label: "Resumo", icon: ClipboardCheck },
+    { key: "info", label: "Dados", icon: User },
   ];
-
   const currentStepIndex = steps.findIndex((s) => s.key === step);
 
   // ===========================================================================
-  // RENDER: SUCCESS STATE
+  // RENDER: SUCCESS STATE (inline, after modal closes)
   // ===========================================================================
-  if (step === "success" && bookingResult) {
+  if (bookingResult && !isOpen) {
     return (
       <div className="rounded-2xl border border-bo-blue/30 bg-bo-card p-8 text-center">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-bo-blue/20">
@@ -225,7 +241,6 @@ export function LandingBookingWidget({
         </div>
         <h3 className="font-display text-2xl font-bold text-bo-white">Agendamento Confirmado!</h3>
         <p className="mt-2 text-bo-silver">Seu horário foi reservado com sucesso.</p>
-
         <div className="mt-6 rounded-xl border border-bo-border bg-bo-black/50 p-4 text-left space-y-2">
           <div className="flex justify-between">
             <span className="text-bo-gray">Serviço</span>
@@ -233,24 +248,17 @@ export function LandingBookingWidget({
           </div>
           <div className="flex justify-between">
             <span className="text-bo-gray">Data e Hora</span>
-            <span className="font-medium text-bo-white capitalize">{formatDateTime(bookingResult.scheduledAt)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-bo-gray">Duração</span>
-            <span className="font-medium text-bo-white">{bookingResult.durationMinutes} min</span>
+            <span className="font-medium text-bo-white capitalize">
+              {new Date(bookingResult.scheduledAt).toLocaleString("pt-BR", { weekday: "short", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}
+            </span>
           </div>
           <div className="border-t border-bo-border pt-2 flex justify-between">
             <span className="text-bo-gray">Valor</span>
             <span className="font-bold text-bo-blue-bright">{formatPrice(bookingResult.price)}</span>
           </div>
         </div>
-
-        <p className="mt-4 text-sm text-bo-gray">
-          Enviamos a confirmação para <strong className="text-bo-silver">{customerPhone}</strong>
-        </p>
-
         <button
-          onClick={handleReset}
+          onClick={() => { setBookingResult(null); }}
           className="mt-6 rounded-lg border border-bo-border px-6 py-2.5 text-sm font-medium text-bo-silver transition-colors hover:border-bo-blue hover:text-bo-white"
         >
           Novo Agendamento
@@ -260,363 +268,457 @@ export function LandingBookingWidget({
   }
 
   // ===========================================================================
-  // RENDER: BOOKING FLOW
+  // RENDER: SERVICE CARDS (clickable to open modal) + MODAL
   // ===========================================================================
   return (
-    <div className="rounded-2xl border border-bo-border bg-bo-card overflow-hidden">
-      {/* Progress Bar */}
-      {step !== "success" && (
-        <div className="border-b border-bo-border bg-bo-black/50 px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-1">
-            {steps.map((s, i) => (
-              <div key={s.key} className="flex items-center gap-1 flex-1">
-                <div className="flex flex-col items-center flex-1">
-                  <div
-                    className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
-                      i <= currentStepIndex
-                        ? "bg-bo-blue text-bo-white"
-                        : "bg-bo-border text-bo-gray"
-                    }`}
-                  >
-                    {i < currentStepIndex ? (
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : (
-                      i + 1
-                    )}
-                  </div>
-                  <span className={`mt-1 hidden text-[10px] sm:block ${i <= currentStepIndex ? "text-bo-blue-bright" : "text-bo-gray"}`}>
-                    {s.label}
-                  </span>
-                </div>
-                {i < steps.length - 1 && (
-                  <div className={`h-0.5 flex-1 rounded ${i < currentStepIndex ? "bg-bo-blue" : "bg-bo-border"}`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Error Banner */}
-      {error && (
-        <div className="border-b border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400 sm:px-6">
-          {error}
-        </div>
-      )}
-
-      {/* Step Content */}
-      <div className="p-4 sm:p-6">
-        {/* STEP 1: SERVICE */}
-        {step === "service" && (
-          <div className="space-y-4">
-            <h3 className="font-display text-lg font-semibold text-bo-white">Escolha o serviço</h3>
-            {services.length === 0 ? (
-              <p className="text-bo-gray">Nenhum serviço disponível no momento.</p>
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {services.map((svc) => (
-                  <button
-                    key={svc.id}
-                    onClick={() => {
-                      setSelectedService(svc);
-                      setStep(settings?.allow_barber_selection !== false && barbers.length > 0 ? "barber" : "date");
-                      setError(null);
-                    }}
-                    className="group relative flex items-start gap-3 rounded-xl border border-bo-border bg-bo-black/30 p-4 text-left transition-all hover:border-bo-blue hover:bg-bo-blue/5"
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-bo-blue/10 text-bo-blue-bright transition-colors group-hover:bg-bo-blue/20">
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-7 7m7-7l-7-7" />
-                      </svg>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium text-bo-white truncate">{svc.name}</span>
-                        <span className="shrink-0 text-sm font-bold text-bo-blue-bright">{formatPrice(svc.price)}</span>
-                      </div>
-                      {svc.description && (
-                        <p className="mt-0.5 truncate text-xs text-bo-gray">{svc.description}</p>
-                      )}
-                      <span className="mt-1 inline-block text-[11px] text-bo-gray">{svc.duration_minutes} min</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* STEP 2: BARBER */}
-        {step === "barber" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-bo-white">Escolha o profissional</h3>
-              <button onClick={() => setStep("service")} className="text-xs text-bo-gray hover:text-bo-white transition-colors">Voltar</button>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Opção: qualquer profissional */}
+    <>
+      {/* Service cards grid — clicking opens the modal */}
+      <div className="space-y-4">
+        <h3 className="font-display text-xl font-bold text-bo-white">Nossos Serviços</h3>
+        <p className="text-sm text-bo-gray">Clique em um serviço para agendar</p>
+        {services.length === 0 ? (
+          <p className="text-bo-gray">Nenhum serviço disponível no momento.</p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((svc) => (
               <button
-                onClick={() => {
-                  setSelectedBarber(null);
-                  setStep("date");
-                  setError(null);
-                }}
-                className="group flex flex-col items-center gap-2 rounded-xl border border-bo-border bg-bo-black/30 p-4 text-center transition-all hover:border-bo-blue hover:bg-bo-blue/5"
+                key={svc.id}
+                onClick={() => openWithService(svc)}
+                className="group flex items-center justify-between rounded-xl border border-bo-border bg-[#383838] p-4 text-left transition-all hover:border-bo-blue/50 hover:bg-[#424242]"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-bo-blue/10 text-bo-blue-bright transition-colors group-hover:bg-bo-blue/20">
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-white">{svc.name}</p>
+                  <div className="mt-1 flex items-center gap-1.5 text-xs text-[#BDBDBD]">
+                    <Clock className="h-3.5 w-3.5" />
+                    <span>{svc.duration_minutes} min</span>
+                  </div>
                 </div>
-                <span className="font-medium text-bo-white">Qualquer profissional</span>
-                <span className="text-xs text-bo-gray">Primeiro disponível</span>
+                <div className="flex flex-col items-end gap-1 pl-3">
+                  <span className="text-sm font-bold text-white">{formatPrice(Number(svc.price))}</span>
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4A4A4A] text-[#9E9E9E] transition-colors group-hover:bg-bo-blue group-hover:text-white">
+                    <Plus className="h-4 w-4" />
+                  </div>
+                </div>
               </button>
-
-              {barbers.map((barber) => (
-                <button
-                  key={barber.id}
-                  onClick={() => {
-                    setSelectedBarber(barber);
-                    setStep("date");
-                    setError(null);
-                  }}
-                  className="group flex flex-col items-center gap-2 rounded-xl border border-bo-border bg-bo-black/30 p-4 text-center transition-all hover:border-bo-blue hover:bg-bo-blue/5"
-                >
-                  {barber.avatar_url ? (
-                    <img src={barber.avatar_url} alt={barber.full_name} className="h-14 w-14 rounded-full object-cover ring-2 ring-transparent transition-all group-hover:ring-bo-blue" />
-                  ) : (
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-bo-graphite text-lg font-bold text-bo-silver">
-                      {barber.full_name.charAt(0)}
-                    </div>
-                  )}
-                  <span className="font-medium text-bo-white">{barber.full_name}</span>
-                  <span className="text-xs text-bo-gray">{barber.role}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* STEP 3: DATE */}
-        {step === "date" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-bo-white">Escolha a data</h3>
-              <button onClick={() => setStep(settings?.allow_barber_selection !== false && barbers.length > 0 ? "barber" : "service")} className="text-xs text-bo-gray hover:text-bo-white transition-colors">Voltar</button>
-            </div>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-              {availableDates().map((date) => (
-                <button
-                  key={date}
-                  onClick={() => {
-                    setSelectedDate(date);
-                    setSelectedTime("");
-                    setStep("time");
-                    setError(null);
-                  }}
-                  className={`rounded-lg border px-2 py-3 text-center text-sm transition-all ${
-                    selectedDate === date
-                      ? "border-bo-blue bg-bo-blue/10 text-bo-white"
-                      : "border-bo-border bg-bo-black/30 text-bo-silver hover:border-bo-blue/50 hover:text-bo-white"
-                  }`}
-                >
-                  <span className="block text-xs uppercase text-bo-gray">{formatDate(date).split(",")[0]}</span>
-                  <span className="block font-semibold">{formatDate(date).split(", ")[1]}</span>
-                </button>
-              ))}
-            </div>
-            {availableDates().length === 0 && (
-              <p className="text-bo-gray">Nenhuma data disponível.</p>
-            )}
-          </div>
-        )}
-
-        {/* STEP 4: TIME */}
-        {step === "time" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-bo-white">
-                Horários para {formatDate(selectedDate)}
-              </h3>
-              <button onClick={() => setStep("date")} className="text-xs text-bo-gray hover:text-bo-white transition-colors">Voltar</button>
-            </div>
-
-            {loadingSlots ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-bo-border border-t-bo-blue" />
-                <span className="ml-3 text-bo-gray">Buscando horários...</span>
-              </div>
-            ) : availableSlots.length === 0 ? (
-              <div className="py-8 text-center">
-                <p className="text-bo-gray">Nenhum horário disponível nesta data.</p>
-                <button onClick={() => setStep("date")} className="mt-3 text-sm text-bo-blue-bright hover:underline">
-                  Escolher outra data
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-                {availableSlots.map((slot) => (
-                  <button
-                    key={slot}
-                    onClick={() => {
-                      setSelectedTime(slot);
-                      setStep("info");
-                      setError(null);
-                    }}
-                    className={`rounded-lg border px-3 py-2.5 text-center text-sm font-medium transition-all ${
-                      selectedTime === slot
-                        ? "border-bo-blue bg-bo-blue text-bo-white shadow-lg shadow-bo-blue/25"
-                        : "border-bo-border bg-bo-black/30 text-bo-silver hover:border-bo-blue/50 hover:text-bo-white"
-                    }`}
-                  >
-                    {slot}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* STEP 5: CUSTOMER INFO */}
-        {step === "info" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-bo-white">Seus dados</h3>
-              <button onClick={() => setStep("time")} className="text-xs text-bo-gray hover:text-bo-white transition-colors">Voltar</button>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-bo-silver">Nome completo *</label>
-                <input
-                  type="text"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Seu nome"
-                  className="w-full rounded-lg border border-bo-border bg-bo-black/50 px-4 py-2.5 text-bo-white placeholder:text-bo-gray focus:border-bo-blue focus:outline-none focus:ring-1 focus:ring-bo-blue"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-bo-silver">WhatsApp *</label>
-                <input
-                  type="tel"
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="(82) 99999-9999"
-                  className="w-full rounded-lg border border-bo-border bg-bo-black/50 px-4 py-2.5 text-bo-white placeholder:text-bo-gray focus:border-bo-blue focus:outline-none focus:ring-1 focus:ring-bo-blue"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-bo-silver">E-mail (opcional)</label>
-                <input
-                  type="email"
-                  value={customerEmail}
-                  onChange={(e) => setCustomerEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                  className="w-full rounded-lg border border-bo-border bg-bo-black/50 px-4 py-2.5 text-bo-white placeholder:text-bo-gray focus:border-bo-blue focus:outline-none focus:ring-1 focus:ring-bo-blue"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-bo-silver">Observações (opcional)</label>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Alguma preferência ou observação?"
-                  rows={2}
-                  className="w-full resize-none rounded-lg border border-bo-border bg-bo-black/50 px-4 py-2.5 text-bo-white placeholder:text-bo-gray focus:border-bo-blue focus:outline-none focus:ring-1 focus:ring-bo-blue"
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                if (!customerName.trim() || !customerPhone.trim()) {
-                  setError("Nome e WhatsApp são obrigatórios");
-                  return;
-                }
-                setError(null);
-                setStep("confirm");
-              }}
-              className="w-full rounded-lg bg-bo-blue px-6 py-3 text-sm font-bold text-bo-white transition-all hover:bg-bo-blue-bright hover:shadow-lg hover:shadow-bo-blue/25"
-            >
-              Continuar
-            </button>
-          </div>
-        )}
-
-        {/* STEP 6: CONFIRM */}
-        {step === "confirm" && selectedService && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-bo-white">Confirmar agendamento</h3>
-              <button onClick={() => setStep("info")} className="text-xs text-bo-gray hover:text-bo-white transition-colors">Voltar</button>
-            </div>
-
-            <div className="rounded-xl border border-bo-border bg-bo-black/50 p-4 space-y-3">
-              <div className="flex justify-between">
-                <span className="text-bo-gray">Serviço</span>
-                <span className="font-medium text-bo-white">{selectedService.name}</span>
-              </div>
-              {selectedBarber && (
-                <div className="flex justify-between">
-                  <span className="text-bo-gray">Profissional</span>
-                  <span className="font-medium text-bo-white">{selectedBarber.full_name}</span>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-bo-gray">Data</span>
-                <span className="font-medium text-bo-white capitalize">{formatDate(selectedDate)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-bo-gray">Horário</span>
-                <span className="font-medium text-bo-white">{selectedTime}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-bo-gray">Duração</span>
-                <span className="font-medium text-bo-white">{selectedService.duration_minutes} min</span>
-              </div>
-              <div className="border-t border-bo-border pt-3 flex justify-between">
-                <span className="text-bo-silver font-medium">Total</span>
-                <span className="text-lg font-bold text-bo-blue-bright">{formatPrice(selectedService.price)}</span>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-bo-border bg-bo-black/50 p-4 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-bo-gray">Nome</span>
-                <span className="font-medium text-bo-white">{customerName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-bo-gray">WhatsApp</span>
-                <span className="font-medium text-bo-white">{customerPhone}</span>
-              </div>
-              {customerEmail && (
-                <div className="flex justify-between">
-                  <span className="text-bo-gray">E-mail</span>
-                  <span className="font-medium text-bo-white">{customerEmail}</span>
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="w-full rounded-lg bg-bo-blue px-6 py-3.5 text-sm font-bold text-bo-white transition-all hover:bg-bo-blue-bright hover:shadow-lg hover:shadow-bo-blue/25 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {submitting ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-bo-white/30 border-t-bo-white" />
-                  Confirmando...
-                </span>
-              ) : (
-                "Confirmar Agendamento"
-              )}
-            </button>
+            ))}
           </div>
         )}
       </div>
-    </div>
+
+      {/* ===================================================================== */}
+      {/* MODAL OVERLAY */}
+      {/* ===================================================================== */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
+
+          {/* Modal container */}
+          <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-[#3E4042] bg-[#242526] shadow-2xl">
+            {/* Close button */}
+            <button
+              onClick={handleClose}
+              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#3A3B3C] text-[#B0B3B8] transition-colors hover:bg-[#4A4B4C] hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            {/* Header summary bar */}
+            <div className="border-b border-[#3E4042] bg-[#242526] px-5 py-4">
+              <div className="flex items-center gap-2">
+                <ClipboardCheck className="h-5 w-5 text-blue-500" />
+                <span className="text-base font-bold text-white">Resumo</span>
+              </div>
+              <div className="mt-3 space-y-1.5 text-sm">
+                {selectedBarber && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[#9CA3AF]">
+                      <User className="h-4 w-4" />
+                      <span>Profissional:</span>
+                    </div>
+                    <span className="font-bold text-white">{selectedBarber.full_name}</span>
+                  </div>
+                )}
+                {selectedServices.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[#9CA3AF]">
+                      <Scissors className="h-4 w-4" />
+                      <span>Serviços:</span>
+                    </div>
+                    <span className="font-bold text-white">
+                      {selectedServices.map((s) => s.name).join(", ")}
+                    </span>
+                  </div>
+                )}
+                {selectedServices.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[#9CA3AF]">
+                      <Tag className="h-4 w-4" />
+                      <span>Valor:</span>
+                    </div>
+                    <span className="font-bold text-white">{formatPrice(totalPrice)}</span>
+                  </div>
+                )}
+                {selectedServices.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[#9CA3AF]">
+                      <Hourglass className="h-4 w-4" />
+                      <span>Duração:</span>
+                    </div>
+                    <span className="font-bold text-white">{totalDuration} min</span>
+                  </div>
+                )}
+                {selectedDate && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[#9CA3AF]">
+                      <CalendarDays className="h-4 w-4" />
+                      <span>Data:</span>
+                    </div>
+                    <span className="font-bold text-white">{formatDateShort(selectedDate)}</span>
+                  </div>
+                )}
+                {selectedTime && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[#9CA3AF]">
+                      <Clock className="h-4 w-4" />
+                      <span>Horário:</span>
+                    </div>
+                    <span className="font-bold text-white">{selectedTime}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="border-b border-[#3E4042] bg-[#242526] px-5 py-3">
+              <div className="flex items-center justify-between">
+                {steps.map((s, i) => (
+                  <div key={s.key} className="flex items-center flex-1 last:flex-none">
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
+                          i <= currentStepIndex ? "bg-blue-600 text-white" : "bg-[#525252] text-[#242424]"
+                        }`}
+                      >
+                        <s.icon className="h-4 w-4" />
+                      </div>
+                    </div>
+                    {i < steps.length - 1 && (
+                      <div className={`mx-1 h-0.5 flex-1 rounded ${i < currentStepIndex ? "bg-blue-600" : "bg-[#525252]"}`} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Error banner */}
+            {error && (
+              <div className="border-b border-red-500/30 bg-red-500/10 px-5 py-2.5 text-sm text-red-400">
+                {error}
+              </div>
+            )}
+
+            {/* Step content */}
+            <div className="max-h-[60vh] overflow-y-auto bg-[#2E2F31] px-5 py-5">
+              {/* STEP 1: SELECT SERVICES */}
+              {step === "services" && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold italic text-white">Selecione os serviços</h3>
+
+                  {/* Selected services box */}
+                  {selectedServices.length > 0 && (
+                    <div className="rounded-xl border border-[#3E4042] bg-[#242526] p-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-semibold text-white">Serviços Selecionados</span>
+                        <span className="font-bold text-white">Total: {formatPrice(totalPrice)}</span>
+                      </div>
+                      <div className="mt-2 space-y-1.5">
+                        {selectedServices.map((svc) => (
+                          <div key={svc.id} className="flex items-center justify-between rounded-lg bg-[#3D3D3D] px-3 py-2">
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium text-white">{svc.name}</p>
+                              <div className="flex items-center gap-1.5 text-xs text-[#A3A3A3]">
+                                <Clock className="h-3 w-3" />
+                                <span>{svc.duration_minutes} min</span>
+                                <span className="font-medium text-white">{formatPrice(Number(svc.price))}</span>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => toggleService(svc)}
+                              className="ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded text-[#A3A3A3] hover:bg-red-500/20 hover:text-red-400"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Available services list */}
+                  <div className="space-y-2">
+                    {services.map((svc) => {
+                      const isSelected = selectedServices.some((s) => s.id === svc.id);
+                      return (
+                        <button
+                          key={svc.id}
+                          onClick={() => toggleService(svc)}
+                          className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left transition-all ${
+                            isSelected
+                              ? "border-blue-600 bg-blue-600/10"
+                              : "border-[#3E4042] bg-[#303030] hover:border-[#525252]"
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className={`truncate text-sm font-bold ${isSelected ? "text-blue-400" : "text-white"}`}>{svc.name}</p>
+                            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-[#A3A3A3]">
+                              <Clock className="h-3 w-3" />
+                              <span>{svc.duration_minutes} min</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 pl-3">
+                            <span className="text-sm font-bold text-white">{formatPrice(Number(svc.price))}</span>
+                            <div className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+                              isSelected ? "bg-blue-600 text-white" : "bg-[#4A4A4A] text-[#9E9E9E]"
+                            }`}>
+                              {isSelected ? <X className="h-3.5 w-3.5" /> : <Plus className="h-4 w-4" />}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (selectedServices.length === 0) {
+                        setError("Selecione pelo menos um serviço");
+                        return;
+                      }
+                      setError(null);
+                      setStep("datetime");
+                    }}
+                    className="w-full rounded-lg bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700"
+                  >
+                    Continuar
+                  </button>
+                </div>
+              )}
+
+              {/* STEP 2: DATE & TIME */}
+              {step === "datetime" && (
+                <div className="space-y-5">
+                  {/* Barber selection */}
+                  {barbers.length > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold italic text-white">Profissional:</label>
+                      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                        <button
+                          onClick={() => setSelectedBarber(null)}
+                          className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
+                            !selectedBarber ? "border-blue-600 bg-blue-600/10 text-white" : "border-[#3E4042] bg-[#303030] text-[#A3A3A3] hover:border-[#525252]"
+                          }`}
+                        >
+                          Qualquer
+                        </button>
+                        {barbers.map((b) => (
+                          <button
+                            key={b.id}
+                            onClick={() => setSelectedBarber(b)}
+                            className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
+                              selectedBarber?.id === b.id ? "border-blue-600 bg-blue-600/10 text-white" : "border-[#3E4042] bg-[#303030] text-[#A3A3A3] hover:border-[#525252]"
+                            }`}
+                          >
+                            {b.full_name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Date picker */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold italic text-white">Dia:</label>
+                    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                      {availableDates().map((date) => (
+                        <button
+                          key={date}
+                          onClick={() => {
+                            setSelectedDate(date);
+                            setSelectedTime("");
+                          }}
+                          className={`shrink-0 rounded-lg border px-3 py-2.5 text-center text-xs font-medium transition-all ${
+                            selectedDate === date
+                              ? "border-blue-600 bg-blue-600 text-white"
+                              : "border-[#3E4042] bg-[#262626] text-[#F5F5F5] hover:border-[#525252]"
+                          }`}
+                        >
+                          <span className="block text-[10px] uppercase opacity-70">{formatDate(date).split(",")[0]}</span>
+                          <span className="block font-semibold">{formatDate(date).split(", ")[1]}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Time slots */}
+                  {selectedDate && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold italic text-white">Selecione um Horário Disponível:</label>
+                      {loadingSlots ? (
+                        <div className="flex items-center justify-center py-8">
+                          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#3E4042] border-t-blue-600" />
+                          <span className="ml-2 text-sm text-[#A3A3A3]">Buscando...</span>
+                        </div>
+                      ) : availableSlots.length === 0 ? (
+                        <p className="py-4 text-center text-sm text-[#A3A3A3]">Nenhum horário disponível nesta data.</p>
+                      ) : (
+                        <div className="grid grid-cols-4 gap-2">
+                          {availableSlots.map((slot) => (
+                            <button
+                              key={slot}
+                              onClick={() => setSelectedTime(slot)}
+                              className={`rounded-lg py-2.5 text-center text-sm font-medium transition-all ${
+                                selectedTime === slot
+                                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25"
+                                  : "bg-[#171717] text-[#F5F5F5] hover:bg-[#262626]"
+                              }`}
+                            >
+                              {slot}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 pt-2">
+                    <button onClick={() => setStep("services")} className="flex-1 rounded-lg bg-[#4B5563] py-3 text-sm font-bold text-white transition-all hover:bg-[#5B6573]">
+                      Voltar
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (!selectedDate || !selectedTime) {
+                          setError("Selecione data e horário");
+                          return;
+                        }
+                        setError(null);
+                        setStep("summary");
+                      }}
+                      disabled={!selectedDate || !selectedTime}
+                      className="flex-1 rounded-lg bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      Continuar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3: SUMMARY */}
+              {step === "summary" && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold italic text-white">Confirme os detalhes</h3>
+
+                  <div className="rounded-xl border border-[#3E4042] bg-[#242526] p-4 space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-[#9CA3AF]"><User className="h-4 w-4" /><span>Profissional:</span></div>
+                      <span className="font-bold text-white">{selectedBarber?.full_name ?? "Qualquer disponível"}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-[#9CA3AF]"><Scissors className="h-4 w-4" /><span>Serviços:</span></div>
+                      <span className="font-bold text-white text-right max-w-[60%]">{selectedServices.map((s) => s.name).join(", ")}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-[#9CA3AF]"><Tag className="h-4 w-4" /><span>Valor:</span></div>
+                      <span className="font-bold text-white">{formatPrice(totalPrice)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-[#9CA3AF]"><Hourglass className="h-4 w-4" /><span>Duração:</span></div>
+                      <span className="font-bold text-white">{totalDuration} min</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-[#9CA3AF]"><CalendarDays className="h-4 w-4" /><span>Data:</span></div>
+                      <span className="font-bold text-white">{formatDateShort(selectedDate)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-[#9CA3AF]"><Clock className="h-4 w-4" /><span>Horário:</span></div>
+                      <span className="font-bold text-white">{selectedTime}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button onClick={() => setStep("datetime")} className="flex-1 rounded-lg bg-[#4B5563] py-3 text-sm font-bold text-white transition-all hover:bg-[#5B6573]">
+                      Voltar
+                    </button>
+                    <button onClick={() => setStep("info")} className="flex-1 rounded-lg bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700">
+                      Continuar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: CUSTOMER INFO */}
+              {step === "info" && (
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <label className="mb-1 block text-sm font-bold italic text-white">Seu Nome</label>
+                      <input
+                        type="text"
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
+                        placeholder="Digite seu nome completo"
+                        className="w-full rounded-lg border border-[#3E4042] bg-[#2E2F31] px-4 py-2.5 text-sm text-white placeholder:text-[#6B7280] focus:border-blue-600 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-bold italic text-white">Telefone</label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+                        <input
+                          type="tel"
+                          value={customerPhone}
+                          onChange={(e) => setCustomerPhone(e.target.value)}
+                          placeholder="(82) 99999-9999"
+                          className="w-full rounded-lg border border-[#3E4042] bg-[#2E2F31] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-[#6B7280] focus:border-blue-600 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <label className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-[#3E4042] bg-[#2E2F31] px-4 py-3 text-sm text-white transition-colors hover:border-[#525252]">
+                      <input
+                        type="checkbox"
+                        checked={isForOtherPerson}
+                        onChange={(e) => setIsForOtherPerson(e.target.checked)}
+                        className="h-4 w-4 rounded border-[#3E4042] accent-blue-600"
+                      />
+                      <span>O horário é para outra pessoa (ex.: filho)</span>
+                    </label>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button onClick={() => setStep("summary")} className="flex-1 rounded-lg bg-[#4B5563] py-3 text-sm font-bold text-white transition-all hover:bg-[#5B6573]">
+                      Voltar
+                    </button>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      className="flex-1 rounded-lg bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {submitting ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                          Agendando...
+                        </span>
+                      ) : (
+                        "Agendar"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
