@@ -391,7 +391,7 @@ async function LandingContent() {
               </div>
 
               <a
-                href="https://www.google.com/maps/search/?api=1&query=Rua+Celina+Sacramento+da+Silva+20+Cidade+Universitaria+Maceio+AL"
+                href="https://www.google.com/maps/search/?api=1&query=Rua+Celina+Sacramento+da+Silva+20+Quadra+B1+Cidade+Universitaria+Maceio+AL+57073-200"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-bo-border bg-bo-card px-6 py-3 text-sm font-medium text-bo-white transition-all hover:border-bo-blue/50 hover:bg-bo-graphite"
@@ -403,7 +403,7 @@ async function LandingContent() {
               {/* Embedded map */}
               <div className="overflow-hidden rounded-2xl border border-bo-border">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.4684!2d-35.7348!3d-9.5553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7014571b3b498a7%3A0x0!2sRua%20Celina%20Sacramento%20da%20Silva%2C%2020%20-%20Cidade%20Universit%C3%A1ria%2C%20Macei%C3%B3%20-%20AL!5e0!3m2!1spt-BR!2sbr!4v1700000000000"
+                  src="https://maps.google.com/maps?q=Rua+Celina+Sacramento+da+Silva%2C+20%2C+Quadra+B1%2C+Cidade+Universit%C3%A1ria%2C+Macei%C3%B3+-+AL%2C+57073-200&t=&z=17&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
