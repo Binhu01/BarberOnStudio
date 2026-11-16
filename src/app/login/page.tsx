@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, Scissors } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const loginSchema = z.object({
@@ -49,25 +49,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-barber-bg px-4">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-barber-border bg-white p-8 shadow-sm">
+    <div className="flex min-h-screen items-center justify-center bg-bo-black px-4">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-bo-border bg-bo-card p-8 shadow-lg">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-barber-blue font-display text-lg font-bold text-white">
-            N
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-bo-blue text-white shadow-[0_0_20px_rgba(8,102,232,0.3)]">
+            <Scissors className="h-7 w-7" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-bo-white">
             Entrar no Barber-On
           </h1>
-          <p className="mt-2 text-sm text-barber-text-secondary">
+          <p className="mt-2 text-sm text-bo-gray">
             Acesse sua conta para continuar
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-barber-text"
+              className="mb-1.5 block text-sm font-medium text-bo-gray"
             >
               E-mail
             </label>
@@ -75,11 +75,11 @@ export default function LoginPage() {
               id="email"
               type="email"
               {...register("email")}
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-bo-border bg-bo-graphite px-4 py-2.5 text-sm text-bo-white placeholder:text-bo-gray/50 outline-none transition-colors focus:border-bo-blue focus:ring-1 focus:ring-bo-blue"
               placeholder="seu@email.com"
             />
             {errors.email && (
-              <p className="mt-1 text-xs text-barber-error">
+              <p className="mt-1 text-xs text-red-400">
                 {errors.email.message}
               </p>
             )}
@@ -88,7 +88,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="mb-1 block text-sm font-medium text-barber-text"
+              className="mb-1.5 block text-sm font-medium text-bo-gray"
             >
               Senha
             </label>
@@ -96,18 +96,18 @@ export default function LoginPage() {
               id="password"
               type="password"
               {...register("password")}
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-bo-border bg-bo-graphite px-4 py-2.5 text-sm text-bo-white placeholder:text-bo-gray/50 outline-none transition-colors focus:border-bo-blue focus:ring-1 focus:ring-bo-blue"
               placeholder="••••••••"
             />
             {errors.password && (
-              <p className="mt-1 text-xs text-barber-error">
+              <p className="mt-1 text-xs text-red-400">
                 {errors.password.message}
               </p>
             )}
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-barber-error">
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
               {error}
             </div>
           )}
@@ -115,18 +115,18 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-barber-blue py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-bo-blue py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(8,102,232,0.3)] transition-all hover:bg-blue-600 hover:shadow-[0_0_25px_rgba(8,102,232,0.4)] disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Entrar
           </button>
         </form>
 
-        <p className="text-center text-sm text-barber-text-secondary">
+        <p className="text-center text-sm text-bo-gray">
           Não tem conta?{" "}
           <Link
             href="/cadastro"
-            className="font-medium text-barber-blue hover:underline"
+            className="font-medium text-bo-blue-bright hover:text-bo-blue hover:underline"
           >
             Criar conta grátis
           </Link>
