@@ -300,23 +300,15 @@ async function LandingContent() {
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Services */}
-                {data.services.map((service: { id: string; name: string; description: string | null; price: number; duration_minutes: number; image_url: string | null }) => (
+                {data.services.map((service: { id: string; name: string; description: string | null; price: number; duration_minutes: number }) => (
                   <div
                     key={service.id}
                     className="group overflow-hidden rounded-2xl border border-bo-border bg-bo-card transition-all hover:border-bo-blue/50"
                   >
                     <div className="aspect-square bg-bo-graphite">
-                      {service.image_url ? (
-                        <img
-                          src={service.image_url}
-                          alt={service.name}
-                          className="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <Scissors className="h-12 w-12 text-bo-border" />
-                        </div>
-                      )}
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Scissors className="h-12 w-12 text-bo-border" />
+                      </div>
                     </div>
                     <div className="p-4 text-center">
                       <h3 className="text-sm font-bold uppercase tracking-wide text-bo-white">

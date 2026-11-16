@@ -78,10 +78,10 @@ export async function GET() {
       .eq("organization_id", orgId)
       .eq("is_active", true);
 
-    // 6. Services — consulta EXATA da landing page (com description, duration, image, display_order)
+    // 6. Services — consulta EXATA da landing page (com description, duration, display_order)
     const servicesExact = await supabase
       .from("barber_services")
-      .select("id, name, description, price, duration_minutes, image_url")
+      .select("id, name, description, price, duration_minutes")
       .eq("organization_id", orgId)
       .eq("is_active", true)
       .order("display_order", { ascending: true })
@@ -90,7 +90,7 @@ export async function GET() {
     // 7. Services — consulta INTERMEDIÁRIA (sem display_order, com as outras colunas)
     const servicesNoOrder = await supabase
       .from("barber_services")
-      .select("id, name, description, price, duration_minutes, image_url")
+      .select("id, name, description, price, duration_minutes")
       .eq("organization_id", orgId)
       .eq("is_active", true)
       .order("name");

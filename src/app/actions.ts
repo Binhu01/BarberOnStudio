@@ -69,7 +69,7 @@ export async function getLandingData() {
       // Serviços ativos
       supabase
         .from("barber_services")
-        .select("id, name, description, price, duration_minutes, image_url")
+        .select("id, name, description, price, duration_minutes")
         .eq("organization_id", org.id)
         .eq("is_active", true)
         .order("display_order", { ascending: true })
@@ -139,7 +139,7 @@ export async function getLandingData() {
       description: s.description,
       price: s.price,
       duration_minutes: s.duration_minutes,
-      image_url: s.image_url ?? null,
+      image_url: null,
     })),
     products: ((productsRes as any).data ?? []).map((p: any) => ({
       id: p.id,
