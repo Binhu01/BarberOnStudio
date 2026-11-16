@@ -144,16 +144,18 @@ async function LandingContent() {
             </div>
           </div>
 
-          {/* Right - Logo showcase */}
+          {/* Right - Video showcase */}
           <div className="relative flex items-center justify-center">
-            <div className="relative z-10">
-              <Image
-                src="/logo-bo.svg"
-                alt="Barber On Studio Logo"
-                width={500}
-                height={150}
-                className="w-full max-w-[500px] drop-shadow-[0_0_40px_rgba(8,102,232,0.2)]"
-              />
+            <div className="relative z-10 w-full max-w-[500px] overflow-hidden rounded-2xl border border-bo-border/30 shadow-[0_0_40px_rgba(8,102,232,0.2)]">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-auto w-full object-cover"
+              >
+                <source src="/hero-video.mp4" type="video/mp4" />
+              </video>
             </div>
             {/* Decorative light beams */}
             <div className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-bo-blue/10 blur-[100px]" />
@@ -401,7 +403,7 @@ async function LandingContent() {
               {/* Embedded map */}
               <div className="overflow-hidden rounded-2xl border border-bo-border">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.5!2d-35.73!3d-9.55!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOcKwMzMnMDAuMCJTIDM1wrA0Myc0OC4wIlc!5e0!3m2!1spt-BR!2sbr!4v1"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.4684!2d-35.7348!3d-9.5553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7014571b3b498a7%3A0x0!2sRua%20Celina%20Sacramento%20da%20Silva%2C%2020%20-%20Cidade%20Universit%C3%A1ria%2C%20Macei%C3%B3%20-%20AL!5e0!3m2!1spt-BR!2sbr!4v1700000000000"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
