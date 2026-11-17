@@ -128,14 +128,23 @@ export async function getLandingData() {
     : (settingsRes as any).data;
 
   return {
-    barbers: ((barbersRes as any).data ?? []).map((b: any) => ({
-      id: b.id,
-      full_name: b.full_name || "Profissional",
-      avatar_url: b.avatar_url,
-      phone: null,
-      role: memberRoles[b.id] ?? "Barbeiro",
-      instagram: null,
-    })),
+    barbers: ((barbersRes as any).data ?? []).map((b: any) => {
+      // Mapear roles internos para labels amigáveis na landing page
+      const roleMap: Record<string, string> = {
+        EMPLOYEE: "Barbeiro",
+        MANAGER: "Gerente",
+        ADMIN: "Administrador",
+        OWNER: "Proprietário",
+      };
+      return {
+        id: b.id,
+        full_name: b.full_name || "Profissional",
+        avatar_url: b.avatar_url,
+        phone: null,
+        role: roleMap[memberRoles[b.id]] ?? memberRoles[b.id] ?? "Barbeiro",
+        instagram: null,
+      };
+    }),
     services: ((servicesRes as any).data ?? []).map((s: any) => ({
       id: s.id,
       name: s.name,
