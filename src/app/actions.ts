@@ -198,10 +198,20 @@ export async function getAvailableSlotsForLanding(params: {
 
   if (!service) return { slots: [], error: "Serviço não encontrado" };
 
+  // A RPC get_public_available_slots usa membership_id, não user_id.
   if (params.barberId) {
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("id")
+      .eq("organization_id", org.id)
+      .eq("user_id", params.barberId)
+      .maybeSingle();
+
+    if (!membership) return { slots: [], error: "Profissional não encontrado" };
+
     const { data, error } = await supabase.rpc("get_public_available_slots", {
       p_org_id: org.id,
-      p_barber_id: params.barberId,
+      p_barber_id: membership.id,
       p_service_id: params.serviceId,
       p_date: params.date,
     });
@@ -211,7 +221,7 @@ export async function getAvailableSlotsForLanding(params: {
 
   const { data: members } = await supabase
     .from("memberships")
-    .select("user_id")
+    .select("id, user_id")
     .eq("organization_id", org.id);
 
   if (!members || members.length === 0)
@@ -220,7 +230,7 @@ export async function getAvailableSlotsForLanding(params: {
   for (const member of members) {
     const { data, error } = await supabase.rpc("get_public_available_slots", {
       p_org_id: org.id,
-      p_barber_id: member.user_id,
+      p_barber_id: member.id,
       p_service_id: params.serviceId,
       p_date: params.date,
     });
@@ -252,6 +262,21 @@ export async function getNextAvailableSlots(barberIds: string[]) {
   if (!orgs || orgs.length === 0) return {};
   const org = orgs[0];
 
+  // A RPC get_public_available_slots usa membership_id, não user_id.
+  // Buscar o mapa user_id → membership_id para os barbeiros informados.
+  const { data: memberships } = await supabase
+    .from("memberships")
+    .select("id, user_id")
+    .eq("organization_id", org.id)
+    .in("user_id", barberIds);
+
+  if (!memberships || memberships.length === 0) return {};
+
+  const userIdToMembershipId: Record<string, string> = {};
+  for (const m of memberships) {
+    userIdToMembershipId[m.user_id] = m.id;
+  }
+
   // Buscar qualquer serviço ativo para usar como parâmetro da RPC
   const { data: svc } = await supabase
     .from("barber_services")
@@ -274,6 +299,12 @@ export async function getNextAvailableSlots(barberIds: string[]) {
   }
 
   for (const barberId of barberIds) {
+    const membershipId = userIdToMembershipId[barberId];
+    if (!membershipId) {
+      result[barberId] = null;
+      continue;
+    }
+
     let found = false;
     for (const dateStr of datesToCheck) {
       if (found) break;
@@ -281,7 +312,7 @@ export async function getNextAvailableSlots(barberIds: string[]) {
         "get_public_available_slots",
         {
           p_org_id: org.id,
-          p_barber_id: barberId,
+          p_barber_id: membershipId,
           p_service_id: svc.id,
           p_date: dateStr,
         }
@@ -349,19 +380,29 @@ export async function createPublicBookingFromLanding(input: {
   const scheduledAt = `${input.date}T${input.timeSlot}:00`;
 
   if (input.barberId) {
-    const { data: availability } = await supabase.rpc(
-      "check_public_availability",
-      {
-        p_org_id: org.id,
-        p_barber_id: input.barberId,
-        p_start_time: scheduledAt,
-        p_duration_minutes: service.duration_minutes,
-      }
-    );
-    if (!availability?.[0]?.is_available) {
-      throw new Error(
-        "Este horário não está mais disponível. Por favor, escolha outro."
+    // A RPC check_public_availability usa membership_id, não user_id
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("id")
+      .eq("organization_id", org.id)
+      .eq("user_id", input.barberId)
+      .maybeSingle();
+
+    if (membership) {
+      const { data: availability } = await supabase.rpc(
+        "check_public_availability",
+        {
+          p_org_id: org.id,
+          p_barber_id: membership.id,
+          p_start_time: scheduledAt,
+          p_duration_minutes: service.duration_minutes,
+        }
       );
+      if (!availability?.[0]?.is_available) {
+        throw new Error(
+          "Este horário não está mais disponível. Por favor, escolha outro."
+        );
+      }
     }
   }
 

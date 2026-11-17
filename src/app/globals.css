@@ -83,6 +83,14 @@
   html {
     @apply font-sans;
   }
+  button,
+  [role="button"],
+  a,
+  select,
+  summary,
+  [tabindex]:not([tabindex="-1"]) {
+    cursor: pointer;
+  }
 }
 
 :root {
