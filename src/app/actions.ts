@@ -232,6 +232,86 @@ export async function getAvailableSlotsForLanding(params: {
   return { slots: [], error: "Nenhum horário disponível nesta data" };
 }
 
+/**
+ * Busca o próximo slot disponível para cada barbeiro (hoje ou amanhã).
+ * Retorna um mapa barberId → { date, time } ou null se sem disponibilidade.
+ */
+export async function getNextAvailableSlots(barberIds: string[]) {
+  let supabase;
+  try {
+    supabase = getSupabase();
+  } catch {
+    return {};
+  }
+
+  const { data: orgs } = await supabase
+    .from("organizations")
+    .select("id")
+    .limit(1);
+
+  if (!orgs || orgs.length === 0) return {};
+  const org = orgs[0];
+
+  // Buscar qualquer serviço ativo para usar como parâmetro da RPC
+  const { data: svc } = await supabase
+    .from("barber_services")
+    .select("id")
+    .eq("organization_id", org.id)
+    .eq("is_active", true)
+    .limit(1)
+    .maybeSingle();
+
+  if (!svc) return {};
+
+  const result: Record<string, { date: string; time: string } | null> = {};
+
+  const today = new Date();
+  const datesToCheck: string[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    datesToCheck.push(d.toISOString().split("T")[0]);
+  }
+
+  for (const barberId of barberIds) {
+    let found = false;
+    for (const dateStr of datesToCheck) {
+      if (found) break;
+      const { data: slots, error } = await supabase.rpc(
+        "get_public_available_slots",
+        {
+          p_org_id: org.id,
+          p_barber_id: barberId,
+          p_service_id: svc.id,
+          p_date: dateStr,
+        }
+      );
+      if (error || !slots || slots.length === 0) continue;
+
+      // Se é hoje, filtrar slots que já passaram
+      const nowISO = new Date().toISOString();
+      const futureSlots = slots.filter((s: any) => s.slot_start > nowISO);
+      const pick = futureSlots.length > 0 ? futureSlots[0] : slots[0];
+
+      const slotStart = new Date(pick.slot_start);
+      const day = String(slotStart.getDate()).padStart(2, "0");
+      const month = String(slotStart.getMonth() + 1).padStart(2, "0");
+      const year = String(slotStart.getFullYear()).slice(-2);
+      const hours = String(slotStart.getHours()).padStart(2, "0");
+      const minutes = String(slotStart.getMinutes()).padStart(2, "0");
+
+      result[barberId] = {
+        date: `${day}/${month}/${year}`,
+        time: `${hours}:${minutes}`,
+      };
+      found = true;
+    }
+    if (!found) result[barberId] = null;
+  }
+
+  return result;
+}
+
 export async function createPublicBookingFromLanding(input: {
   serviceId: string;
   barberId?: string | null;
