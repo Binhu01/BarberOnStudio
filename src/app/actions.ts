@@ -379,8 +379,9 @@ export async function createPublicBookingFromLanding(input: {
 
   const scheduledAt = `${input.date}T${input.timeSlot}:00`;
 
+  // A RPC e a tabela public_bookings usam membership_id, não user_id
+  let membershipId: string | null = null;
   if (input.barberId) {
-    // A RPC check_public_availability usa membership_id, não user_id
     const { data: membership } = await supabase
       .from("memberships")
       .select("id")
@@ -389,16 +390,22 @@ export async function createPublicBookingFromLanding(input: {
       .maybeSingle();
 
     if (membership) {
-      const { data: availability } = await supabase.rpc(
+      membershipId = membership.id;
+
+      // check_public_availability retorna BOOLEAN (true/false), não array
+      const { data: isAvailable, error: rpcError } = await supabase.rpc(
         "check_public_availability",
         {
           p_org_id: org.id,
           p_barber_id: membership.id,
-          p_start_time: scheduledAt,
+          p_scheduled_at: scheduledAt,
           p_duration_minutes: service.duration_minutes,
         }
       );
-      if (!availability?.[0]?.is_available) {
+
+      if (rpcError) {
+        console.error("[createPublicBooking] RPC error:", rpcError.message);
+      } else if (!isAvailable) {
         throw new Error(
           "Este horário não está mais disponível. Por favor, escolha outro."
         );
@@ -411,7 +418,7 @@ export async function createPublicBookingFromLanding(input: {
     .insert({
       organization_id: org.id,
       barber_service_id: input.serviceId,
-      assigned_barber_id: input.barberId ?? null,
+      assigned_barber_id: membershipId,
       customer_name: input.customerName,
       customer_phone: input.customerPhone,
       customer_email: input.customerEmail ?? null,
