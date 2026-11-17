@@ -433,6 +433,32 @@ export async function createPublicBookingFromLanding(input: {
 
   if (error) throw new Error(`Erro ao criar agendamento: ${error.message}`);
 
+  // Criar registro correspondente em calendar_events para aparecer na agenda do admin
+  const endAt = new Date(
+    new Date(scheduledAt).getTime() + service.duration_minutes * 60 * 1000
+  ).toISOString();
+
+  try {
+    await supabase.from("calendar_events").insert({
+      organization_id: org.id,
+      title: `${service.name} — ${input.customerName}`,
+      description: input.notes ?? null,
+      start_at: scheduledAt,
+      end_at: endAt,
+      all_day: false,
+      barber_service_id: input.serviceId,
+      assigned_barber_id: membershipId,
+      total_price: service.price,
+      status: "confirmed",
+      origin: "landing_page",
+      notes: `Agendamento público via landing page\nTelefone: ${input.customerPhone}${input.customerEmail ? `\nEmail: ${input.customerEmail}` : ""}`,
+      confirmed_at: new Date().toISOString(),
+    });
+  } catch (calErr: any) {
+    // Não bloqueia a confirmação do booking se calendar_events falhar
+    console.error("[createPublicBooking] Falha ao criar calendar_event:", calErr?.message);
+  }
+
   try {
     await supabase.rpc("log_audit", {
       p_org_id: org.id,
