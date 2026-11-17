@@ -9,11 +9,11 @@ import { getReceivables } from "../actions";
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 const statusLabels: Record<string, { label: string; className: string }> = {
-  open: { label: "Em aberto", className: "bg-blue-50 text-blue-700" },
-  partially_received: { label: "Parcial", className: "bg-yellow-50 text-yellow-700" },
-  received: { label: "Recebido", className: "bg-green-50 text-green-700" },
-  overdue: { label: "Vencido", className: "bg-red-50 text-red-700" },
-  cancelled: { label: "Cancelado", className: "bg-gray-100 text-gray-600" },
+  open: { label: "Em aberto", className: "bg-barber-gold/10 text-barber-gold" },
+  partially_received: { label: "Parcial", className: "bg-barber-warning/10 text-barber-warning" },
+  received: { label: "Recebido", className: "bg-barber-success/10 text-barber-success" },
+  overdue: { label: "Vencido", className: "bg-barber-error/10 text-barber-error" },
+  cancelled: { label: "Cancelado", className: "bg-barber-muted/10 text-barber-muted" },
 };
 
 interface PageProps {
@@ -47,35 +47,35 @@ export default async function ReceberPage({ searchParams }: PageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-barber-dark">Contas a Receber</h1>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">
+        <h1 className="font-display text-2xl font-bold text-barber-white">Contas a Receber</h1>
+        <button className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-opacity hover:opacity-90">
           <Plus className="h-4 w-4" />
           Novo Recebível
         </button>
       </div>
 
       {/* Filters */}
-      <div className="rounded-xl border border-barber-border bg-white p-4">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-4">
         <form className="flex flex-wrap items-end gap-3">
           <div className="min-w-[200px] flex-1">
-            <label className="mb-1 block text-sm font-medium text-barber-text">Buscar</label>
+            <label className="mb-1 block text-sm font-medium text-barber-light">Buscar</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-text-secondary" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-muted" />
               <input
                 type="text"
                 name="search"
                 defaultValue={search}
                 placeholder="Descrição..."
-                className="w-full rounded-lg border border-barber-border bg-barber-bg py-2 pl-9 pr-3 text-barber-text placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-2 focus:ring-barber-blue/20"
+                className="w-full rounded-lg border border-barber-border bg-barber-dark py-2 pl-9 pr-3 text-barber-white placeholder:text-barber-muted focus:border-barber-gold focus:outline-none focus:ring-2 focus:ring-barber-gold/20"
               />
             </div>
           </div>
           <div className="min-w-[160px]">
-            <label className="mb-1 block text-sm font-medium text-barber-text">Status</label>
+            <label className="mb-1 block text-sm font-medium text-barber-light">Status</label>
             <select
               name="status"
               defaultValue={status}
-              className="w-full rounded-lg border border-barber-border bg-barber-bg px-3 py-2 text-barber-text focus:border-barber-blue focus:outline-none focus:ring-2 focus:ring-barber-blue/20"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-barber-white focus:border-barber-gold focus:outline-none focus:ring-2 focus:ring-barber-gold/20"
             >
               <option value="all">Todos</option>
               <option value="open">Em aberto</option>
@@ -87,7 +87,7 @@ export default async function ReceberPage({ searchParams }: PageProps) {
           </div>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-opacity hover:opacity-90"
           >
             <Filter className="h-4 w-4" />
             Filtrar
@@ -95,7 +95,7 @@ export default async function ReceberPage({ searchParams }: PageProps) {
           {(search || status !== "all") && (
             <Link
               href="/dashboard/financeiro/receber"
-              className="inline-flex items-center rounded-lg border border-barber-border px-4 py-2 text-sm text-barber-text transition-colors hover:bg-barber-bg-secondary"
+              className="inline-flex items-center rounded-lg border border-barber-border px-4 py-2 text-sm text-barber-light transition-colors hover:bg-barber-dark/50"
             >
               Limpar
             </Link>
@@ -104,12 +104,12 @@ export default async function ReceberPage({ searchParams }: PageProps) {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-barber-border bg-white">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite">
         {receivables.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <TrendingUp className="mb-4 h-12 w-12 text-barber-text-secondary/50" />
-            <p className="text-lg font-medium text-barber-dark">Nenhum recebível encontrado</p>
-            <p className="text-sm text-barber-text-secondary">
+            <TrendingUp className="mb-4 h-12 w-12 text-barber-muted/50" />
+            <p className="text-lg font-medium text-barber-white">Nenhum recebível encontrado</p>
+            <p className="text-sm text-barber-muted">
               {search || status !== "all"
                 ? "Tente ajustar os filtros."
                 : "Crie seu primeiro recebível ou gere a partir de um pedido."}
@@ -118,24 +118,24 @@ export default async function ReceberPage({ searchParams }: PageProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-barber-border bg-barber-bg">
+              <thead className="border-b border-barber-border bg-barber-dark">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Descrição
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Vencimento
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Valor
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Recebido
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Status
                   </th>
                 </tr>
@@ -151,22 +151,22 @@ export default async function ReceberPage({ searchParams }: PageProps) {
                   const st = statusLabels[r.status] ?? statusLabels.open;
 
                   return (
-                    <tr key={r.id} className="transition-colors hover:bg-barber-bg-secondary">
+                    <tr key={r.id} className="transition-colors hover:bg-barber-dark/50">
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-barber-dark">{r.description}</p>
+                        <p className="text-sm font-medium text-barber-white">{r.description}</p>
                         {r.installment_number && (
-                          <p className="text-xs text-barber-text-secondary">
+                          <p className="text-xs text-barber-muted">
                             Parcela {r.installment_number}
                           </p>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-sm text-barber-text">{customerName}</td>
+                      <td className="px-4 py-3 text-sm text-barber-light">{customerName}</td>
                       <td className="px-4 py-3 text-sm">
                         <span
                           className={
                             isOverdue
                               ? "font-medium text-barber-error"
-                              : "text-barber-text"
+                              : "text-barber-light"
                           }
                         >
                           {new Date(r.due_date + "T00:00:00").toLocaleDateString("pt-BR")}
@@ -175,10 +175,10 @@ export default async function ReceberPage({ searchParams }: PageProps) {
                           <AlertTriangle className="ml-1 inline h-3 w-3 text-barber-error" />
                         )}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono text-sm text-barber-text">
+                      <td className="px-4 py-3 text-right font-mono text-sm text-barber-light">
                         {brl.format(Number(r.original_amount))}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono text-sm text-barber-text">
+                      <td className="px-4 py-3 text-right font-mono text-sm text-barber-light">
                         {brl.format(Number(r.amount_received))}
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -200,14 +200,14 @@ export default async function ReceberPage({ searchParams }: PageProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-barber-text-secondary">
+          <p className="text-sm text-barber-muted">
             Página {page} de {totalPages} ({total} recebíveis)
           </p>
           <div className="flex items-center gap-2">
             {page > 1 && (
               <Link
                 href={`/dashboard/financeiro/receber?page=${page - 1}${search ? `&search=${search}` : ""}${status !== "all" ? `&status=${status}` : ""}`}
-                className="rounded-lg border border-barber-border px-4 py-2 text-sm text-barber-text transition-colors hover:bg-barber-bg-secondary"
+                className="rounded-lg border border-barber-border px-4 py-2 text-sm text-barber-light transition-colors hover:bg-barber-dark/50"
               >
                 Anterior
               </Link>
@@ -215,7 +215,7 @@ export default async function ReceberPage({ searchParams }: PageProps) {
             {page < totalPages && (
               <Link
                 href={`/dashboard/financeiro/receber?page=${page + 1}${search ? `&search=${search}` : ""}${status !== "all" ? `&status=${status}` : ""}`}
-                className="rounded-lg border border-barber-border px-4 py-2 text-sm text-barber-text transition-colors hover:bg-barber-bg-secondary"
+                className="rounded-lg border border-barber-border px-4 py-2 text-sm text-barber-light transition-colors hover:bg-barber-dark/50"
               >
                 Próxima
               </Link>

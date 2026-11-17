@@ -25,7 +25,7 @@ function formatChange(value: number | null): { text: string; color: string; Icon
   const isPositive = value >= 0;
   return {
     text: `${isPositive ? "+" : ""}${value.toFixed(1)}%`,
-    color: isPositive ? "text-green-600" : "text-red-600",
+    color: isPositive ? "text-barber-success" : "text-barber-error",
     Icon: isPositive ? TrendingUp : TrendingDown,
   };
 }
@@ -56,8 +56,8 @@ export default async function RelatoriosPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">Relatórios e Inteligência</h1>
-        <p className="mt-1 text-sm text-barber-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-white">Relatórios e Inteligência</h1>
+        <p className="mt-1 text-sm text-barber-muted">
           Visão executiva dos últimos 30 dias · Última atualização: {now.toLocaleString("pt-BR")}
         </p>
       </div>
@@ -65,18 +65,18 @@ export default async function RelatoriosPage() {
       {/* Executive KPIs Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Sales */}
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-blue/10">
-              <ShoppingCart className="h-5 w-5 text-barber-blue" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+              <ShoppingCart className="h-5 w-5 text-barber-gold" />
             </div>
             <div>
-              <p className="text-xs font-medium text-barber-text-secondary">Receita (pedidos)</p>
-              <p className="text-xl font-bold text-barber-dark">{brl.format(data.sales.totalRevenue)}</p>
+              <p className="text-xs font-medium text-barber-muted">Receita (pedidos)</p>
+              <p className="text-xl font-bold text-barber-white">{brl.format(data.sales.totalRevenue)}</p>
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 text-xs">
-            <span className="text-barber-text-secondary">{data.sales.totalOrders} pedidos</span>
+            <span className="text-barber-muted">{data.sales.totalOrders} pedidos</span>
             {formatChange(data.sales.revenueChange) && (
               <span className={`flex items-center gap-0.5 ${formatChange(data.sales.revenueChange)!.color}`}>
                 {formatChange(data.sales.revenueChange)!.Icon({ className: "h-3 w-3" })}
@@ -87,18 +87,18 @@ export default async function RelatoriosPage() {
         </div>
 
         {/* CRM */}
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-cyan/10">
               <Users className="h-5 w-5 text-barber-cyan" />
             </div>
             <div>
-              <p className="text-xs font-medium text-barber-text-secondary">Novos clientes</p>
-              <p className="text-xl font-bold text-barber-dark">{data.crm.newCustomersInPeriod}</p>
+              <p className="text-xs font-medium text-barber-muted">Novos clientes</p>
+              <p className="text-xl font-bold text-barber-white">{data.crm.newCustomersInPeriod}</p>
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 text-xs">
-            <span className="text-barber-text-secondary">{data.crm.totalLeads} leads · {data.crm.conversionRate.toFixed(1)}% conv.</span>
+            <span className="text-barber-muted">{data.crm.totalLeads} leads · {data.crm.conversionRate.toFixed(1)}% conv.</span>
             {formatChange(data.crm.customersChange) && (
               <span className={`flex items-center gap-0.5 ${formatChange(data.crm.customersChange)!.color}`}>
                 {formatChange(data.crm.customersChange)!.Icon({ className: "h-3 w-3" })}
@@ -109,18 +109,18 @@ export default async function RelatoriosPage() {
         </div>
 
         {/* Financial */}
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
-              <DollarSign className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-success/10">
+              <DollarSign className="h-5 w-5 text-barber-success" />
             </div>
             <div>
-              <p className="text-xs font-medium text-barber-text-secondary">Recebido no período</p>
-              <p className="text-xl font-bold text-barber-dark">{brl.format(data.financial.totalReceived)}</p>
+              <p className="text-xs font-medium text-barber-muted">Recebido no período</p>
+              <p className="text-xl font-bold text-barber-white">{brl.format(data.financial.totalReceived)}</p>
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 text-xs">
-            <span className="text-barber-text-secondary">Saldo: {brl.format(data.financial.accountBalance)}</span>
+            <span className="text-barber-muted">Saldo: {brl.format(data.financial.accountBalance)}</span>
             {formatChange(data.financial.receivedChange) && (
               <span className={`flex items-center gap-0.5 ${formatChange(data.financial.receivedChange)!.color}`}>
                 {formatChange(data.financial.receivedChange)!.Icon({ className: "h-3 w-3" })}
@@ -131,18 +131,18 @@ export default async function RelatoriosPage() {
         </div>
 
         {/* Inventory */}
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
-              <Package className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-warning/10">
+              <Package className="h-5 w-5 text-barber-warning" />
             </div>
             <div>
-              <p className="text-xs font-medium text-barber-text-secondary">Produtos ativos</p>
-              <p className="text-xl font-bold text-barber-dark">{data.inventory.totalProducts}</p>
+              <p className="text-xs font-medium text-barber-muted">Produtos ativos</p>
+              <p className="text-xl font-bold text-barber-white">{data.inventory.totalProducts}</p>
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 text-xs">
-            <span className="text-barber-text-secondary">
+            <span className="text-barber-muted">
               {data.inventory.lowStockProducts} estoque baixo · {data.inventory.outOfStockProducts} sem estoque
             </span>
           </div>
@@ -151,38 +151,38 @@ export default async function RelatoriosPage() {
 
       {/* Secondary KPIs Row */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
-          <p className="text-2xl font-bold text-barber-dark">{data.sales.completedOrders}</p>
-          <p className="text-xs text-barber-text-secondary">Pedidos concluídos</p>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4 text-center shadow-sm">
+          <p className="text-2xl font-bold text-barber-white">{data.sales.completedOrders}</p>
+          <p className="text-xs text-barber-muted">Pedidos concluídos</p>
         </div>
-        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
-          <p className="text-2xl font-bold text-barber-dark">{brl.format(data.sales.avgTicket)}</p>
-          <p className="text-xs text-barber-text-secondary">Ticket médio</p>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4 text-center shadow-sm">
+          <p className="text-2xl font-bold text-barber-white">{brl.format(data.sales.avgTicket)}</p>
+          <p className="text-xs text-barber-muted">Ticket médio</p>
         </div>
-        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
-          <p className="text-2xl font-bold text-barber-dark">{brl.format(data.financial.openReceivables)}</p>
-          <p className="text-xs text-barber-text-secondary">A receber pendente</p>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4 text-center shadow-sm">
+          <p className="text-2xl font-bold text-barber-white">{brl.format(data.financial.openReceivables)}</p>
+          <p className="text-xs text-barber-muted">A receber pendente</p>
         </div>
-        <div className="rounded-xl border border-barber-border bg-white p-4 text-center shadow-sm">
-          <p className="text-2xl font-bold text-red-600">{brl.format(data.financial.overdueReceivables)}</p>
-          <p className="text-xs text-barber-text-secondary">Recebíveis vencidos</p>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-4 text-center shadow-sm">
+          <p className="text-2xl font-bold text-barber-error">{brl.format(data.financial.overdueReceivables)}</p>
+          <p className="text-xs text-barber-muted">Recebíveis vencidos</p>
         </div>
       </div>
 
       {/* Recent Orders + Upcoming Due */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Recent Orders */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-barber-dark">Pedidos recentes</h2>
-            <Link href="/dashboard/vendas/pedidos" className="text-sm font-medium text-barber-blue hover:underline">
+            <h2 className="font-display text-lg font-semibold text-barber-white">Pedidos recentes</h2>
+            <Link href="/dashboard/vendas/pedidos" className="text-sm font-medium text-barber-gold hover:underline">
               Ver todos
             </Link>
           </div>
           {data.recentOrders.length === 0 ? (
             <div className="mt-8 flex flex-col items-center justify-center text-center">
-              <ShoppingCart className="mb-3 h-10 w-10 text-barber-text-secondary/40" />
-              <p className="text-sm text-barber-text-secondary">Nenhum pedido registrado</p>
+              <ShoppingCart className="mb-3 h-10 w-10 text-barber-muted/40" />
+              <p className="text-sm text-barber-muted">Nenhum pedido registrado</p>
             </div>
           ) : (
             <div className="mt-4 space-y-3">
@@ -190,17 +190,17 @@ export default async function RelatoriosPage() {
                 <Link
                   key={order.id}
                   href={`/dashboard/vendas/pedidos/${order.id}`}
-                  className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3 transition-colors hover:bg-barber-bg-secondary"
+                  className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3 transition-colors hover:bg-barber-dark/50"
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-barber-dark">{order.documentNumber}</p>
-                    <p className="truncate text-xs text-barber-text-secondary">
+                    <p className="truncate text-sm font-medium text-barber-white">{order.documentNumber}</p>
+                    <p className="truncate text-xs text-barber-muted">
                       {order.customerName ?? "Sem cliente"} · {new Date(order.createdAt).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-barber-dark">{brl.format(order.total)}</p>
-                    <p className="text-xs text-barber-text-secondary">{order.status}</p>
+                    <p className="text-sm font-semibold text-barber-white">{brl.format(order.total)}</p>
+                    <p className="text-xs text-barber-muted">{order.status}</p>
                   </div>
                 </Link>
               ))}
@@ -211,29 +211,29 @@ export default async function RelatoriosPage() {
         {/* Upcoming Due + Stock Alerts */}
         <div className="space-y-6">
           {/* Upcoming Due */}
-          <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+          <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-barber-dark">Próximos vencimentos</h2>
-              <Link href="/dashboard/financeiro/receber" className="text-sm font-medium text-barber-blue hover:underline">
+              <h2 className="font-display text-lg font-semibold text-barber-white">Próximos vencimentos</h2>
+              <Link href="/dashboard/financeiro/receber" className="text-sm font-medium text-barber-gold hover:underline">
                 Ver contas
               </Link>
             </div>
             {data.upcomingDue.length === 0 ? (
               <div className="mt-6 flex flex-col items-center justify-center text-center">
-                <Clock className="mb-3 h-8 w-8 text-barber-text-secondary/40" />
-                <p className="text-sm text-barber-text-secondary">Sem vencimentos nos próximos 7 dias</p>
+                <Clock className="mb-3 h-8 w-8 text-barber-muted/40" />
+                <p className="text-sm text-barber-muted">Sem vencimentos nos próximos 7 dias</p>
               </div>
             ) : (
               <div className="mt-4 space-y-2">
                 {data.upcomingDue.map((item) => (
                   <div key={item.id} className="flex items-center justify-between rounded-lg border border-barber-border/50 p-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-barber-dark">{item.description}</p>
-                      <p className="text-xs text-barber-text-secondary">
+                      <p className="truncate text-sm font-medium text-barber-white">{item.description}</p>
+                      <p className="text-xs text-barber-muted">
                         {item.type === "receivable" ? "A receber" : "A pagar"} · {new Date(item.dueDate).toLocaleDateString("pt-BR")}
                       </p>
                     </div>
-                    <p className={`text-sm font-semibold ${item.type === "receivable" ? "text-green-600" : "text-red-600"}`}>
+                    <p className={`text-sm font-semibold ${item.type === "receivable" ? "text-barber-success" : "text-barber-error"}`}>
                       {brl.format(item.amount)}
                     </p>
                   </div>
@@ -244,19 +244,19 @@ export default async function RelatoriosPage() {
 
           {/* Stock Alerts */}
           {data.stockAlerts.length > 0 && (
-            <div className="rounded-xl border border-amber-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-barber-warning/20 bg-barber-graphite p-6 shadow-sm">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
-                <h2 className="font-display text-lg font-semibold text-barber-dark">Alertas de estoque</h2>
+                <AlertTriangle className="h-5 w-5 text-barber-warning" />
+                <h2 className="font-display text-lg font-semibold text-barber-white">Alertas de estoque</h2>
               </div>
               <div className="mt-3 space-y-2">
                 {data.stockAlerts.map((alert) => (
-                  <div key={alert.productId} className="flex items-center justify-between rounded-lg border border-amber-100 bg-amber-50/50 p-3">
+                  <div key={alert.productId} className="flex items-center justify-between rounded-lg border border-barber-warning/10 bg-barber-warning/5 p-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-barber-dark">{alert.productName}</p>
-                      <p className="text-xs text-barber-text-secondary">Mínimo: {alert.minimumStock}</p>
+                      <p className="truncate text-sm font-medium text-barber-white">{alert.productName}</p>
+                      <p className="text-xs text-barber-muted">Mínimo: {alert.minimumStock}</p>
                     </div>
-                    <span className="text-sm font-bold text-amber-700">{alert.quantityAvailable} un.</span>
+                    <span className="text-sm font-bold text-barber-warning">{alert.quantityAvailable} un.</span>
                   </div>
                 ))}
               </div>
@@ -267,22 +267,22 @@ export default async function RelatoriosPage() {
 
       {/* Report Navigation Cards */}
       <div>
-        <h2 className="font-display text-lg font-semibold text-barber-dark">Relatórios detalhados</h2>
+        <h2 className="font-display text-lg font-semibold text-barber-white">Relatórios detalhados</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {reportLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="group flex items-start gap-4 rounded-xl border border-barber-border bg-white p-5 shadow-sm transition-all hover:border-barber-blue/30 hover:shadow-md"
+              className="group flex items-start gap-4 rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm transition-all hover:border-barber-gold/30 hover:shadow-md"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-blue/10 transition-colors group-hover:bg-barber-blue group-hover:text-white">
-                <link.icon className="h-5 w-5 text-barber-blue transition-colors group-hover:text-white" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-gold/10 transition-colors group-hover:bg-barber-gold group-hover:text-barber-white">
+                <link.icon className="h-5 w-5 text-barber-gold transition-colors group-hover:text-barber-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="font-display text-base font-semibold text-barber-dark">{link.label}</h3>
-                <p className="mt-1 text-sm text-barber-text-secondary">{link.description}</p>
+                <h3 className="font-display text-base font-semibold text-barber-white">{link.label}</h3>
+                <p className="mt-1 text-sm text-barber-muted">{link.description}</p>
               </div>
-              <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-barber-text-secondary/40 transition-transform group-hover:translate-x-1 group-hover:text-barber-blue" />
+              <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-barber-muted/40 transition-transform group-hover:translate-x-1 group-hover:text-barber-gold" />
             </Link>
           ))}
         </div>

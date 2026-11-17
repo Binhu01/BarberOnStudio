@@ -54,7 +54,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       <div className="flex items-center gap-4">
         <Link
           href={`/dashboard/produtos/${id}`}
-          className="inline-flex items-center gap-1.5 text-sm text-barber-text-secondary hover:text-barber-blue transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-barber-muted transition-colors hover:text-barber-gold"
         >
           <ChevronLeft size={16} />
           Voltar ao Produto
@@ -62,10 +62,10 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       </div>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-white">
           Editar Produto
         </h1>
-        <p className="mt-1 text-sm text-barber-text-secondary">
+        <p className="mt-1 text-sm text-barber-muted">
           Atualize as informações do produto abaixo.
         </p>
       </div>

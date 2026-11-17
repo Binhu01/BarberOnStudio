@@ -38,17 +38,17 @@ export default async function NovoRecebimentoPage(props: {
     <div className="space-y-6">
       <Link
         href={`/dashboard/compras/ordens/${order.id}`}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-gold"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para ordem {order.purchase_number}
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">Registrar recebimento</h1>
-        <p className="mt-1 text-sm text-barber-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-white">Registrar recebimento</h1>
+        <p className="mt-1 text-sm text-barber-muted">
           Confirme a entrada de mercadorias da ordem{" "}
-          <span className="font-semibold text-barber-dark">{order.purchase_number}</span> ·{" "}
+          <span className="font-semibold text-barber-white">{order.purchase_number}</span> ·{" "}
           {order.supplier_name ?? "Fornecedor"}
         </p>
       </div>

@@ -34,7 +34,7 @@ function CardSkeleton({ count = 6 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="rounded-xl border border-barber-border bg-white p-5"
+          className="rounded-xl border border-barber-border bg-barber-graphite p-5"
         >
           <div className="flex items-start justify-between">
             <div className="space-y-2">
@@ -74,16 +74,16 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-xl border border-barber-border bg-white p-6 shadow-lg">
-        <h3 className="font-display text-lg font-semibold text-barber-dark">
+      <div className="w-full max-w-sm rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-lg">
+        <h3 className="font-display text-lg font-semibold text-barber-white">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-barber-text-secondary">{message}</p>
+        <p className="mt-2 text-sm text-barber-muted">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onCancel}
             disabled={loading}
-            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
+            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-light hover:bg-barber-dark/50 disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -169,15 +169,15 @@ function WarehouseModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-xl border border-barber-border bg-white p-6 shadow-lg">
+      <div className="w-full max-w-lg rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-lg">
         <div className="flex items-center justify-between">
-          <h3 className="font-display text-lg font-semibold text-barber-dark">
+          <h3 className="font-display text-lg font-semibold text-barber-white">
             {isEdit ? "Editar Depósito" : "Novo Depósito"}
           </h3>
           <button
             onClick={onCancel}
             disabled={saving}
-            className="rounded-lg p-1.5 text-barber-text-secondary hover:bg-barber-bg-secondary disabled:opacity-50"
+            className="rounded-lg p-1.5 text-barber-muted hover:bg-barber-dark/50 disabled:opacity-50"
           >
             <X className="h-5 w-5" />
           </button>
@@ -186,13 +186,13 @@ function WarehouseModal({
         <form onSubmit={form.handleSubmit(onSave)} className="mt-5 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+              <label className="mb-1 block text-xs font-medium text-barber-muted">
                 Nome *
               </label>
               <input
                 {...form.register("name")}
                 placeholder="Ex: Depósito Central"
-                className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+                className="w-full rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm text-barber-white outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
               />
               {form.formState.errors.name && (
                 <p className="mt-1 text-xs text-red-500">
@@ -202,13 +202,13 @@ function WarehouseModal({
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+              <label className="mb-1 block text-xs font-medium text-barber-muted">
                 Código *
               </label>
               <input
                 {...form.register("code")}
                 placeholder="Ex: DEP-01"
-                className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+                className="w-full rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm text-barber-white outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
               />
               {form.formState.errors.code && (
                 <p className="mt-1 text-xs text-red-500">
@@ -219,25 +219,25 @@ function WarehouseModal({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+            <label className="mb-1 block text-xs font-medium text-barber-muted">
               Endereço
             </label>
             <input
               {...form.register("address")}
               placeholder="Endereço completo do depósito"
-              className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+              className="w-full rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm text-barber-white outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+            <label className="mb-1 block text-xs font-medium text-barber-muted">
               Descrição
             </label>
             <textarea
               {...form.register("description")}
               rows={3}
               placeholder="Descrição opcional do depósito"
-              className="w-full resize-none rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+              className="w-full resize-none rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm text-barber-white outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
             />
           </div>
 
@@ -248,7 +248,7 @@ function WarehouseModal({
                 {...form.register("is_default")}
                 className="rounded border-barber-border text-barber-primary focus:ring-barber-primary"
               />
-              <span className="text-sm text-barber-text">Depósito padrão</span>
+              <span className="text-sm text-barber-light">Depósito padrão</span>
             </label>
 
             {isEdit && (
@@ -260,7 +260,7 @@ function WarehouseModal({
                   ).register("is_active")}
                   className="rounded border-barber-border text-barber-primary focus:ring-barber-primary"
                 />
-                <span className="text-sm text-barber-text">Ativo</span>
+                <span className="text-sm text-barber-light">Ativo</span>
               </label>
             )}
           </div>
@@ -270,7 +270,7 @@ function WarehouseModal({
               type="button"
               onClick={onCancel}
               disabled={saving}
-              className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
+              className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-light hover:bg-barber-dark/50 disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -393,10 +393,10 @@ export default function DepositosPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-white">
             Depósitos
           </h1>
-          <p className="mt-1 text-sm text-barber-text-secondary">
+          <p className="mt-1 text-sm text-barber-muted">
             Gerencie os depósitos e locais de armazenamento da sua organização.
           </p>
         </div>
@@ -414,14 +414,14 @@ export default function DepositosPage() {
         <CardSkeleton />
       ) : warehouses.length === 0 ? (
         /* Empty State */
-        <div className="flex flex-col items-center justify-center rounded-xl border border-barber-border bg-white py-16 text-center shadow-sm">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-barber-bg-secondary">
-            <Warehouse className="h-7 w-7 text-barber-text-secondary" />
+        <div className="flex flex-col items-center justify-center rounded-xl border border-barber-border bg-barber-graphite py-16 text-center shadow-sm">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-barber-dark">
+            <Warehouse className="h-7 w-7 text-barber-muted" />
           </div>
-          <h3 className="mt-4 font-display text-lg font-semibold text-barber-dark">
+          <h3 className="mt-4 font-display text-lg font-semibold text-barber-white">
             Nenhum depósito cadastrado
           </h3>
-          <p className="mt-1 max-w-xs text-sm text-barber-text-secondary">
+          <p className="mt-1 max-w-xs text-sm text-barber-muted">
             Crie depósitos para organizar o controle de estoque por local físico
             ou centro de distribuição.
           </p>
@@ -439,13 +439,13 @@ export default function DepositosPage() {
           {warehouses.map((warehouse) => (
             <div
               key={warehouse.id}
-              className="group relative rounded-xl border border-barber-border bg-white p-5 shadow-sm transition-colors hover:border-barber-primary/30 hover:shadow-md"
+              className="group relative rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm transition-colors hover:border-barber-primary/30 hover:shadow-md"
             >
               {/* Card Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="truncate font-display text-base font-semibold text-barber-dark">
+                    <h3 className="truncate font-display text-base font-semibold text-barber-white">
                       {warehouse.name}
                     </h3>
                     {warehouse.is_default && (
@@ -455,7 +455,7 @@ export default function DepositosPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 text-xs font-medium text-barber-text-secondary">
+                  <p className="mt-0.5 text-xs font-medium text-barber-muted">
                     {warehouse.code}
                   </p>
                 </div>
@@ -467,7 +467,7 @@ export default function DepositosPage() {
                     Ativo
                   </span>
                 ) : (
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-barber-bg-secondary px-2.5 py-0.5 text-xs font-medium text-barber-text-secondary">
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-barber-dark px-2.5 py-0.5 text-xs font-medium text-barber-muted">
                     <span className="h-1.5 w-1.5 rounded-full bg-barber-text-secondary" />
                     Inativo
                   </span>
@@ -477,8 +477,8 @@ export default function DepositosPage() {
               {/* Address */}
               {warehouse.address && (
                 <div className="mt-3 flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-barber-text-secondary" />
-                  <p className="text-sm text-barber-text-secondary line-clamp-2">
+                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-barber-muted" />
+                  <p className="text-sm text-barber-muted line-clamp-2">
                     {warehouse.address}
                   </p>
                 </div>
@@ -486,7 +486,7 @@ export default function DepositosPage() {
 
               {/* Description */}
               {warehouse.description && (
-                <p className="mt-2 text-sm text-barber-text-secondary line-clamp-2">
+                <p className="mt-2 text-sm text-barber-muted line-clamp-2">
                   {warehouse.description}
                 </p>
               )}
@@ -496,14 +496,14 @@ export default function DepositosPage() {
                 <button
                   onClick={() => openEditModal(warehouse)}
                   title="Editar"
-                  className="rounded-lg p-1.5 text-barber-text-secondary hover:bg-barber-bg-secondary hover:text-barber-primary"
+                  className="rounded-lg p-1.5 text-barber-muted hover:bg-barber-dark/50 hover:text-barber-primary"
                 >
                   <Edit className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => setDeleteTarget(warehouse)}
                   title="Excluir"
-                  className="rounded-lg p-1.5 text-barber-text-secondary hover:bg-red-50 hover:text-red-600"
+                  className="rounded-lg p-1.5 text-barber-muted hover:bg-barber-error/10 hover:text-barber-error"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

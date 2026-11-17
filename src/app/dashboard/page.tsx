@@ -479,7 +479,7 @@ export default async function DashboardPage() {
 
             <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-success/10 text-barber-success">
                   <TrendingUp className="h-5 w-5" />
                 </div>
                 <div>
@@ -495,7 +495,7 @@ export default async function DashboardPage() {
 
             <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-50 text-barber-error">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-error/10 text-barber-error">
                   <TrendingUp className="h-5 w-5" />
                 </div>
                 <div>

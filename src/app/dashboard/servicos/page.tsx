@@ -24,7 +24,7 @@ export default async function ServicosPage() {
         </div>
         <Link
           href="/dashboard/servicos/novo"
-          className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2.5 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-copper"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2.5 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper"
         >
           <Plus className="h-4 w-4" />
           Novo Serviço

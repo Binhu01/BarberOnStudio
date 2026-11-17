@@ -51,8 +51,8 @@ export default async function ClienteDetailPage({
   const statusLabel = customer.status === "active" ? "Ativo" : "Inativo";
   const statusClasses =
     customer.status === "active"
-      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-      : "bg-gray-100 text-gray-600 border-gray-200";
+      ? "bg-barber-success/10 text-barber-success border-barber-success/20"
+      : "bg-barber-muted/10 text-barber-muted border-barber-muted/20";
 
   const typeLabel = customer.customer_type === "pf" ? "Pessoa Física" : "Pessoa Jurídica";
 
@@ -70,16 +70,16 @@ export default async function ClienteDetailPage({
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/clientes"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-barber-border text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-barber-border text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-white"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="font-display text-2xl font-bold text-barber-dark">
+            <h1 className="font-display text-2xl font-bold text-barber-white">
               {customer.name}
             </h1>
-            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium bg-blue-50 text-blue-700 border-blue-200">
+            <span className="inline-flex items-center rounded-full border border-barber-gold/20 bg-barber-gold/10 px-2.5 py-0.5 text-xs font-medium text-barber-gold">
               {typeLabel}
             </span>
             <span
@@ -88,21 +88,21 @@ export default async function ClienteDetailPage({
               {statusLabel}
             </span>
           </div>
-          <p className="mt-0.5 text-sm text-barber-text-secondary">
+          <p className="mt-0.5 text-sm text-barber-muted">
             Detalhes do cliente
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href={`/dashboard/clientes/${id}/editar`}
-            className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-dark/50"
           >
             <Edit className="h-4 w-4" />
             Editar
           </Link>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-error/30 bg-barber-graphite px-3 py-2 text-sm font-medium text-barber-error transition-colors hover:bg-barber-error/10"
           >
             <Archive className="h-4 w-4" />
             Arquivar
@@ -113,45 +113,45 @@ export default async function ClienteDetailPage({
       {/* Info Grid */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Dados Cadastrais */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <FileText className="h-5 w-5 text-barber-text-secondary" />
-            <h2 className="text-base font-semibold text-barber-dark">
+            <FileText className="h-5 w-5 text-barber-muted" />
+            <h2 className="text-base font-semibold text-barber-white">
               Dados Cadastrais
             </h2>
           </div>
           <dl className="space-y-4">
             <div>
-              <dt className="text-xs text-barber-text-secondary">Tipo</dt>
-              <dd className="text-sm font-medium text-barber-text">{typeLabel}</dd>
+              <dt className="text-xs text-barber-muted">Tipo</dt>
+              <dd className="text-sm font-medium text-barber-light">{typeLabel}</dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">Documento</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">Documento</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.document || "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">Origem</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">Origem</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.source || "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">Categoria</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">Categoria</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.category || "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">Criado em</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">Criado em</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {formatDate(customer.created_at)}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">Atualizado em</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">Atualizado em</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {formatDate(customer.updated_at)}
               </dd>
             </div>
@@ -159,19 +159,19 @@ export default async function ClienteDetailPage({
         </div>
 
         {/* Contato */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <User className="h-5 w-5 text-barber-text-secondary" />
-            <h2 className="text-base font-semibold text-barber-dark">Contato</h2>
+            <User className="h-5 w-5 text-barber-muted" />
+            <h2 className="text-base font-semibold text-barber-white">Contato</h2>
           </div>
           <dl className="space-y-4">
             <div>
-              <dt className="text-xs text-barber-text-secondary">E-mail</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">E-mail</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.email ? (
                   <a
                     href={`mailto:${customer.email}`}
-                    className="inline-flex items-center gap-1.5 text-teal-600 hover:underline"
+                    className="inline-flex items-center gap-1.5 text-barber-gold hover:underline"
                   >
                     <Mail className="h-3.5 w-3.5" />
                     {customer.email}
@@ -182,11 +182,11 @@ export default async function ClienteDetailPage({
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">Telefone</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">Telefone</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.phone ? (
                   <span className="inline-flex items-center gap-1.5">
-                    <Phone className="h-3.5 w-3.5 text-barber-text-secondary" />
+                    <Phone className="h-3.5 w-3.5 text-barber-muted" />
                     {customer.phone}
                   </span>
                 ) : (
@@ -195,11 +195,11 @@ export default async function ClienteDetailPage({
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">WhatsApp</dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dt className="text-xs text-barber-muted">WhatsApp</dt>
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.whatsapp ? (
                   <span className="inline-flex items-center gap-1.5">
-                    <MessageCircle className="h-3.5 w-3.5 text-barber-text-secondary" />
+                    <MessageCircle className="h-3.5 w-3.5 text-barber-muted" />
                     {customer.whatsapp}
                   </span>
                 ) : (
@@ -208,13 +208,13 @@ export default async function ClienteDetailPage({
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-barber-text-secondary">
+              <dt className="text-xs text-barber-muted">
                 Contato Principal
               </dt>
-              <dd className="text-sm font-medium text-barber-text">
+              <dd className="text-sm font-medium text-barber-light">
                 {customer.primary_contact_name ? (
                   <span className="inline-flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-barber-text-secondary" />
+                    <Building2 className="h-3.5 w-3.5 text-barber-muted" />
                     {customer.primary_contact_name}
                   </span>
                 ) : (
@@ -228,14 +228,14 @@ export default async function ClienteDetailPage({
 
       {/* Notes */}
       {customer.notes && (
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
-            <FileText className="h-5 w-5 text-barber-text-secondary" />
-            <h2 className="text-base font-semibold text-barber-dark">
+            <FileText className="h-5 w-5 text-barber-muted" />
+            <h2 className="text-base font-semibold text-barber-white">
               Observações
             </h2>
           </div>
-          <p className="whitespace-pre-wrap text-sm text-barber-text">
+          <p className="whitespace-pre-wrap text-sm text-barber-light">
             {customer.notes}
           </p>
         </div>

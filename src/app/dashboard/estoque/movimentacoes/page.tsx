@@ -29,10 +29,10 @@ function getMovementBadge(type: string) {
   const label = MOVEMENT_TYPE_LABELS[type] || type;
 
   if (type.endsWith("_in") || type === "purchase_in" || type === "manual_in" || type === "return_in") {
-    return { label, className: "bg-green-100 text-green-800" };
+    return { label, className: "bg-barber-success/10 text-barber-success" };
   }
   if (type.endsWith("_out") || type === "sale_out" || type === "manual_out" || type === "return_out") {
-    return { label, className: "bg-red-100 text-red-800" };
+    return { label, className: "bg-barber-error/10 text-barber-error" };
   }
   if (type.startsWith("transfer")) {
     return { label, className: "bg-blue-100 text-blue-800" };
@@ -41,7 +41,7 @@ function getMovementBadge(type: string) {
     return { label, className: "bg-orange-100 text-orange-800" };
   }
 
-  return { label, className: "bg-gray-100 text-gray-700" };
+  return { label, className: "bg-barber-muted/10 text-barber-muted" };
 }
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
@@ -102,12 +102,12 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-barber-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-white">
           Movimentações
         </h1>
         <button
           type="button"
-          className="inline-flex items-center gap-2 border border-barber-border text-barber-text rounded-lg px-4 py-2 hover:bg-barber-bg-secondary transition-colors"
+          className="inline-flex items-center gap-2 border border-barber-border text-barber-light rounded-lg px-4 py-2 hover:bg-barber-dark/50 transition-colors"
         >
           <Download className="w-4 h-4" />
           Exportar
@@ -115,16 +115,16 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-white rounded-xl border border-barber-border p-4">
+      <div className="bg-barber-graphite rounded-xl border border-barber-border p-4">
         <form className="flex flex-wrap gap-3 items-end">
           <div className="min-w-[180px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+            <label className="block text-sm font-medium text-barber-light mb-1">
               Produto
             </label>
             <select
               name="product_id"
               defaultValue={product_id}
-              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-dark text-barber-light focus:outline-none focus:ring-2 focus:ring-barber-gold/20 focus:border-barber-gold"
             >
               <option value="">Todos</option>
               {productsData.products.map((p: { id: string; name: string }) => (
@@ -136,13 +136,13 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
           </div>
 
           <div className="min-w-[180px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+            <label className="block text-sm font-medium text-barber-light mb-1">
               Depósito
             </label>
             <select
               name="warehouse_id"
               defaultValue={warehouse_id}
-              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-dark text-barber-light focus:outline-none focus:ring-2 focus:ring-barber-gold/20 focus:border-barber-gold"
             >
               <option value="">Todos</option>
               {warehouses.map((w: { id: string; name: string }) => (
@@ -154,13 +154,13 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
           </div>
 
           <div className="min-w-[180px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+            <label className="block text-sm font-medium text-barber-light mb-1">
               Tipo de Movimentação
             </label>
             <select
               name="movement_type"
               defaultValue={movement_type}
-              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-dark text-barber-light focus:outline-none focus:ring-2 focus:ring-barber-gold/20 focus:border-barber-gold"
             >
               <option value="">Todos</option>
               {Object.entries(MOVEMENT_TYPE_LABELS).map(([value, label]) => (
@@ -173,7 +173,7 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
 
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-barber-blue text-white rounded-lg hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-barber-gold text-white rounded-lg hover:opacity-90 transition-opacity"
           >
             <Filter className="w-4 h-4" />
             Filtrar
@@ -182,7 +182,7 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
           {(product_id || warehouse_id || movement_type) && (
             <Link
               href="/dashboard/estoque/movimentacoes"
-              className="inline-flex items-center px-4 py-2 border border-barber-border text-barber-text rounded-lg hover:bg-barber-bg-secondary transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-barber-border text-barber-light rounded-lg hover:bg-barber-dark/50 transition-colors"
             >
               Limpar
             </Link>
@@ -191,16 +191,16 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
       </div>
 
       {/* Movements Table */}
-      <div className="bg-white rounded-xl border border-barber-border overflow-hidden">
+      <div className="bg-barber-graphite rounded-xl border border-barber-border overflow-hidden">
         {movements.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="w-16 h-16 rounded-full bg-barber-bg-secondary flex items-center justify-center mb-4">
-              <ArrowLeftRight className="w-8 h-8 text-barber-text-secondary" />
+            <div className="w-16 h-16 rounded-full bg-barber-dark flex items-center justify-center mb-4">
+              <ArrowLeftRight className="w-8 h-8 text-barber-muted" />
             </div>
-            <h3 className="text-lg font-semibold text-barber-dark mb-1">
+            <h3 className="text-lg font-semibold text-barber-white mb-1">
               Nenhuma movimentação encontrada
             </h3>
-            <p className="text-sm text-barber-text-secondary text-center max-w-sm">
+            <p className="text-sm text-barber-muted text-center max-w-sm">
               {product_id || warehouse_id || movement_type
                 ? "Tente ajustar os filtros ou limpar a busca."
                 : "As movimentações de estoque aparecerão aqui quando entradas, saídas ou ajustes forem registrados."}
@@ -209,30 +209,30 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-barber-bg border-b border-barber-border">
+              <thead className="bg-barber-dark border-b border-barber-border">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Produto
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Variante
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Quantidade
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Depósito
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Motivo
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-muted uppercase tracking-wider">
                     Usuário
                   </th>
                 </tr>
@@ -247,9 +247,9 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
                   return (
                     <tr
                       key={mov.id}
-                      className="hover:bg-barber-bg-secondary transition-colors"
+                      className="hover:bg-barber-dark/50 transition-colors"
                     >
-                      <td className="px-4 py-3 text-sm text-barber-text whitespace-nowrap">
+                      <td className="px-4 py-3 text-sm text-barber-light whitespace-nowrap">
                         {dateFormatter.format(new Date(mov.created_at))}
                       </td>
                       <td className="px-4 py-3">
@@ -259,10 +259,10 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
                           {badge.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-barber-text">
+                      <td className="px-4 py-3 text-sm text-barber-light">
                         {mov.product?.name || "—"}
                       </td>
-                      <td className="px-4 py-3 text-sm text-barber-text">
+                      <td className="px-4 py-3 text-sm text-barber-light">
                         {mov.variant?.name || "—"}
                       </td>
                       <td
@@ -271,18 +271,18 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
                             ? "text-green-700"
                             : qty < 0
                             ? "text-red-700"
-                            : "text-barber-text"
+                            : "text-barber-light"
                         }`}
                       >
                         {qtyFormatted}
                       </td>
-                      <td className="px-4 py-3 text-sm text-barber-text">
+                      <td className="px-4 py-3 text-sm text-barber-light">
                         {mov.warehouse?.name || "—"}
                       </td>
-                      <td className="px-4 py-3 text-sm text-barber-text max-w-[200px] truncate" title={mov.reason || ""}>
+                      <td className="px-4 py-3 text-sm text-barber-light max-w-[200px] truncate" title={mov.reason || ""}>
                         {mov.reason || "—"}
                       </td>
-                      <td className="px-4 py-3 text-sm text-barber-text">
+                      <td className="px-4 py-3 text-sm text-barber-light">
                         {mov.creator?.full_name || "—"}
                       </td>
                     </tr>
@@ -297,14 +297,14 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-barber-text-secondary">
+          <p className="text-sm text-barber-muted">
             Mostrando página {page} de {totalPages} ({total} movimentações)
           </p>
           <div className="flex items-center gap-2">
             {page > 1 && (
               <Link
                 href={buildFilterUrl({ page: String(page - 1) })}
-                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-text hover:bg-barber-bg-secondary transition-colors"
+                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-light hover:bg-barber-dark/50 transition-colors"
               >
                 Anterior
               </Link>
@@ -312,7 +312,7 @@ export default async function MovimentacoesPage({ searchParams }: PageProps) {
             {page < totalPages && (
               <Link
                 href={buildFilterUrl({ page: String(page + 1) })}
-                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-text hover:bg-barber-bg-secondary transition-colors"
+                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-light hover:bg-barber-dark/50 transition-colors"
               >
                 Próxima
               </Link>

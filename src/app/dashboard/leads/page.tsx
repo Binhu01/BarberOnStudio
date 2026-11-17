@@ -85,13 +85,13 @@ function KanbanSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="min-w-[280px] flex-shrink-0 space-y-3 rounded-xl border border-barber-border bg-barber-bg-secondary/30 p-3"
+          className="min-w-[280px] flex-shrink-0 space-y-3 rounded-xl border border-barber-border bg-barber-dark/30 p-3"
         >
           <div className="h-5 w-24 animate-pulse rounded bg-barber-border" />
           {Array.from({ length: 3 }).map((_, j) => (
             <div
               key={j}
-              className="h-24 rounded-lg border border-barber-border bg-white p-3"
+              className="h-24 rounded-lg border border-barber-border bg-barber-graphite p-3"
             >
               <div className="h-4 w-3/4 animate-pulse rounded bg-barber-border" />
               <div className="mt-2 h-3 w-1/2 animate-pulse rounded bg-barber-border" />
@@ -109,18 +109,18 @@ function KanbanSkeleton() {
 // ---------------------------------------------------------------------------
 
 const SOURCE_COLORS: Record<string, string> = {
-  website: "bg-blue-50 text-blue-700",
-  indicacao: "bg-emerald-50 text-emerald-700",
-  "redes-sociais": "bg-purple-50 text-purple-700",
-  email: "bg-amber-50 text-amber-700",
-  telefone: "bg-cyan-50 text-cyan-700",
-  evento: "bg-rose-50 text-rose-700",
+  website: "bg-barber-gold/10 text-barber-gold",
+  indicacao: "bg-barber-success/10 text-barber-success",
+  "redes-sociais": "bg-barber-warning/10 text-barber-warning",
+  email: "bg-barber-copper/10 text-barber-copper",
+  telefone: "bg-barber-gold/10 text-barber-light",
+  evento: "bg-barber-error/10 text-barber-error",
 };
 
 function sourceBadge(source: string | null) {
-  if (!source) return <span className="text-barber-text-secondary">—</span>;
+  if (!source) return <span className="text-barber-muted">—</span>;
   const colorClass =
-    SOURCE_COLORS[source.toLowerCase()] ?? "bg-gray-50 text-gray-700";
+    SOURCE_COLORS[source.toLowerCase()] ?? "bg-barber-muted/10 text-barber-muted";
   return (
     <span
       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${colorClass}`}
@@ -228,23 +228,23 @@ export default function LeadsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-white">
             Leads
           </h1>
-          <p className="mt-1 text-sm text-barber-text-secondary">
+          <p className="mt-1 text-sm text-barber-muted">
             Gerencie seu funil de vendas
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* View Toggle */}
-          <div className="inline-flex rounded-lg border border-barber-border bg-white p-0.5 shadow-sm">
+          <div className="inline-flex rounded-lg border border-barber-border bg-barber-graphite p-0.5 shadow-sm">
             <button
               onClick={() => setViewMode("list")}
               className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 viewMode === "list"
-                  ? "bg-barber-bg-secondary text-barber-dark"
-                  : "text-barber-text-secondary hover:text-barber-dark"
+                  ? "bg-barber-dark text-barber-white"
+                  : "text-barber-muted hover:text-barber-white"
               }`}
             >
               <ListIcon className="h-4 w-4" />
@@ -254,8 +254,8 @@ export default function LeadsPage() {
               onClick={() => setViewMode("kanban")}
               className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 viewMode === "kanban"
-                  ? "bg-barber-bg-secondary text-barber-dark"
-                  : "text-barber-text-secondary hover:text-barber-dark"
+                  ? "bg-barber-dark text-barber-white"
+                  : "text-barber-muted hover:text-barber-white"
               }`}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -265,7 +265,7 @@ export default function LeadsPage() {
 
           <Link
             href="/dashboard/leads/novo"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-barber-blue px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-barber-gold px-4 py-2.5 text-sm font-medium text-barber-white shadow-sm transition-colors hover:bg-barber-copper"
           >
             <Plus className="h-4 w-4" />
             Novo lead
@@ -274,17 +274,17 @@ export default function LeadsPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="rounded-xl border border-barber-border bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-4 shadow-sm">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-text-secondary" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-muted" />
             <input
               type="text"
               placeholder="Buscar por nome, empresa ou e-mail..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-barber-border bg-barber-bg-secondary py-2 pl-9 pr-3 text-sm text-barber-dark placeholder:text-barber-text-secondary focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark py-2 pl-9 pr-3 text-sm text-barber-white placeholder:text-barber-muted focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             />
           </div>
 
@@ -292,7 +292,7 @@ export default function LeadsPage() {
           <select
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
-            className="rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
+            className="rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
           >
             <option value="">Todas as origens</option>
             {uniqueSources.map((s) => (
@@ -306,7 +306,7 @@ export default function LeadsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2 text-sm text-barber-dark focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
+            className="rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
           >
             <option value="">Todos os status</option>
             <option value="open">Abertos</option>
@@ -318,7 +318,7 @@ export default function LeadsPage() {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-text-secondary hover:bg-barber-bg-secondary hover:text-barber-dark"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-muted hover:bg-barber-dark/50 hover:text-barber-white"
             >
               <Filter className="h-3.5 w-3.5" />
               Limpar
@@ -330,7 +330,7 @@ export default function LeadsPage() {
       {/* Content */}
       {loading ? (
         viewMode === "list" ? (
-          <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite shadow-sm">
             <ListSkeleton />
           </div>
         ) : (
@@ -338,16 +338,16 @@ export default function LeadsPage() {
         )
       ) : viewMode === "list" ? (
         /* LIST VIEW */
-        <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite shadow-sm">
           {leads.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-barber-bg-secondary text-barber-text-secondary">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-barber-dark text-barber-muted">
                 <Search className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 font-display text-lg font-semibold text-barber-dark">
+              <h3 className="mt-4 font-display text-lg font-semibold text-barber-white">
                 Nenhum lead encontrado
               </h3>
-              <p className="mt-1 max-w-xs text-sm text-barber-text-secondary">
+              <p className="mt-1 max-w-xs text-sm text-barber-muted">
                 {hasActiveFilters
                   ? "Tente ajustar os filtros ou buscar por outro termo."
                   : "Comece adicionando seu primeiro lead."}
@@ -355,7 +355,7 @@ export default function LeadsPage() {
               {!hasActiveFilters && (
                 <Link
                   href="/dashboard/leads/novo"
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white hover:bg-barber-blue/90"
+                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white hover:bg-barber-copper"
                 >
                   <Plus className="h-4 w-4" />
                   Novo lead
@@ -365,30 +365,30 @@ export default function LeadsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="border-b border-barber-border bg-barber-bg-secondary">
+                <thead className="border-b border-barber-border bg-barber-dark">
                   <tr>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Nome
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Empresa
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Origem
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Etapa
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Valor Estimado
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Retorno
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">
                       Responsavel
                     </th>
-                    <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">
+                    <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-muted">
                       Acoes
                     </th>
                   </tr>
@@ -399,58 +399,58 @@ export default function LeadsPage() {
                     return (
                       <tr
                         key={lead.id}
-                        className="transition-colors hover:bg-barber-bg-secondary/50"
+                        className="transition-colors hover:bg-barber-dark/50"
                       >
-                        <td className="whitespace-nowrap px-4 py-3 font-medium text-barber-dark">
+                        <td className="whitespace-nowrap px-4 py-3 font-medium text-barber-white">
                           {lead.name}
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-barber-text">
+                        <td className="whitespace-nowrap px-4 py-3 text-barber-light">
                           {lead.company_name || (
-                            <span className="text-barber-text-secondary">—</span>
+                            <span className="text-barber-muted">—</span>
                           )}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3">
                           {sourceBadge(lead.source)}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3">
-                          <span className="inline-flex items-center rounded-full bg-barber-bg-secondary px-2 py-0.5 text-xs font-medium text-barber-dark">
+                          <span className="inline-flex items-center rounded-full bg-barber-dark px-2 py-0.5 text-xs font-medium text-barber-white">
                             {lead.stage?.name ?? "—"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-barber-text">
+                        <td className="whitespace-nowrap px-4 py-3 text-barber-light">
                           {lead.estimated_value != null
                             ? currencyFormatter.format(lead.estimated_value)
                             : (
-                                <span className="text-barber-text-secondary">—</span>
+                                <span className="text-barber-muted">—</span>
                               )}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3">
                           <div className="flex items-center gap-1.5">
                             <span
-                              className={`text-barber-text ${overdue ? "font-medium text-amber-600" : ""}`}
+                              className={`text-barber-light ${overdue ? "font-medium text-barber-warning" : ""}`}
                             >
                               {formatDate(lead.expected_return_at)}
                             </span>
                             {overdue && (
-                              <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
+                              <AlertCircle className="h-3.5 w-3.5 text-barber-warning" />
                             )}
                           </div>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-barber-text">
+                        <td className="whitespace-nowrap px-4 py-3 text-barber-light">
                           {lead.assigned_to ? (
                             <div className="flex items-center gap-1.5">
-                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-barber-blue/10 text-xs font-medium text-barber-blue">
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-barber-gold/10 text-xs font-medium text-barber-gold">
                                 <User className="h-3 w-3" />
                               </div>
                             </div>
                           ) : (
-                            <span className="text-barber-text-secondary">—</span>
+                            <span className="text-barber-muted">—</span>
                           )}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-right">
                           <Link
                             href={`/dashboard/leads/${lead.id}`}
-                            className="inline-flex items-center rounded-md p-1.5 text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-blue"
+                            className="inline-flex items-center rounded-md p-1.5 text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-gold"
                             title="Ver detalhes"
                           >
                             <MoreHorizontal className="h-4 w-4" />
@@ -469,13 +469,13 @@ export default function LeadsPage() {
         <div className="flex gap-4 overflow-x-auto pb-4">
           {stages.length === 0 ? (
             <div className="flex w-full flex-col items-center justify-center py-16 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-barber-bg-secondary text-barber-text-secondary">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-barber-dark text-barber-muted">
                 <LayoutGrid className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 font-display text-lg font-semibold text-barber-dark">
+              <h3 className="mt-4 font-display text-lg font-semibold text-barber-white">
                 Nenhuma etapa configurada
               </h3>
-              <p className="mt-1 max-w-xs text-sm text-barber-text-secondary">
+              <p className="mt-1 max-w-xs text-sm text-barber-muted">
                 Configure o pipeline para visualizar o Kanban.
               </p>
             </div>
@@ -485,9 +485,9 @@ export default function LeadsPage() {
               const isWon = stage.is_won;
               const isLost = stage.is_lost;
 
-              let columnBg = "bg-barber-bg-secondary/30";
-              if (isWon) columnBg = "bg-green-50";
-              if (isLost) columnBg = "bg-red-50";
+              let columnBg = "bg-barber-dark/30";
+              if (isWon) columnBg = "bg-barber-success/5";
+              if (isLost) columnBg = "bg-barber-error/5";
 
               return (
                 <div
@@ -496,10 +496,10 @@ export default function LeadsPage() {
                 >
                   {/* Column Header */}
                   <div className="mb-3 flex items-center justify-between">
-                    <h3 className="font-display text-sm font-semibold text-barber-dark">
+                    <h3 className="font-display text-sm font-semibold text-barber-white">
                       {stage.name}
                     </h3>
-                    <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-barber-bg-secondary px-1.5 text-xs font-medium text-barber-text-secondary">
+                    <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-barber-dark px-1.5 text-xs font-medium text-barber-muted">
                       {stageLeads.length}
                     </span>
                   </div>
@@ -508,7 +508,7 @@ export default function LeadsPage() {
                   <div className="space-y-2.5">
                     {stageLeads.length === 0 ? (
                       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-barber-border py-8 text-center">
-                        <p className="text-xs text-barber-text-secondary">
+                        <p className="text-xs text-barber-muted">
                           Nenhum lead
                         </p>
                       </div>
@@ -558,7 +558,7 @@ function KanbanCard({
   const [showStageSelect, setShowStageSelect] = useState(false);
 
   return (
-    <div className="group relative rounded-lg border border-barber-border bg-white p-3 shadow-sm transition-shadow hover:shadow-md">
+    <div className="group relative rounded-lg border border-barber-border bg-barber-graphite p-3 shadow-sm transition-shadow hover:shadow-md">
       {/* Card link overlay */}
       <Link
         href={`/dashboard/leads/${lead.id}`}
@@ -568,9 +568,9 @@ function KanbanCard({
 
       {/* Name + Company */}
       <div className="relative z-20 pointer-events-none">
-        <p className="font-medium text-barber-dark leading-tight">{lead.name}</p>
+        <p className="font-medium text-barber-white leading-tight">{lead.name}</p>
         {lead.company_name && (
-          <p className="mt-0.5 text-xs text-barber-text-secondary">
+          <p className="mt-0.5 text-xs text-barber-muted">
             {lead.company_name}
           </p>
         )}
@@ -580,7 +580,7 @@ function KanbanCard({
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         {sourceBadge(lead.source)}
         {overdue && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-barber-warning/10 px-2 py-0.5 text-xs font-medium text-barber-warning">
             <AlertCircle className="h-3 w-3" />
             Atrasado
           </span>
@@ -589,15 +589,15 @@ function KanbanCard({
 
       {/* Value + Return date */}
       <div className="mt-2.5 flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1 text-barber-text">
-          <DollarSign className="h-3 w-3 text-barber-text-secondary" />
+        <div className="flex items-center gap-1 text-barber-light">
+          <DollarSign className="h-3 w-3 text-barber-muted" />
           {lead.estimated_value != null
             ? currencyFormatter.format(lead.estimated_value)
             : "—"}
         </div>
         {lead.expected_return_at && (
           <div
-            className={`flex items-center gap-1 ${overdue ? "font-medium text-amber-600" : "text-barber-text-secondary"}`}
+            className={`flex items-center gap-1 ${overdue ? "font-medium text-barber-warning" : "text-barber-muted"}`}
           >
             <Calendar className="h-3 w-3" />
             {formatDate(lead.expected_return_at)}
@@ -610,11 +610,11 @@ function KanbanCard({
         {/* Assignee avatar */}
         <div className="flex items-center gap-1.5">
           {lead.assigned_to ? (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-barber-blue/10 text-xs font-medium text-barber-blue">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-barber-gold/10 text-xs font-medium text-barber-gold">
               <User className="h-3 w-3" />
             </div>
           ) : (
-            <span className="text-xs text-barber-text-secondary">
+            <span className="text-xs text-barber-muted">
               Sem responsavel
             </span>
           )}
@@ -628,7 +628,7 @@ function KanbanCard({
               e.stopPropagation();
               setShowStageSelect(!showStageSelect);
             }}
-            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-white"
           >
             Mover
             <ChevronDown className="h-3 w-3" />
@@ -641,7 +641,7 @@ function KanbanCard({
                 className="fixed inset-0 z-40"
                 onClick={() => setShowStageSelect(false)}
               />
-              <div className="absolute right-0 top-full z-50 mt-1 w-44 overflow-hidden rounded-lg border border-barber-border bg-white py-1 shadow-lg">
+              <div className="absolute right-0 top-full z-50 mt-1 w-44 overflow-hidden rounded-lg border border-barber-border bg-barber-graphite py-1 shadow-lg">
                 {stages
                   .filter((s) => s.id !== lead.stage_id)
                   .map((s) => (
@@ -653,7 +653,7 @@ function KanbanCard({
                         onStageChange(lead.id, s.id);
                         setShowStageSelect(false);
                       }}
-                      className="block w-full px-3 py-1.5 text-left text-xs text-barber-dark hover:bg-barber-bg-secondary"
+                      className="block w-full px-3 py-1.5 text-left text-xs text-barber-white hover:bg-barber-dark/50"
                     >
                       {s.name}
                     </button>

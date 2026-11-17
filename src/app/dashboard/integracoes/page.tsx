@@ -30,10 +30,10 @@ const PROVIDER_CONFIG: Record<string, { label: string; icon: typeof Plug; color:
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: typeof CheckCircle2 }> = {
-  connected: { label: "Conectado", color: "text-green-600", bg: "bg-green-50 border-green-200", icon: CheckCircle2 },
-  disconnected: { label: "Desconectado", color: "text-gray-500", bg: "bg-gray-50 border-gray-200", icon: XCircle },
-  error: { label: "Erro", color: "text-red-600", bg: "bg-red-50 border-red-200", icon: AlertCircle },
-  pending: { label: "Pendente", color: "text-amber-600", bg: "bg-amber-50 border-amber-200", icon: RefreshCw },
+  connected: { label: "Conectado", color: "text-barber-success", bg: "bg-barber-success/10 border-barber-success/20", icon: CheckCircle2 },
+  disconnected: { label: "Desconectado", color: "text-barber-muted", bg: "bg-barber-muted/10 border-barber-muted/20", icon: XCircle },
+  error: { label: "Erro", color: "text-barber-error", bg: "bg-barber-error/10 border-barber-error/20", icon: AlertCircle },
+  pending: { label: "Pendente", color: "text-barber-warning", bg: "bg-barber-warning/10 border-barber-warning/20", icon: RefreshCw },
 };
 
 export default async function IntegracoesPage() {
@@ -70,7 +70,7 @@ export default async function IntegracoesPage() {
               key={provider}
               className={`relative rounded-xl border p-5 transition-all ${
                 isConnected
-                  ? "border-green-500/30 bg-barber-graphite"
+                  ? "border-barber-success/30 bg-barber-graphite"
                   : "border-barber-border bg-barber-graphite hover:border-barber-gold/30"
               }`}
             >
@@ -90,7 +90,7 @@ export default async function IntegracoesPage() {
               <p className="mt-1 text-xs text-barber-muted leading-relaxed">{config.description}</p>
 
               {connection?.last_error && (
-                <p className="mt-2 rounded bg-red-950/20 px-2 py-1 text-[10px] text-red-400">
+                <p className="mt-2 rounded bg-barber-error/10 px-2 py-1 text-[10px] text-barber-error">
                   {connection.last_error}
                 </p>
               )}
@@ -101,12 +101,12 @@ export default async function IntegracoesPage() {
                     <button className="rounded-lg border border-barber-border bg-barber-dark px-3 py-1.5 text-xs font-medium text-barber-white transition-colors hover:bg-barber-border">
                       Configurar
                     </button>
-                    <button className="rounded-lg border border-red-900/30 bg-red-950/20 px-3 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-red-950/40">
+                    <button className="rounded-lg border border-barber-error/30 bg-barber-error/10 px-3 py-1.5 text-xs font-medium text-barber-error transition-colors hover:bg-barber-error/20">
                       Desconectar
                     </button>
                   </>
                 ) : (
-                  <button className="inline-flex items-center gap-1 rounded-lg bg-barber-gold px-3 py-1.5 text-xs font-medium text-barber-dark transition-colors hover:bg-barber-copper">
+                  <button className="inline-flex items-center gap-1 rounded-lg bg-barber-gold px-3 py-1.5 text-xs font-medium text-barber-white transition-colors hover:bg-barber-copper">
                     <ExternalLink className="h-3 w-3" />
                     Conectar
                   </button>
@@ -146,10 +146,10 @@ export default async function IntegracoesPage() {
                     <td className="py-2 pr-4">
                       <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                         event.processed
-                          ? "bg-green-50 text-green-600"
+                          ? "bg-barber-success/10 text-barber-success"
                           : event.processing_error
-                            ? "bg-red-50 text-red-600"
-                            : "bg-amber-50 text-amber-600"
+                            ? "bg-barber-error/10 text-barber-error"
+                            : "bg-barber-warning/10 text-barber-warning"
                       }`}>
                         {event.processed ? "Processado" : event.processing_error ? "Erro" : "Pendente"}
                       </span>

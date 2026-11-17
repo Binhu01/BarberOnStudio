@@ -29,8 +29,8 @@ const STATUS_CONFIG: Record<
 > = {
   scheduled: {
     label: "Agendado",
-    color: "text-blue-600",
-    bg: "bg-blue-50 border-blue-200",
+    color: "text-barber-gold",
+    bg: "bg-barber-gold/10 border-blue-200",
     icon: CalendarDays,
   },
   confirmed: {
@@ -53,14 +53,14 @@ const STATUS_CONFIG: Record<
   },
   completed: {
     label: "Concluído",
-    color: "text-green-600",
-    bg: "bg-green-50 border-green-200",
+    color: "text-barber-success",
+    bg: "bg-barber-success/10 border-green-200",
     icon: CheckCircle2,
   },
   cancelled: {
     label: "Cancelado",
-    color: "text-red-600",
-    bg: "bg-red-50 border-red-200",
+    color: "text-barber-error",
+    bg: "bg-barber-error/10 border-red-200",
     icon: XCircle,
   },
   no_show: {
@@ -145,7 +145,7 @@ export default async function AgendaPage() {
         </div>
         <Link
           href="/dashboard/agenda/novo"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-dark transition-colors hover:bg-barber-copper"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper"
         >
           <Plus className="h-4 w-4" />
           Novo agendamento
@@ -188,7 +188,7 @@ export default async function AgendaPage() {
           </p>
           <Link
             href="/dashboard/agenda/novo"
-            className="mt-4 inline-block rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-dark hover:bg-barber-copper"
+            className="mt-4 inline-block rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white hover:bg-barber-copper"
           >
             Criar agendamento
           </Link>

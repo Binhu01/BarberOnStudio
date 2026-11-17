@@ -39,8 +39,8 @@ const STATUS_CONFIG: Record<
 > = {
   scheduled: {
     label: "Agendado",
-    color: "text-blue-600",
-    bg: "bg-blue-50 border-blue-200",
+    color: "text-barber-gold",
+    bg: "bg-barber-gold/10 border-blue-200",
     icon: CalendarDays,
   },
   confirmed: {
@@ -63,14 +63,14 @@ const STATUS_CONFIG: Record<
   },
   completed: {
     label: "Concluído",
-    color: "text-green-600",
-    bg: "bg-green-50 border-green-200",
+    color: "text-barber-success",
+    bg: "bg-barber-success/10 border-green-200",
     icon: CheckCircle2,
   },
   cancelled: {
     label: "Cancelado",
-    color: "text-red-600",
-    bg: "bg-red-50 border-red-200",
+    color: "text-barber-error",
+    bg: "bg-barber-error/10 border-red-200",
     icon: XCircle,
   },
   no_show: {

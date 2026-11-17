@@ -21,15 +21,15 @@ export default async function NovaOrdemPage(props: {
     <div className="space-y-6">
       <Link
         href="/dashboard/compras/ordens"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-gold"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para ordens
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">Nova ordem de compra</h1>
-        <p className="mt-1 text-sm text-barber-text-secondary">
+        <h1 className="font-display text-2xl font-bold text-barber-white">Nova ordem de compra</h1>
+        <p className="mt-1 text-sm text-barber-muted">
           Crie uma ordem de compra vinculada a um fornecedor e adicione os itens desejados.
         </p>
       </div>

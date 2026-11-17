@@ -17,14 +17,14 @@ export default async function DepartamentosPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">Departamentos</h1>
-          <p className="mt-1 text-sm text-barber-text-secondary">
+          <h1 className="font-display text-2xl font-bold text-barber-white">Departamentos</h1>
+          <p className="mt-1 text-sm text-barber-muted">
             Organize sua equipe em departamentos para melhor gestão
           </p>
         </div>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
           <Plus className="h-4 w-4" />
           Novo departamento
@@ -33,44 +33,44 @@ export default async function DepartamentosPage() {
 
       {/* Active Departments Grid */}
       {active.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-barber-border bg-white py-16">
-          <Building2 className="mb-4 h-12 w-12 text-barber-text-secondary/40" />
-          <p className="text-lg font-medium text-barber-dark">Nenhum departamento ativo</p>
-          <p className="text-sm text-barber-text-secondary">Crie departamentos para organizar sua equipe.</p>
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-barber-border bg-barber-graphite py-16">
+          <Building2 className="mb-4 h-12 w-12 text-barber-muted/40" />
+          <p className="text-lg font-medium text-barber-white">Nenhum departamento ativo</p>
+          <p className="text-sm text-barber-muted">Crie departamentos para organizar sua equipe.</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {active.map((dept) => (
             <div
               key={dept.id}
-              className="group relative rounded-xl border border-barber-border bg-white p-5 shadow-sm transition-all hover:border-barber-blue/30 hover:shadow-md"
+              className="group relative rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm transition-all hover:border-barber-gold/30 hover:shadow-md"
             >
               <div className="flex items-start justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-blue/10">
-                  <Building2 className="h-5 w-5 text-barber-blue" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+                  <Building2 className="h-5 w-5 text-barber-gold" />
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-barber-bg-secondary px-2.5 py-0.5 text-xs font-medium text-barber-text-secondary">
+                <span className="inline-flex items-center gap-1 rounded-full bg-barber-dark px-2.5 py-0.5 text-xs font-medium text-barber-muted">
                   <Users className="h-3 w-3" />
                   {dept.member_count} {dept.member_count === 1 ? "membro" : "membros"}
                 </span>
               </div>
-              <h3 className="mt-3 font-display text-lg font-semibold text-barber-dark">{dept.name}</h3>
+              <h3 className="mt-3 font-display text-lg font-semibold text-barber-white">{dept.name}</h3>
               {dept.description && (
-                <p className="mt-1 line-clamp-2 text-sm text-barber-text-secondary">{dept.description}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-barber-muted">{dept.description}</p>
               )}
               {!dept.description && (
-                <p className="mt-1 text-sm italic text-barber-text-secondary/60">Sem descrição</p>
+                <p className="mt-1 text-sm italic text-barber-muted/60">Sem descrição</p>
               )}
               <div className="mt-4 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                 <button
                   type="button"
-                  className="rounded-lg border border-barber-border px-3 py-1.5 text-xs font-medium text-barber-text hover:bg-barber-bg-secondary"
+                  className="rounded-lg border border-barber-border px-3 py-1.5 text-xs font-medium text-barber-light hover:bg-barber-dark/50"
                 >
                   Editar
                 </button>
                 <button
                   type="button"
-                  className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+                  className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-barber-error hover:bg-barber-error/10"
                 >
                   Arquivar
                 </button>
@@ -83,19 +83,19 @@ export default async function DepartamentosPage() {
       {/* Archived Section */}
       {archived.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-display text-lg font-semibold text-barber-text-secondary">Arquivados</h2>
+          <h2 className="font-display text-lg font-semibold text-barber-muted">Arquivados</h2>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {archived.map((dept) => (
               <div
                 key={dept.id}
-                className="rounded-xl border border-barber-border/50 bg-barber-bg-secondary/50 p-4 opacity-70"
+                className="rounded-xl border border-barber-border/50 bg-barber-dark/50 p-4 opacity-70"
               >
                 <div className="flex items-center gap-2">
-                  <Archive className="h-4 w-4 text-barber-text-secondary" />
-                  <span className="font-medium text-barber-text-secondary">{dept.name}</span>
+                  <Archive className="h-4 w-4 text-barber-muted" />
+                  <span className="font-medium text-barber-muted">{dept.name}</span>
                 </div>
                 {dept.description && (
-                  <p className="mt-1 truncate text-xs text-barber-text-secondary/60">{dept.description}</p>
+                  <p className="mt-1 truncate text-xs text-barber-muted/60">{dept.description}</p>
                 )}
               </div>
             ))}

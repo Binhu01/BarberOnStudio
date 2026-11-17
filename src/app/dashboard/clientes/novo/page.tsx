@@ -20,15 +20,15 @@ export default function NovoClientePage() {
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/clientes"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-barber-border text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-barber-border text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-white"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-white">
             Novo Cliente
           </h1>
-          <p className="mt-0.5 text-sm text-barber-text-secondary">
+          <p className="mt-0.5 text-sm text-barber-muted">
             Preencha os dados para cadastrar um novo cliente
           </p>
         </div>

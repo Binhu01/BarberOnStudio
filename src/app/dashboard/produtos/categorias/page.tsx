@@ -32,11 +32,11 @@ function TableSkeleton({ rows = 5 }: { rows?: number }) {
     <div className="space-y-3 p-6">
       {Array.from({ length: rows }).map((_, i) => (
         <div key={i} className="flex items-center gap-4">
-          <div className="h-4 w-32 animate-pulse rounded bg-barber-border" />
-          <div className="h-4 w-48 animate-pulse rounded bg-barber-border" />
-          <div className="h-4 w-16 animate-pulse rounded bg-barber-border" />
-          <div className="h-4 w-20 animate-pulse rounded bg-barber-border" />
-          <div className="ml-auto h-4 w-24 animate-pulse rounded bg-barber-border" />
+          <div className="h-4 w-32 animate-pulse rounded bg-barber-dark" />
+          <div className="h-4 w-48 animate-pulse rounded bg-barber-dark" />
+          <div className="h-4 w-16 animate-pulse rounded bg-barber-dark" />
+          <div className="h-4 w-20 animate-pulse rounded bg-barber-dark" />
+          <div className="ml-auto h-4 w-24 animate-pulse rounded bg-barber-dark" />
         </div>
       ))}
     </div>
@@ -64,23 +64,23 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-xl border border-barber-border bg-white p-6 shadow-lg">
-        <h3 className="font-display text-lg font-semibold text-barber-dark">
+      <div className="w-full max-w-sm rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-lg">
+        <h3 className="font-display text-lg font-semibold text-barber-white">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-barber-text-secondary">{message}</p>
+        <p className="mt-2 text-sm text-barber-muted">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onCancel}
             disabled={loading}
-            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
+            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-white disabled:opacity-50"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
             disabled={loading}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            className="rounded-lg bg-barber-error px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-barber-error/90 disabled:opacity-50"
           >
             {loading ? "Arquivando..." : "Confirmar"}
           </button>
@@ -115,43 +115,43 @@ function InlineCreateForm({
   return (
     <form
       onSubmit={form.handleSubmit(onSave)}
-      className="mb-6 rounded-xl border border-barber-border bg-barber-bg-secondary p-5"
+      className="mb-6 rounded-xl border border-barber-border bg-barber-dark/50 p-5"
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-1">
-          <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-barber-muted">
             Nome *
           </label>
           <input
             {...form.register("name")}
             placeholder="Ex: Hortifruti"
-            className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+            className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold focus:ring-1 focus:ring-barber-gold"
           />
           {form.formState.errors.name && (
-            <p className="mt-1 text-xs text-red-500">
+            <p className="mt-1 text-xs text-barber-error">
               {form.formState.errors.name.message}
             </p>
           )}
         </div>
 
         <div className="sm:col-span-1">
-          <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-barber-muted">
             Descrição
           </label>
           <input
             {...form.register("description")}
             placeholder="Descrição opcional"
-            className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+            className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold focus:ring-1 focus:ring-barber-gold"
           />
         </div>
 
         <div className="sm:col-span-1">
-          <label className="mb-1 block text-xs font-medium text-barber-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-barber-muted">
             Categoria Pai
           </label>
           <select
             {...form.register("parent_id")}
-            className="w-full rounded-lg border border-barber-border bg-white px-3 py-2 text-sm text-barber-dark outline-none focus:border-barber-primary focus:ring-1 focus:ring-barber-primary"
+            className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold focus:ring-1 focus:ring-barber-gold"
           >
             <option value="">Nenhuma (raiz)</option>
             {categories
@@ -168,7 +168,7 @@ function InlineCreateForm({
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-barber-primary px-4 py-2 text-sm font-medium text-white hover:bg-barber-primary/90 disabled:opacity-50"
+            className="rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper disabled:opacity-50"
           >
             {saving ? "Salvando..." : "Salvar"}
           </button>
@@ -176,7 +176,7 @@ function InlineCreateForm({
             type="button"
             onClick={onCancel}
             disabled={saving}
-            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text hover:bg-barber-bg-secondary disabled:opacity-50"
+            className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-white disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -212,14 +212,14 @@ function InlineEditRow({
   });
 
   return (
-    <tr className="border-b border-barber-border bg-barber-bg-secondary/50">
+    <tr className="border-b border-barber-border bg-barber-dark/30">
       <td className="px-4 py-3">
         <input
           {...form.register("name")}
-          className="w-full rounded border border-barber-border bg-white px-2 py-1 text-sm text-barber-dark outline-none focus:border-barber-primary"
+          className="w-full rounded border border-barber-border bg-barber-dark px-2 py-1 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold"
         />
         {form.formState.errors.name && (
-          <p className="mt-0.5 text-xs text-red-500">
+          <p className="mt-0.5 text-xs text-barber-error">
             {form.formState.errors.name.message}
           </p>
         )}
@@ -227,16 +227,16 @@ function InlineEditRow({
       <td className="px-4 py-3">
         <input
           {...form.register("description")}
-          className="w-full rounded border border-barber-border bg-white px-2 py-1 text-sm text-barber-dark outline-none focus:border-barber-primary"
+          className="w-full rounded border border-barber-border bg-barber-dark px-2 py-1 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold"
         />
       </td>
       <td className="px-4 py-3">
-        <span className="text-sm text-barber-text-secondary">—</span>
+        <span className="text-sm text-barber-muted">—</span>
       </td>
       <td className="px-4 py-3">
         <select
           {...form.register("parent_id")}
-          className="w-full rounded border border-barber-border bg-white px-2 py-1 text-sm text-barber-dark outline-none focus:border-barber-primary"
+          className="w-full rounded border border-barber-border bg-barber-dark px-2 py-1 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold"
         >
           <option value="">Nenhuma (raiz)</option>
           {allCategories
@@ -253,9 +253,9 @@ function InlineEditRow({
           <input
             type="checkbox"
             {...form.register("is_active")}
-            className="rounded border-barber-border text-barber-primary focus:ring-barber-primary"
+            className="rounded border-barber-border text-barber-gold focus:ring-barber-gold"
           />
-          <span className="text-xs text-barber-text-secondary">Ativa</span>
+          <span className="text-xs text-barber-muted">Ativa</span>
         </label>
       </td>
       <td className="px-4 py-3">
@@ -263,14 +263,14 @@ function InlineEditRow({
           <button
             onClick={() => form.handleSubmit((data) => onSave(category.id, data))()}
             disabled={saving}
-            className="rounded p-1.5 text-xs font-medium text-barber-primary hover:bg-barber-primary/10 disabled:opacity-50"
+            className="rounded p-1.5 text-xs font-medium text-barber-gold transition-colors hover:bg-barber-gold/10 disabled:opacity-50"
           >
             {saving ? "..." : "Salvar"}
           </button>
           <button
             onClick={onCancel}
             disabled={saving}
-            className="rounded p-1.5 text-xs font-medium text-barber-text-secondary hover:bg-barber-bg-secondary disabled:opacity-50"
+            className="rounded p-1.5 text-xs font-medium text-barber-muted transition-colors hover:bg-barber-dark/50 disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -387,10 +387,10 @@ export default function CategoriasPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-white">
             Categorias
           </h1>
-          <p className="mt-1 text-sm text-barber-text-secondary">
+          <p className="mt-1 text-sm text-barber-muted">
             Gerencie as categorias de produtos da sua organização.
           </p>
         </div>
@@ -400,7 +400,7 @@ export default function CategoriasPage() {
               setEditingId(null);
               setShowCreateForm(true);
             }}
-            className="inline-flex items-center gap-2 rounded-lg bg-barber-primary px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-barber-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2.5 text-sm font-medium text-barber-white shadow-sm transition-colors hover:bg-barber-copper"
           >
             <Plus className="h-4 w-4" />
             Nova Categoria
@@ -419,26 +419,26 @@ export default function CategoriasPage() {
       )}
 
       {/* Categories Table */}
-      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite shadow-sm">
         {loading ? (
           <TableSkeleton />
         ) : categories.length === 0 ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-barber-bg-secondary">
-              <FolderTree className="h-7 w-7 text-barber-text-secondary" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-barber-dark">
+              <FolderTree className="h-7 w-7 text-barber-muted" />
             </div>
-            <h3 className="mt-4 font-display text-lg font-semibold text-barber-dark">
+            <h3 className="mt-4 font-display text-lg font-semibold text-barber-white">
               Nenhuma categoria cadastrada
             </h3>
-            <p className="mt-1 max-w-xs text-sm text-barber-text-secondary">
+            <p className="mt-1 max-w-xs text-sm text-barber-muted">
               Crie categorias para organizar seus produtos e facilitar a gestão
               do catálogo.
             </p>
             {!showCreateForm && (
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-barber-primary px-4 py-2 text-sm font-medium text-white hover:bg-barber-primary/90 transition-colors"
+                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper"
               >
                 <Plus className="h-4 w-4" />
                 Criar primeira categoria
@@ -450,23 +450,23 @@ export default function CategoriasPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-barber-border bg-barber-bg-secondary/60">
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                <tr className="border-b border-barber-border bg-barber-dark">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Nome
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Descrição
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Produtos Ativos
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Categoria Pai
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Ações
                   </th>
                 </tr>
@@ -485,37 +485,37 @@ export default function CategoriasPage() {
                   ) : (
                     <tr
                       key={category.id}
-                      className="group transition-colors hover:bg-barber-bg-secondary/40"
+                      className="group transition-colors hover:bg-barber-dark/30"
                     >
                       <td className="px-4 py-3">
-                        <span className="text-sm font-medium text-barber-dark">
+                        <span className="text-sm font-medium text-barber-white">
                           {category.name}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm text-barber-text-secondary">
+                        <span className="text-sm text-barber-muted">
                           {category.description || "—"}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="inline-flex items-center rounded-full bg-barber-bg-secondary px-2.5 py-0.5 text-xs font-medium text-barber-text-secondary">
+                        <span className="inline-flex items-center rounded-full bg-barber-dark px-2.5 py-0.5 text-xs font-medium text-barber-muted">
                           —
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm text-barber-text-secondary">
+                        <span className="text-sm text-barber-muted">
                           {getParentName(category.parent_id)}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         {category.is_active ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          <span className="inline-flex items-center gap-1 rounded-full bg-barber-success/10 px-2.5 py-0.5 text-xs font-medium text-barber-success">
+                            <span className="h-1.5 w-1.5 rounded-full bg-barber-success" />
                             Ativa
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-barber-bg-secondary px-2.5 py-0.5 text-xs font-medium text-barber-text-secondary">
-                            <span className="h-1.5 w-1.5 rounded-full bg-barber-text-secondary" />
+                          <span className="inline-flex items-center gap-1 rounded-full bg-barber-muted/10 px-2.5 py-0.5 text-xs font-medium text-barber-muted">
+                            <span className="h-1.5 w-1.5 rounded-full bg-barber-muted" />
                             Arquivada
                           </span>
                         )}
@@ -528,7 +528,7 @@ export default function CategoriasPage() {
                               setEditingId(category.id);
                             }}
                             title="Editar"
-                            className="rounded p-1.5 text-barber-text-secondary hover:bg-barber-bg-secondary hover:text-barber-primary"
+                            className="rounded p-1.5 text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-gold"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
@@ -536,7 +536,7 @@ export default function CategoriasPage() {
                             <button
                               onClick={() => setArchiveTarget(category)}
                               title="Arquivar"
-                              className="rounded p-1.5 text-barber-text-secondary hover:bg-red-50 hover:text-red-600"
+                              className="rounded p-1.5 text-barber-muted transition-colors hover:bg-barber-error/10 hover:text-barber-error"
                             >
                               <Archive className="h-4 w-4" />
                             </button>

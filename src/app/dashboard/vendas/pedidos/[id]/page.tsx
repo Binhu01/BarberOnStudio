@@ -55,11 +55,11 @@ function formatDateTime(iso: string): string {
 // --- Status Badge ---
 
 const statusConfig: Record<OrderStatus, { label: string; className: string }> = {
-  draft: { label: "Rascunho", className: "bg-gray-100 text-gray-700" },
-  confirmed: { label: "Confirmado", className: "bg-blue-50 text-blue-700" },
-  preparing: { label: "Em preparo", className: "bg-amber-50 text-amber-700" },
-  completed: { label: "Concluído", className: "bg-green-50 text-green-700" },
-  cancelled: { label: "Cancelado", className: "bg-red-50 text-red-700" },
+  draft: { label: "Rascunho", className: "bg-barber-muted/10 text-barber-muted" },
+  confirmed: { label: "Confirmado", className: "bg-barber-gold/10 text-barber-gold" },
+  preparing: { label: "Em preparo", className: "bg-barber-warning/10 text-barber-warning" },
+  completed: { label: "Concluído", className: "bg-barber-success/10 text-barber-success" },
+  cancelled: { label: "Cancelado", className: "bg-barber-error/10 text-barber-error" },
 };
 
 function StatusBadge({ status }: { status: OrderStatus }) {
@@ -114,7 +114,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Back Link */}
       <Link
         href="/dashboard/vendas/pedidos"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-dark"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-white"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para pedidos
@@ -123,7 +123,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-white">
             Pedido {order.document_number}
           </h1>
           <StatusBadge status={order.status} />
@@ -131,14 +131,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <div className="flex items-center gap-2">
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-lg border border-barber-border px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary print:hidden"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-dark/50 print:hidden"
           >
             <Printer className="h-4 w-4" />
             Imprimir
           </button>
           <Link
             href={`/dashboard/vendas/pedidos/${order.id}/editar`}
-            className="inline-flex items-center gap-2 rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-barber-blue/90 print:hidden"
+            className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white shadow-sm transition-colors hover:bg-barber-copper print:hidden"
           >
             <Edit className="h-4 w-4" />
             Editar
@@ -149,75 +149,75 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Info Grid + Financial Summary */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Order Info */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-barber-dark">Informações do pedido</h2>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-white">Informações do pedido</h2>
           <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-4">
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Cliente</dt>
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Cliente</dt>
               <dd className="mt-1">
                 <Link
                   href={`/dashboard/clientes/${order.customer.id}`}
-                  className="text-sm font-medium text-barber-blue hover:underline"
+                  className="text-sm font-medium text-barber-gold hover:underline"
                 >
                   {order.customer.name}
                 </Link>
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Canal</dt>
-              <dd className="mt-1 text-sm text-barber-dark">
-                {order.channel?.name ?? <span className="text-barber-text-secondary">—</span>}
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Canal</dt>
+              <dd className="mt-1 text-sm text-barber-white">
+                {order.channel?.name ?? <span className="text-barber-muted">—</span>}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Criado por</dt>
-              <dd className="mt-1 text-sm text-barber-dark">
-                {order.creator.full_name ?? <span className="text-barber-text-secondary">—</span>}
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Criado por</dt>
+              <dd className="mt-1 text-sm text-barber-white">
+                {order.creator.full_name ?? <span className="text-barber-muted">—</span>}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Data de emissão</dt>
-              <dd className="mt-1 text-sm text-barber-dark">{formatDate(order.issued_at)}</dd>
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Data de emissão</dt>
+              <dd className="mt-1 text-sm text-barber-white">{formatDate(order.issued_at)}</dd>
             </div>
             {order.completed_at && (
               <div>
-                <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Data de conclusão</dt>
-                <dd className="mt-1 text-sm text-barber-dark">{formatDate(order.completed_at)}</dd>
+                <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Data de conclusão</dt>
+                <dd className="mt-1 text-sm text-barber-white">{formatDate(order.completed_at)}</dd>
               </div>
             )}
             {order.cancelled_at && (
               <div>
-                <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Data de cancelamento</dt>
-                <dd className="mt-1 text-sm text-barber-dark">{formatDate(order.cancelled_at)}</dd>
+                <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Data de cancelamento</dt>
+                <dd className="mt-1 text-sm text-barber-white">{formatDate(order.cancelled_at)}</dd>
               </div>
             )}
           </dl>
           {order.notes && (
             <div className="mt-4 border-t border-barber-border pt-4">
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">Observações</dt>
-              <dd className="mt-1 text-sm text-barber-dark whitespace-pre-line">{order.notes}</dd>
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">Observações</dt>
+              <dd className="mt-1 text-sm text-barber-light whitespace-pre-line">{order.notes}</dd>
             </div>
           )}
         </div>
 
         {/* Financial Summary */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-barber-dark">Resumo financeiro</h2>
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-white">Resumo financeiro</h2>
           <dl className="mt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <dt className="text-sm text-barber-text-secondary">Subtotal</dt>
-              <dd className="text-sm font-medium text-barber-dark">{formatCurrency(order.subtotal)}</dd>
+              <dt className="text-sm text-barber-muted">Subtotal</dt>
+              <dd className="text-sm font-medium text-barber-white">{formatCurrency(order.subtotal)}</dd>
             </div>
             <div className="flex items-center justify-between">
-              <dt className="text-sm text-barber-text-secondary">Desconto</dt>
-              <dd className="text-sm font-medium text-barber-dark">
+              <dt className="text-sm text-barber-muted">Desconto</dt>
+              <dd className="text-sm font-medium text-barber-white">
                 {order.discount > 0 ? `- ${formatCurrency(order.discount)}` : formatCurrency(0)}
               </dd>
             </div>
             <div className="border-t border-barber-border pt-3">
               <div className="flex items-center justify-between">
-                <dt className="text-base font-semibold text-barber-dark">Total</dt>
-                <dd className="text-xl font-bold text-barber-blue">{formatCurrency(order.total)}</dd>
+                <dt className="text-base font-semibold text-barber-white">Total</dt>
+                <dd className="text-xl font-bold text-barber-gold">{formatCurrency(order.total)}</dd>
               </div>
             </div>
           </dl>
@@ -225,31 +225,31 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* Items Table */}
-      <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite shadow-sm">
         <div className="px-6 py-4">
-          <h2 className="font-display text-lg font-semibold text-barber-dark">Itens do pedido</h2>
+          <h2 className="font-display text-lg font-semibold text-barber-white">Itens do pedido</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-barber-border bg-barber-bg-secondary">
+            <thead className="border-b border-barber-border bg-barber-dark">
               <tr>
-                <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-text-secondary">Descrição</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Qtd</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Preço unitário</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Desconto</th>
-                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-text-secondary">Total</th>
+                <th className="whitespace-nowrap px-4 py-3 font-medium text-barber-muted">Descrição</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-muted">Qtd</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-muted">Preço unitário</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-muted">Desconto</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-muted">Total</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-barber-border">
               {order.items.map((item) => (
-                <tr key={item.id} className="transition-colors hover:bg-barber-bg-secondary/50">
-                  <td className="px-4 py-3 font-medium text-barber-dark">{item.description}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-text">{item.quantity}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-text">{formatCurrency(item.unit_price)}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-text">
+                <tr key={item.id} className="transition-colors hover:bg-barber-dark/30">
+                  <td className="px-4 py-3 font-medium text-barber-white">{item.description}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-light">{item.quantity}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-light">{formatCurrency(item.unit_price)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-barber-light">
                     {item.discount > 0 ? formatCurrency(item.discount) : "—"}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-dark">{formatCurrency(item.total)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-barber-white">{formatCurrency(item.total)}</td>
                 </tr>
               ))}
             </tbody>
@@ -259,15 +259,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
       {/* Financial Section — Receivables linked to this order */}
       {receivables.length > 0 && (
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm print:hidden">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm print:hidden">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-barber-blue" />
-              <h2 className="font-display text-lg font-semibold text-barber-dark">Financeiro</h2>
+              <DollarSign className="h-5 w-5 text-barber-gold" />
+              <h2 className="font-display text-lg font-semibold text-barber-white">Financeiro</h2>
             </div>
             <Link
               href="/dashboard/financeiro/receber"
-              className="text-sm font-medium text-barber-blue hover:underline"
+              className="text-sm font-medium text-barber-gold hover:underline"
             >
               Ver todos os recebíveis
             </Link>
@@ -275,16 +275,16 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
           <div className="mt-4 grid grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-barber-text-secondary">Total do pedido</p>
-              <p className="text-lg font-bold text-barber-dark">{formatCurrency(totalReceivable)}</p>
+              <p className="text-xs text-barber-muted">Total do pedido</p>
+              <p className="text-lg font-bold text-barber-white">{formatCurrency(totalReceivable)}</p>
             </div>
             <div>
-              <p className="text-xs text-barber-text-secondary">Recebido</p>
-              <p className="text-lg font-bold text-green-600">{formatCurrency(totalReceived)}</p>
+              <p className="text-xs text-barber-muted">Recebido</p>
+              <p className="text-lg font-bold text-barber-success">{formatCurrency(totalReceived)}</p>
             </div>
             <div>
-              <p className="text-xs text-barber-text-secondary">Pendente</p>
-              <p className={`text-lg font-bold ${totalReceivable - totalReceived > 0 ? "text-barber-error" : "text-green-600"}`}>
+              <p className="text-xs text-barber-muted">Pendente</p>
+              <p className={`text-lg font-bold ${totalReceivable - totalReceived > 0 ? "text-barber-error" : "text-barber-success"}`}>
                 {formatCurrency(totalReceivable - totalReceived)}
               </p>
             </div>
@@ -292,13 +292,13 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-barber-border bg-barber-bg-secondary">
+              <thead className="border-b border-barber-border bg-barber-dark">
                 <tr>
-                  <th className="px-4 py-2 font-medium text-barber-text-secondary">Parcela</th>
-                  <th className="px-4 py-2 font-medium text-barber-text-secondary">Vencimento</th>
-                  <th className="px-4 py-2 text-right font-medium text-barber-text-secondary">Valor</th>
-                  <th className="px-4 py-2 text-right font-medium text-barber-text-secondary">Recebido</th>
-                  <th className="px-4 py-2 text-center font-medium text-barber-text-secondary">Status</th>
+                  <th className="px-4 py-2 font-medium text-barber-muted">Parcela</th>
+                  <th className="px-4 py-2 font-medium text-barber-muted">Vencimento</th>
+                  <th className="px-4 py-2 text-right font-medium text-barber-muted">Valor</th>
+                  <th className="px-4 py-2 text-right font-medium text-barber-muted">Recebido</th>
+                  <th className="px-4 py-2 text-center font-medium text-barber-muted">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-barber-border">
@@ -311,28 +311,28 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                     cancelled: "Cancelado",
                   };
                   const stClass: Record<string, string> = {
-                    open: "bg-blue-50 text-blue-700",
-                    partially_received: "bg-yellow-50 text-yellow-700",
-                    received: "bg-green-50 text-green-700",
-                    overdue: "bg-red-50 text-red-700",
-                    cancelled: "bg-gray-100 text-gray-600",
+                    open: "bg-barber-gold/10 text-barber-gold",
+                    partially_received: "bg-barber-warning/10 text-barber-warning",
+                    received: "bg-barber-success/10 text-barber-success",
+                    overdue: "bg-barber-error/10 text-barber-error",
+                    cancelled: "bg-barber-muted/10 text-barber-muted",
                   };
                   return (
-                    <tr key={r.id} className="hover:bg-barber-bg-secondary/50">
-                      <td className="px-4 py-2 text-barber-dark">
+                    <tr key={r.id} className="hover:bg-barber-dark/30">
+                      <td className="px-4 py-2 text-barber-white">
                         {r.installment_number ? `${r.installment_number}ª` : "—"}
                       </td>
-                      <td className="px-4 py-2 text-barber-text">
+                      <td className="px-4 py-2 text-barber-light">
                         {new Date(r.due_date + "T00:00:00").toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono text-barber-text">
+                      <td className="px-4 py-2 text-right font-mono text-barber-light">
                         {formatCurrency(Number(r.original_amount))}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono text-barber-text">
+                      <td className="px-4 py-2 text-right font-mono text-barber-light">
                         {formatCurrency(Number(r.amount_received))}
                       </td>
                       <td className="px-4 py-2 text-center">
-                        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${stClass[r.status] ?? "bg-gray-100 text-gray-600"}`}>
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${stClass[r.status] ?? "bg-barber-muted/10 text-barber-muted"}`}>
                           {stLabel[r.status] ?? r.status}
                         </span>
                       </td>

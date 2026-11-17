@@ -71,16 +71,16 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-barber-bg px-4">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-barber-border bg-white p-8 shadow-sm">
+    <div className="flex min-h-screen items-center justify-center bg-barber-dark px-4">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-barber-border bg-barber-graphite p-8 shadow-sm">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-barber-blue/10 text-barber-blue">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-barber-gold/10 text-barber-gold">
             <Building2 className="h-7 w-7" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">
+          <h1 className="font-display text-2xl font-bold text-barber-white">
             Crie sua empresa
           </h1>
-          <p className="mt-2 text-sm text-barber-text-secondary">
+          <p className="mt-2 text-sm text-barber-muted">
             Configure o ambiente da sua organização para começar a usar o Barber-On.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
           <div>
             <label
               htmlFor="name"
-              className="mb-1 block text-sm font-medium text-barber-text"
+              className="mb-1 block text-sm font-medium text-barber-light"
             >
               Nome da empresa
             </label>
@@ -101,7 +101,7 @@ export default function OnboardingPage() {
                 register("name").onChange(e);
                 handleNameChange(e);
               }}
-              className="w-full rounded-lg border border-barber-border px-3 py-2.5 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2.5 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold focus:ring-1 focus:ring-barber-gold"
               placeholder="Ex: Minha Empresa Ltda"
             />
             {errors.name && (
@@ -114,12 +114,12 @@ export default function OnboardingPage() {
           <div>
             <label
               htmlFor="slug"
-              className="mb-1 block text-sm font-medium text-barber-text"
+              className="mb-1 block text-sm font-medium text-barber-light"
             >
               Identificador
             </label>
             <div className="flex items-center gap-2">
-              <span className="shrink-0 rounded-lg border border-barber-border bg-barber-bg-secondary px-3 py-2.5 text-sm text-barber-text-secondary">
+              <span className="shrink-0 rounded-lg border border-barber-border bg-barber-dark px-3 py-2.5 text-sm text-barber-muted">
                 barberon.com.br/
               </span>
               <input
@@ -127,7 +127,7 @@ export default function OnboardingPage() {
                 type="text"
                 {...register("slug")}
                 onFocus={() => setSlugEdited(true)}
-                className="w-full rounded-lg border border-barber-border px-3 py-2.5 text-sm outline-none transition-colors focus:border-barber-blue focus:ring-1 focus:ring-barber-blue"
+                className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2.5 text-sm text-barber-white outline-none transition-colors focus:border-barber-gold focus:ring-1 focus:ring-barber-gold"
                 placeholder="minha-empresa"
               />
             </div>
@@ -136,14 +136,14 @@ export default function OnboardingPage() {
                 {errors.slug.message}
               </p>
             ) : (
-              <p className="mt-1 text-xs text-barber-text-secondary">
+              <p className="mt-1 text-xs text-barber-muted">
                 Usado na URL da sua organização. Pode ser editado.
               </p>
             )}
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-barber-error">
+            <div className="rounded-lg bg-barber-error/10 p-3 text-sm text-barber-error">
               {error}
             </div>
           )}
@@ -151,7 +151,7 @@ export default function OnboardingPage() {
           <button
             type="submit"
             disabled={loading || !slugValue}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-barber-blue py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-barber-gold py-2.5 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Criar organização

@@ -31,22 +31,22 @@ const statusConfig: Record<
 > = {
   open: {
     label: "Aberto",
-    classes: "bg-blue-50 text-blue-700 border-blue-200",
+    classes: "bg-barber-gold/10 text-barber-gold border-barber-gold/20",
     icon: TrendingUp,
   },
   won: {
     label: "Ganho",
-    classes: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    classes: "bg-barber-success/10 text-barber-success border-barber-success/20",
     icon: CheckCircle2,
   },
   lost: {
     label: "Perdido",
-    classes: "bg-red-50 text-red-700 border-red-200",
+    classes: "bg-barber-error/10 text-barber-error border-barber-error/20",
     icon: XCircle,
   },
   archived: {
     label: "Arquivado",
-    classes: "bg-gray-100 text-gray-600 border-gray-200",
+    classes: "bg-barber-muted/10 text-barber-muted border-barber-muted/20",
     icon: Archive,
   },
 };
@@ -113,13 +113,13 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/leads"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-barber-border text-barber-text-secondary transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-barber-border text-barber-muted transition-colors hover:bg-barber-dark/50 hover:text-barber-white"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="font-display text-2xl font-bold text-barber-dark">
+              <h1 className="font-display text-2xl font-bold text-barber-white">
                 {lead.name}
               </h1>
               <span
@@ -130,7 +130,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </span>
             </div>
             {lead.company_name && (
-              <p className="mt-0.5 flex items-center gap-1.5 text-sm text-barber-text-secondary">
+              <p className="mt-0.5 flex items-center gap-1.5 text-sm text-barber-muted">
                 <Building2 className="h-3.5 w-3.5" />
                 {lead.company_name}
               </p>
@@ -142,7 +142,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
         <div className="flex items-center gap-2">
           <Link
             href={`/dashboard/leads/${id}/editar`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-dark/50"
           >
             <Edit className="h-4 w-4" />
             Editar
@@ -151,7 +151,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             <form action={`/dashboard/leads/${id}/arquivar`} method="post">
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-white px-3 py-2 text-sm font-medium text-barber-text transition-colors hover:bg-barber-bg-secondary hover:text-barber-dark"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-barber-border bg-barber-graphite px-3 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-dark/50"
               >
                 <Archive className="h-4 w-4" />
                 Arquivar
@@ -171,13 +171,13 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
 
       {/* Converted banner */}
       {isConverted && (
-        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-          <p className="text-sm font-medium text-emerald-800">
+        <div className="flex items-center gap-3 rounded-xl border border-barber-success/20 bg-barber-success/5 px-4 py-3">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-barber-success" />
+          <p className="text-sm font-medium text-barber-success">
             Lead convertido em cliente.{" "}
             <Link
               href={`/dashboard/clientes/${lead.converted_customer_id}`}
-              className="underline decoration-emerald-600/40 underline-offset-2 hover:decoration-emerald-600"
+              className="underline decoration-barber-success/40 underline-offset-2 hover:decoration-barber-success"
             >
               Ver página do cliente
             </Link>
@@ -188,55 +188,55 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
       {/* Info grid */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left: Oportunidade */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-teal-600" />
-            <h2 className="text-base font-semibold text-barber-dark">
+            <TrendingUp className="h-5 w-5 text-barber-gold" />
+            <h2 className="text-base font-semibold text-barber-white">
               Oportunidade
             </h2>
           </div>
           <dl className="space-y-4">
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Estágio
               </dt>
-              <dd className="mt-1 text-sm font-medium text-barber-dark">
+              <dd className="mt-1 text-sm font-medium text-barber-white">
                 {lead.stage?.name ?? "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Origem
               </dt>
-              <dd className="mt-1 text-sm text-barber-text">
+              <dd className="mt-1 text-sm text-barber-light">
                 {lead.source || "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Interesse
               </dt>
-              <dd className="mt-1 text-sm text-barber-text">
+              <dd className="mt-1 text-sm text-barber-light">
                 {lead.interest || "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Valor estimado
               </dt>
-              <dd className="mt-1 flex items-center gap-1.5 text-sm font-medium text-barber-dark">
-                <DollarSign className="h-4 w-4 text-teal-600" />
+              <dd className="mt-1 flex items-center gap-1.5 text-sm font-medium text-barber-white">
+                <DollarSign className="h-4 w-4 text-barber-gold" />
                 {lead.estimated_value != null
                   ? formatCurrency(lead.estimated_value)
                   : "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Retorno esperado
               </dt>
-              <dd className="mt-1 flex items-center gap-1.5 text-sm text-barber-text">
-                <Calendar className="h-4 w-4 text-barber-text-secondary" />
+              <dd className="mt-1 flex items-center gap-1.5 text-sm text-barber-light">
+                <Calendar className="h-4 w-4 text-barber-muted" />
                 {lead.expected_return_at
                   ? formatDate(lead.expected_return_at)
                   : "—"}
@@ -246,24 +246,24 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
         </div>
 
         {/* Right: Contato */}
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <User className="h-5 w-5 text-teal-600" />
-            <h2 className="text-base font-semibold text-barber-dark">
+            <User className="h-5 w-5 text-barber-gold" />
+            <h2 className="text-base font-semibold text-barber-white">
               Contato
             </h2>
           </div>
           <dl className="space-y-4">
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 E-mail
               </dt>
-              <dd className="mt-1 flex items-center gap-1.5 text-sm text-barber-text">
-                <MessageCircle className="h-4 w-4 text-barber-text-secondary" />
+              <dd className="mt-1 flex items-center gap-1.5 text-sm text-barber-light">
+                <MessageCircle className="h-4 w-4 text-barber-muted" />
                 {lead.email ? (
                   <a
                     href={`mailto:${lead.email}`}
-                    className="text-teal-600 hover:underline"
+                    className="text-barber-gold hover:underline"
                   >
                     {lead.email}
                   </a>
@@ -273,24 +273,24 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Telefone
               </dt>
-              <dd className="mt-1 text-sm text-barber-text">
+              <dd className="mt-1 text-sm text-barber-light">
                 {lead.phone || "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 WhatsApp
               </dt>
-              <dd className="mt-1 text-sm text-barber-text">
+              <dd className="mt-1 text-sm text-barber-light">
                 {lead.whatsapp ? (
                   <a
                     href={`https://wa.me/${lead.whatsapp.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-teal-600 hover:underline"
+                    className="text-barber-gold hover:underline"
                   >
                     {lead.whatsapp}
                   </a>
@@ -300,11 +300,11 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-barber-text-secondary">
+              <dt className="text-xs font-medium uppercase tracking-wider text-barber-muted">
                 Responsável
               </dt>
-              <dd className="mt-1 flex items-center gap-1.5 text-sm text-barber-text">
-                <User className="h-4 w-4 text-barber-text-secondary" />
+              <dd className="mt-1 flex items-center gap-1.5 text-sm text-barber-light">
+                <User className="h-4 w-4 text-barber-muted" />
                 {assignedToName}
               </dd>
             </div>
@@ -314,11 +314,11 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
 
       {/* Notes */}
       {lead.notes && (
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-          <h2 className="mb-3 text-base font-semibold text-barber-dark">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+          <h2 className="mb-3 text-base font-semibold text-barber-white">
             Observações
           </h2>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-barber-text">
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-barber-light">
             {lead.notes}
           </p>
         </div>

@@ -8,8 +8,8 @@ import { getInvitations, getDepartments } from "../actions";
 
 const statusConfig: Record<string, { label: string; icon: typeof Clock; className: string }> = {
   pending: { label: "Pendente", icon: Clock, className: "bg-amber-50 text-amber-700" },
-  accepted: { label: "Aceito", icon: CheckCircle2, className: "bg-green-50 text-green-700" },
-  revoked: { label: "Revogado", icon: XCircle, className: "bg-red-50 text-red-700" },
+  accepted: { label: "Aceito", icon: CheckCircle2, className: "bg-barber-success/10 text-green-700" },
+  revoked: { label: "Revogado", icon: XCircle, className: "bg-barber-error/10 text-red-700" },
   expired: { label: "Expirado", icon: XCircle, className: "bg-gray-100 text-gray-600" },
 };
 
@@ -24,42 +24,42 @@ export default async function ConvitesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-barber-dark">Convites</h1>
-          <p className="mt-1 text-sm text-barber-text-secondary">
+          <h1 className="font-display text-2xl font-bold text-barber-white">Convites</h1>
+          <p className="mt-1 text-sm text-barber-muted">
             Convide novos membros para sua organização
           </p>
         </div>
       </div>
 
       {/* Create Invitation Form */}
-      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-blue/10">
-            <UserPlus className="h-5 w-5 text-barber-blue" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+            <UserPlus className="h-5 w-5 text-barber-gold" />
           </div>
           <div>
-            <h2 className="font-display text-lg font-semibold text-barber-dark">Novo convite</h2>
-            <p className="text-xs text-barber-text-secondary">
+            <h2 className="font-display text-lg font-semibold text-barber-white">Novo convite</h2>
+            <p className="text-xs text-barber-muted">
               O link de convite será exibido uma única vez após a criação
             </p>
           </div>
         </div>
         <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">E-mail</label>
+            <label className="mb-1 block text-xs font-medium text-barber-muted">E-mail</label>
             <input
               type="email"
               name="email"
               required
               placeholder="nome@empresa.com"
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Papel</label>
+            <label className="mb-1 block text-xs font-medium text-barber-muted">Papel</label>
             <select
               name="role"
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="EMPLOYEE">Colaborador</option>
               <option value="MANAGER">Gerente</option>
@@ -67,10 +67,10 @@ export default async function ConvitesPage() {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-barber-text-secondary">Departamento</label>
+            <label className="mb-1 block text-xs font-medium text-barber-muted">Departamento</label>
             <select
               name="department_id"
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-blue focus:outline-none focus:ring-1 focus:ring-barber-blue"
+              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="">Sem departamento</option>
               {departments.filter((d) => d.is_active).map((d) => (
@@ -81,7 +81,7 @@ export default async function ConvitesPage() {
           <div className="flex items-end">
             <button
               type="submit"
-              className="w-full rounded-lg bg-barber-blue px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              className="w-full rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
               Gerar convite
             </button>
@@ -91,42 +91,42 @@ export default async function ConvitesPage() {
 
       {/* Pending Invitations */}
       <div className="space-y-3">
-        <h2 className="font-display text-lg font-semibold text-barber-dark">
+        <h2 className="font-display text-lg font-semibold text-barber-white">
           Convites pendentes ({pending.length})
         </h2>
         {pending.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-barber-border bg-white py-12">
-            <MailPlus className="mb-4 h-10 w-10 text-barber-text-secondary/40" />
-            <p className="text-base font-medium text-barber-dark">Nenhum convite pendente</p>
-            <p className="text-sm text-barber-text-secondary">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-barber-border bg-barber-graphite py-12">
+            <MailPlus className="mb-4 h-10 w-10 text-barber-muted/40" />
+            <p className="text-base font-medium text-barber-white">Nenhum convite pendente</p>
+            <p className="text-sm text-barber-muted">
               Use o formulário acima para convidar novos membros.
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite shadow-sm">
             <table className="w-full">
-              <thead className="border-b border-barber-border bg-barber-bg">
+              <thead className="border-b border-barber-border bg-barber-dark">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">E-mail</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Papel</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Departamento</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Expira em</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Ações</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">E-mail</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">Papel</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">Departamento</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">Expira em</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-muted">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-barber-border">
                 {pending.map((inv) => (
-                  <tr key={inv.id} className="transition-colors hover:bg-barber-bg-secondary">
-                    <td className="px-4 py-3 text-sm font-medium text-barber-dark">{inv.email}</td>
-                    <td className="px-4 py-3 text-sm text-barber-text">{inv.role_name ?? "—"}</td>
-                    <td className="px-4 py-3 text-sm text-barber-text">{inv.department_name ?? "—"}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-text">
+                  <tr key={inv.id} className="transition-colors hover:bg-barber-dark/50">
+                    <td className="px-4 py-3 text-sm font-medium text-barber-white">{inv.email}</td>
+                    <td className="px-4 py-3 text-sm text-barber-light">{inv.role_name ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-barber-light">{inv.department_name ?? "—"}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-light">
                       {new Date(inv.expires_at).toLocaleDateString("pt-BR")}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
                         type="button"
-                        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+                        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-barber-error hover:bg-barber-error/10"
                       >
                         Revogar
                       </button>
@@ -142,14 +142,14 @@ export default async function ConvitesPage() {
       {/* Past Invitations */}
       {past.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-display text-lg font-semibold text-barber-text-secondary">Histórico</h2>
-          <div className="overflow-hidden rounded-xl border border-barber-border bg-white shadow-sm opacity-80">
+          <h2 className="font-display text-lg font-semibold text-barber-muted">Histórico</h2>
+          <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite shadow-sm opacity-80">
             <table className="w-full">
-              <thead className="border-b border-barber-border bg-barber-bg">
+              <thead className="border-b border-barber-border bg-barber-dark">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">E-mail</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-text-secondary">Data</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">E-mail</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-barber-muted">Data</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-barber-border">
@@ -159,14 +159,14 @@ export default async function ConvitesPage() {
                   const Icon = config.icon;
                   return (
                     <tr key={inv.id}>
-                      <td className="px-4 py-3 text-sm text-barber-text">{inv.email}</td>
+                      <td className="px-4 py-3 text-sm text-barber-light">{inv.email}</td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${config.className}`}>
                           <Icon className="h-3 w-3" />
                           {config.label}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-text-secondary">
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-barber-muted">
                         {new Date(inv.created_at).toLocaleDateString("pt-BR")}
                       </td>
                     </tr>

@@ -33,18 +33,18 @@ export default async function PerfilPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-white">
           Meu Perfil
         </h1>
-        <p className="mt-1 text-barber-text-secondary">
+        <p className="mt-1 text-barber-muted">
           Informações da sua conta na plataforma Barber-On.
         </p>
       </div>
 
       {/* Profile Card */}
-      <div className="rounded-xl border border-barber-border bg-white p-8 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-8 shadow-sm">
         <div className="flex items-center gap-6">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-barber-blue/10 text-barber-blue">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-barber-gold/10 text-barber-gold">
             {profile?.avatar_url ? (
               <img
                 src={profile.avatar_url}
@@ -58,12 +58,12 @@ export default async function PerfilPage() {
             )}
           </div>
           <div className="space-y-1">
-            <h2 className="font-display text-xl font-semibold text-barber-dark">
+            <h2 className="font-display text-xl font-semibold text-barber-white">
               {profile?.full_name || "Usuário"}
             </h2>
-            <p className="text-sm text-barber-text-secondary">{user.email}</p>
+            <p className="text-sm text-barber-muted">{user.email}</p>
             {activeData && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-barber-blue/10 px-2.5 py-0.5 text-xs font-medium text-barber-blue">
+              <span className="inline-flex items-center gap-1 rounded-full bg-barber-gold/10 px-2.5 py-0.5 text-xs font-medium text-barber-gold">
                 <Shield className="h-3 w-3" />
                 {roleName[activeData.org.membership.role] ??
                   activeData.org.membership.role}
@@ -74,31 +74,31 @@ export default async function PerfilPage() {
 
         <div className="mt-8 space-y-4 border-t border-barber-border pt-6">
           <div className="flex items-center gap-3">
-            <User className="h-4 w-4 text-barber-text-secondary" />
+            <User className="h-4 w-4 text-barber-muted" />
             <div>
-              <p className="text-xs text-barber-text-secondary">Nome</p>
-              <p className="text-sm font-medium text-barber-text">
+              <p className="text-xs text-barber-muted">Nome</p>
+              <p className="text-sm font-medium text-barber-light">
                 {profile?.full_name || "—"}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Mail className="h-4 w-4 text-barber-text-secondary" />
+            <Mail className="h-4 w-4 text-barber-muted" />
             <div>
-              <p className="text-xs text-barber-text-secondary">E-mail</p>
-              <p className="text-sm font-medium text-barber-text">
+              <p className="text-xs text-barber-muted">E-mail</p>
+              <p className="text-sm font-medium text-barber-light">
                 {user.email}
               </p>
             </div>
           </div>
           {activeData && (
             <div className="flex items-center gap-3">
-              <Shield className="h-4 w-4 text-barber-text-secondary" />
+              <Shield className="h-4 w-4 text-barber-muted" />
               <div>
-                <p className="text-xs text-barber-text-secondary">
+                <p className="text-xs text-barber-muted">
                   Organização ativa
                 </p>
-                <p className="text-sm font-medium text-barber-text">
+                <p className="text-sm font-medium text-barber-light">
                   {activeData.org.name}
                 </p>
               </div>
@@ -108,18 +108,18 @@ export default async function PerfilPage() {
       </div>
 
       {/* Session Info */}
-      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-        <h3 className="font-display text-sm font-semibold text-barber-dark">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+        <h3 className="font-display text-sm font-semibold text-barber-white">
           Sessão
         </h3>
-        <p className="mt-2 text-sm text-barber-text-secondary">
+        <p className="mt-2 text-sm text-barber-muted">
           Sua sessão está ativa e segura. O logout encerrará o acesso em todos
           os dispositivos deste navegador.
         </p>
         <form action="/api/auth/signout" method="POST" className="mt-4">
           <button
             type="submit"
-            className="inline-flex items-center gap-2 rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-text-secondary transition-colors hover:bg-red-50 hover:text-barber-error"
+            className="inline-flex items-center gap-2 rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-muted transition-colors hover:bg-barber-error/10 hover:text-barber-error"
           >
             <LogOut className="h-4 w-4" />
             Encerrar sessão

@@ -17,60 +17,60 @@ export default async function RelatoriosComissoesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-white">
           Relatório de Comissões
         </h1>
-        <p className="mt-1 text-sm text-barber-text-secondary">
+        <p className="mt-1 text-sm text-barber-muted">
           Desempenho e receita gerada por profissional para cálculo de comissões
         </p>
       </div>
 
       {/* Summary KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-              <Users className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+              <Users className="h-5 w-5 text-barber-gold" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{ranking.length}</p>
-              <p className="text-xs text-barber-text-secondary">Profissionais ativos</p>
+              <p className="text-2xl font-bold text-barber-white">{ranking.length}</p>
+              <p className="text-xs text-barber-muted">Profissionais ativos</p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
-              <DollarSign className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-success/10">
+              <DollarSign className="h-5 w-5 text-barber-success" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{brl.format(totalRevenue)}</p>
-              <p className="text-xs text-barber-text-secondary">Receita total gerada</p>
+              <p className="text-2xl font-bold text-barber-white">{brl.format(totalRevenue)}</p>
+              <p className="text-xs text-barber-muted">Receita total gerada</p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-barber-border bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
               <BarChart3 className="h-5 w-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{totalAppointments}</p>
-              <p className="text-xs text-barber-text-secondary">Atendimentos concluídos</p>
+              <p className="text-2xl font-bold text-barber-white">{totalAppointments}</p>
+              <p className="text-xs text-barber-muted">Atendimentos concluídos</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Barber Ranking Table */}
-      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-        <h2 className="mb-4 font-display text-lg font-semibold text-barber-dark">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+        <h2 className="mb-4 font-display text-lg font-semibold text-barber-white">
           Ranking de Profissionais por Receita
         </h2>
         {ranking.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Users className="mb-3 h-10 w-10 text-barber-text-secondary/40" />
-            <p className="text-sm text-barber-text-secondary">
+            <Users className="mb-3 h-10 w-10 text-barber-muted/40" />
+            <p className="text-sm text-barber-muted">
               Sem dados de desempenho para exibir
             </p>
           </div>
@@ -78,7 +78,7 @@ export default async function RelatoriosComissoesPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-barber-border text-xs uppercase tracking-wider text-barber-text-secondary">
+                <tr className="border-b border-barber-border text-xs uppercase tracking-wider text-barber-muted">
                   <th className="pb-3 pr-4 font-medium">#</th>
                   <th className="pb-3 pr-4 font-medium">Profissional</th>
                   <th className="pb-3 pr-4 text-right font-medium">Atendimentos</th>
@@ -90,8 +90,8 @@ export default async function RelatoriosComissoesPage() {
               </thead>
               <tbody className="divide-y divide-barber-border/50">
                 {ranking.map((barber, i) => (
-                  <tr key={i} className="transition-colors hover:bg-barber-bg-secondary/30">
-                    <td className="py-3 pr-4 font-medium text-barber-text-secondary">{i + 1}</td>
+                  <tr key={i} className="transition-colors hover:bg-barber-dark/50/30">
+                    <td className="py-3 pr-4 font-medium text-barber-muted">{i + 1}</td>
                     <td className="py-3 pr-4">
                       <div className="flex items-center gap-2">
                         {barber.barber_avatar && (
@@ -101,7 +101,7 @@ export default async function RelatoriosComissoesPage() {
                             className="h-7 w-7 rounded-full object-cover"
                           />
                         )}
-                        <span className="font-medium text-barber-dark">
+                        <span className="font-medium text-barber-white">
                           {barber.barber_name ?? "Sem nome"}
                         </span>
                       </div>
@@ -112,7 +112,7 @@ export default async function RelatoriosComissoesPage() {
                     <td className="py-3 pr-4 text-right">
                       {barber.completion_rate_pct?.toFixed(1)}%
                     </td>
-                    <td className="py-3 text-right font-semibold text-barber-dark">
+                    <td className="py-3 text-right font-semibold text-barber-white">
                       {brl.format(barber.revenue_generated)}
                     </td>
                   </tr>

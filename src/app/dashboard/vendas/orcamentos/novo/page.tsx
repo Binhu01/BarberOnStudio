@@ -18,10 +18,10 @@ export default function NewQuotePage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-barber-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-white">
           Novo Orçamento
         </h1>
-        <p className="mt-1 text-sm text-barber-text-secondary">
+        <p className="mt-1 text-sm text-barber-muted">
           Preencha os dados abaixo para criar um novo orçamento de venda.
         </p>
       </div>

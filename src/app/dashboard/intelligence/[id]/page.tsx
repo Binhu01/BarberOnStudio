@@ -24,7 +24,7 @@ export default async function ConversaPage(props: {
       <div className="space-y-6">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-gold"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
@@ -46,12 +46,12 @@ export default async function ConversaPage(props: {
       <div className="space-y-6">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-gold"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
-        <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
+        <div className="rounded-xl border border-red-200 bg-barber-error/10 p-8 text-center">
           <p className="text-sm text-red-800">Conversa não encontrada ou acesso negado.</p>
         </div>
       </div>
@@ -64,16 +64,16 @@ export default async function ConversaPage(props: {
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard/intelligence"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-gold"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-barber-blue to-barber-cyan">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-barber-gold to-barber-cyan">
             <Sparkles className="h-3.5 w-3.5 text-white" />
           </div>
-          <h1 className="font-display text-lg font-bold text-barber-dark">
+          <h1 className="font-display text-lg font-bold text-barber-white">
             {conversation.title || "Conversa"}
           </h1>
         </div>

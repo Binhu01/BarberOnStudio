@@ -71,96 +71,96 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-barber-dark">
+        <h1 className="font-display text-2xl font-bold text-barber-white">
           Produtos
         </h1>
         <Link
           href="/dashboard/produtos/novo"
-          className="inline-flex items-center gap-2 bg-barber-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2.5 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="h-4 w-4" />
           Novo Produto
         </Link>
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-barber-border p-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-barber-bg-secondary flex items-center justify-center">
-              <Package className="w-5 h-5 text-barber-text-secondary" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-gold/10 text-barber-gold">
+              <Package className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{stats?.total_products ?? 0}</p>
-              <p className="text-sm text-barber-text-secondary">Total de Produtos</p>
+              <p className="text-sm text-barber-muted">Total de Produtos</p>
+              <p className="text-xl font-bold text-barber-white">{stats?.total_products ?? 0}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-barber-border p-4">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-              <Package className="w-5 h-5 text-green-600" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-success/10 text-barber-success">
+              <Package className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{stats?.active_products ?? 0}</p>
-              <p className="text-sm text-barber-text-secondary">Produtos Ativos</p>
+              <p className="text-sm text-barber-muted">Produtos Ativos</p>
+              <p className="text-xl font-bold text-barber-white">{stats?.active_products ?? 0}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-barber-border p-4">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-warning/10 text-barber-warning">
+              <AlertTriangle className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{stats?.low_stock_count ?? 0}</p>
-              <p className="text-sm text-barber-text-secondary">Estoque Baixo</p>
+              <p className="text-sm text-barber-muted">Estoque Baixo</p>
+              <p className="text-xl font-bold text-barber-white">{stats?.low_stock_count ?? 0}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-barber-border p-4">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
-              <Archive className="w-5 h-5 text-barber-error" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-barber-error/10 text-barber-error">
+              <Archive className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-barber-dark">{stats?.out_of_stock_count ?? 0}</p>
-              <p className="text-sm text-barber-text-secondary">Sem Estoque</p>
+              <p className="text-sm text-barber-muted">Sem Estoque</p>
+              <p className="text-xl font-bold text-barber-white">{stats?.out_of_stock_count ?? 0}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-white rounded-xl border border-barber-border p-4">
-        <form className="flex flex-wrap gap-3 items-end">
-          <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-4">
+        <form className="flex flex-wrap items-end gap-3">
+          <div className="min-w-[200px] flex-1">
+            <label className="mb-1 block text-sm font-medium text-barber-muted">
               Buscar
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-barber-text-secondary" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-barber-muted" />
               <input
                 type="text"
                 name="search"
                 defaultValue={search}
                 placeholder="Nome ou SKU..."
-                className="w-full pl-9 pr-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text placeholder:text-barber-text-secondary focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+                className="w-full rounded-lg border border-barber-border bg-barber-dark py-2 pl-9 pr-3 text-sm text-barber-white placeholder:text-barber-muted focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
               />
             </div>
           </div>
 
           <div className="min-w-[160px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+            <label className="mb-1 block text-sm font-medium text-barber-muted">
               Categoria
             </label>
             <select
               name="category_id"
               defaultValue={category_id}
-              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="">Todas</option>
               {categories.map((cat: { id: string; name: string }) => (
@@ -172,28 +172,28 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
           </div>
 
           <div className="min-w-[160px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+            <label className="mb-1 block text-sm font-medium text-barber-muted">
               Tipo
             </label>
             <select
               name="product_type"
               defaultValue={product_type}
-              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="">Todos</option>
               <option value="physical">Físico</option>
-                            <option value="service">Serviço</option>
+              <option value="service">Serviço</option>
             </select>
           </div>
 
           <div className="min-w-[160px]">
-            <label className="block text-sm font-medium text-barber-text mb-1">
+            <label className="mb-1 block text-sm font-medium text-barber-muted">
               Status
             </label>
             <select
               name="status"
               defaultValue={status}
-              className="w-full px-3 py-2 border border-barber-border rounded-lg bg-barber-bg text-barber-text focus:outline-none focus:ring-2 focus:ring-barber-blue/20 focus:border-barber-blue"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="">Todos</option>
               <option value="active">Ativo</option>
@@ -203,16 +203,16 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
 
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-barber-blue text-white rounded-lg hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper"
           >
-            <Filter className="w-4 h-4" />
+            <Filter className="h-4 w-4" />
             Filtrar
           </button>
 
           {(search || category_id || product_type || status) && (
             <Link
               href="/dashboard/produtos"
-              className="inline-flex items-center px-4 py-2 border border-barber-border text-barber-text rounded-lg hover:bg-barber-bg-secondary transition-colors"
+              className="inline-flex items-center rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-muted transition-colors hover:bg-barber-dark hover:text-barber-white"
             >
               Limpar
             </Link>
@@ -221,16 +221,16 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-xl border border-barber-border overflow-hidden">
+      <div className="overflow-hidden rounded-xl border border-barber-border bg-barber-graphite">
         {products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="w-16 h-16 rounded-full bg-barber-bg-secondary flex items-center justify-center mb-4">
-              <Package className="w-8 h-8 text-barber-text-secondary" />
+          <div className="flex flex-col items-center justify-center px-4 py-16">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-barber-dark text-barber-muted">
+              <Package className="h-8 w-8" />
             </div>
-            <h3 className="text-lg font-semibold text-barber-dark mb-1">
+            <h3 className="mb-1 text-lg font-semibold text-barber-white">
               Nenhum produto encontrado
             </h3>
-            <p className="text-sm text-barber-text-secondary text-center max-w-sm">
+            <p className="max-w-sm text-center text-sm text-barber-muted">
               {search || category_id || product_type || status
                 ? "Tente ajustar os filtros ou limpar a busca."
                 : "Comece adicionando seu primeiro produto ao catálogo."}
@@ -238,37 +238,37 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
             {!search && !category_id && !product_type && !status && (
               <Link
                 href="/dashboard/produtos/novo"
-                className="mt-4 inline-flex items-center gap-2 bg-barber-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-copper"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="h-4 w-4" />
                 Adicionar Produto
               </Link>
             )}
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-barber-bg border-b border-barber-border">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-barber-border bg-barber-dark">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Nome
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     SKU
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Categoria
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Tipo
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Preço
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Estoque
                   </th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-barber-text-secondary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-barber-muted">
                     Status
                   </th>
                 </tr>
@@ -279,43 +279,43 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
                   return (
                   <tr
                     key={product.id}
-                    className="hover:bg-barber-bg-secondary transition-colors"
+                    className="transition-colors hover:bg-barber-dark/50"
                   >
                     <td className="px-4 py-3">
                       <Link
                         href={`/dashboard/produtos/${product.id}`}
-                        className="font-medium text-barber-dark hover:text-barber-blue transition-colors"
+                        className="font-medium text-barber-white transition-colors hover:text-barber-gold"
                       >
                         {product.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-sm text-barber-text">
+                    <td className="px-4 py-3 text-barber-light">
                       {product.sku || "—"}
                     </td>
-                    <td className="px-4 py-3 text-sm text-barber-text">
+                    <td className="px-4 py-3 text-barber-light">
                       {categoryName || "—"}
                     </td>
-                    <td className="px-4 py-3 text-sm text-barber-text capitalize">
+                    <td className="px-4 py-3 capitalize text-barber-light">
                       {product.product_type === "physical"
                         ? "Físico"
                         : product.product_type === "service"
                         ? "Serviço"
                         : product.product_type}
                     </td>
-                    <td className="px-4 py-3 text-sm text-barber-text text-right font-mono">
+                    <td className="px-4 py-3 text-right font-mono text-barber-white">
                       {brlFormatter.format(Number(product.sale_price))}
                     </td>
-                    <td className="px-4 py-3 text-sm text-barber-text text-right">
-                      <span className={product.track_inventory ? "" : "text-barber-text-secondary italic"}>
+                    <td className="px-4 py-3 text-right text-barber-light">
+                      <span className={product.track_inventory ? "" : "italic text-barber-muted"}>
                         {product.track_inventory ? "—" : "N/A"}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                           product.is_active
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-700"
+                            ? "bg-barber-success/10 text-barber-success"
+                            : "bg-barber-muted/10 text-barber-muted"
                         }`}
                       >
                         {product.is_active ? "Ativo" : "Inativo"}
@@ -333,14 +333,14 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-barber-text-secondary">
+          <p className="text-sm text-barber-muted">
             Mostrando página {page} de {totalPages} ({total} produtos)
           </p>
           <div className="flex items-center gap-2">
             {page > 1 && (
               <Link
                 href={buildFilterUrl({ page: String(page - 1) })}
-                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-text hover:bg-barber-bg-secondary transition-colors"
+                className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-muted transition-colors hover:bg-barber-dark hover:text-barber-white"
               >
                 Anterior
               </Link>
@@ -348,7 +348,7 @@ export default async function ProdutosPage({ searchParams }: PageProps) {
             {page < totalPages && (
               <Link
                 href={buildFilterUrl({ page: String(page + 1) })}
-                className="px-4 py-2 border border-barber-border rounded-lg text-sm text-barber-text hover:bg-barber-bg-secondary transition-colors"
+                className="rounded-lg border border-barber-border px-4 py-2 text-sm font-medium text-barber-muted transition-colors hover:bg-barber-dark hover:text-barber-white"
               >
                 Próxima
               </Link>

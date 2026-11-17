@@ -16,7 +16,7 @@ import {
 import { getTaskById, getTaskChecklists, getSubtasks } from "../actions";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  todo: { label: "A fazer", color: "bg-gray-100 text-gray-700 border-gray-200" },
+  todo: { label: "A fazer", color: "bg-barber-muted/10 text-barber-muted border-gray-200" },
   in_progress: { label: "Em andamento", color: "bg-amber-100 text-amber-700 border-amber-200" },
   done: { label: "Concluído", color: "bg-green-100 text-green-700 border-green-200" },
   cancelled: { label: "Cancelado", color: "bg-red-100 text-red-700 border-red-200" },
@@ -24,9 +24,9 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 
 const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
   low: { label: "Baixa", color: "text-gray-500" },
-  medium: { label: "Média", color: "text-blue-600" },
+  medium: { label: "Média", color: "text-barber-gold" },
   high: { label: "Alta", color: "text-orange-600" },
-  urgent: { label: "Urgente", color: "text-red-600 font-bold" },
+  urgent: { label: "Urgente", color: "text-barber-error font-bold" },
 };
 
 export default async function TarefaDetailPage(props: { params: Promise<{ id: string }> }) {
@@ -51,18 +51,18 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
       {/* Breadcrumb */}
       <Link
         href="/dashboard/tarefas"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-text-secondary transition-colors hover:text-barber-blue"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-barber-muted transition-colors hover:text-barber-gold"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar para tarefas
       </Link>
 
       {/* Header Card */}
-      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-display text-2xl font-bold text-barber-dark">{task.title}</h1>
+              <h1 className="font-display text-2xl font-bold text-barber-white">{task.title}</h1>
               <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-bold ${statusInfo.color}`}>
                 {statusInfo.label}
               </span>
@@ -70,9 +70,9 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
                 {priorityInfo.label}
               </span>
             </div>
-            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-barber-text-secondary">
+            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-barber-muted">
               <span className="flex items-center gap-1.5">
-                <User className="h-4 w-4 text-barber-blue" />
+                <User className="h-4 w-4 text-barber-gold" />
                 Criado por: {task.creator_name}
               </span>
               {task.assignee_name && (
@@ -83,12 +83,12 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
               )}
               {task.due_date && (
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4 text-barber-blue" />
+                  <Calendar className="h-4 w-4 text-barber-gold" />
                   Prazo: {new Date(task.due_date).toLocaleDateString("pt-BR")}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-barber-blue" />
+                <Clock className="h-4 w-4 text-barber-gold" />
                 Criado em: {new Date(task.created_at).toLocaleDateString("pt-BR")}
               </span>
             </div>
@@ -96,29 +96,29 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
         </div>
 
         {task.description && (
-          <div className="mt-6 rounded-lg bg-barber-bg-secondary/50 p-4">
-            <p className="whitespace-pre-line text-sm text-barber-text-secondary">{task.description}</p>
+          <div className="mt-6 rounded-lg bg-barber-dark/50 p-4">
+            <p className="whitespace-pre-line text-sm text-barber-muted">{task.description}</p>
           </div>
         )}
       </div>
 
       {/* Checklist */}
-      <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-        <h2 className="font-display text-lg font-semibold text-barber-dark">
+      <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+        <h2 className="font-display text-lg font-semibold text-barber-white">
           Checklist ({task.checklist_completed}/{task.checklist_total})
         </h2>
         {checklists.length === 0 ? (
-          <p className="mt-4 text-sm text-barber-text-secondary">Nenhum item no checklist.</p>
+          <p className="mt-4 text-sm text-barber-muted">Nenhum item no checklist.</p>
         ) : (
           <div className="mt-4 space-y-2">
             {checklists.map((item) => (
               <div key={item.id} className="flex items-center gap-3 rounded-lg border border-barber-border p-3">
                 {item.is_completed ? (
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-barber-success" />
                 ) : (
                   <Circle className="h-5 w-5 shrink-0 text-barber-border" />
                 )}
-                <span className={`text-sm ${item.is_completed ? "text-barber-text-secondary line-through" : "text-barber-dark"}`}>
+                <span className={`text-sm ${item.is_completed ? "text-barber-muted line-through" : "text-barber-white"}`}>
                   {item.title}
                 </span>
               </div>
@@ -129,8 +129,8 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
 
       {/* Subtasks */}
       {subtasks.length > 0 && (
-        <div className="rounded-xl border border-barber-border bg-white p-6 shadow-sm">
-          <h2 className="font-display text-lg font-semibold text-barber-dark">
+        <div className="rounded-xl border border-barber-border bg-barber-graphite p-6 shadow-sm">
+          <h2 className="font-display text-lg font-semibold text-barber-white">
             Subtarefas ({subtasks.length})
           </h2>
           <div className="mt-4 space-y-2">
@@ -140,9 +140,9 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
                 <Link
                   key={sub.id}
                   href={`/dashboard/tarefas/${sub.id}`}
-                  className="flex items-center justify-between rounded-lg border border-barber-border p-3 transition-colors hover:bg-barber-bg-secondary/30"
+                  className="flex items-center justify-between rounded-lg border border-barber-border p-3 transition-colors hover:bg-barber-dark/50/30"
                 >
-                  <span className="text-sm font-medium text-barber-dark">{sub.title}</span>
+                  <span className="text-sm font-medium text-barber-white">{sub.title}</span>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${subStatus.color}`}>
                     {subStatus.label}
                   </span>
