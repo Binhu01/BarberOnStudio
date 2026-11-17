@@ -117,7 +117,7 @@ async function LandingContent() {
 
             <div>
               <a
-                href="#agendar"
+                href="#barbeiros"
                 className="inline-flex items-center gap-3 rounded-full bg-bo-blue px-8 py-4 text-base font-semibold text-white transition-all hover:bg-bo-blue-bright hover:shadow-[0_0_30px_rgba(8,102,232,0.4)]"
               >
                 Agendar seu horário
@@ -338,9 +338,9 @@ async function LandingContent() {
                     Nossa Localização
                   </h2>
                   <p className="mt-2 text-bo-gray">
-                    Rua Celina Sacramento da Silva, 20,
+                    R. Celina Sacramento Silva, 429,
                     <br />
-                    Quadra B1 - Cidade Universitária,
+                    Cidade Universitária,
                     <br />
                     Maceió - AL, 57073-200
                   </p>
@@ -348,7 +348,7 @@ async function LandingContent() {
               </div>
 
               <a
-                href="https://www.google.com/maps/search/?api=1&query=Rua+Celina+Sacramento+da+Silva+20+Quadra+B1+Cidade+Universitaria+Maceio+AL+57073-200"
+                href="https://www.google.com/maps/search/?api=1&query=Rua+Celina+Sacramento+Silva+429+Cidade+Universitaria+Maceio+AL"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-bo-border bg-bo-card px-6 py-3 text-sm font-medium text-bo-white transition-all hover:border-bo-blue/50 hover:bg-bo-graphite"
@@ -360,7 +360,7 @@ async function LandingContent() {
               {/* Embedded map */}
               <div className="overflow-hidden rounded-2xl border border-bo-border">
                 <iframe
-                  src="https://maps.google.com/maps?q=Rua+Celina+Sacramento+da+Silva%2C+20%2C+Quadra+B1%2C+Cidade+Universit%C3%A1ria%2C+Macei%C3%B3+-+AL%2C+57073-200&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=Rua+Celina+Sacramento+Silva%2C+429%2C+Cidade+Universit%C3%A1ria%2C+Macei%C3%B3+-+AL&t=&z=17&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}

@@ -54,7 +54,7 @@ export function LandingBookingWidget({
   const [selectedBarber, setSelectedBarber] = useState<Barber | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
-  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<{ slot_start: string; slot_end: string }[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -112,7 +112,7 @@ export function LandingBookingWidget({
           setError(result.error);
           setAvailableSlots([]);
         } else {
-          setAvailableSlots(result.slots as string[]);
+          setAvailableSlots((result.slots ?? []) as { slot_start: string; slot_end: string }[]);
         }
       })
       .catch((err) => {
@@ -588,19 +588,22 @@ export function LandingBookingWidget({
                         <p className="py-4 text-center text-sm text-[#A3A3A3]">Nenhum horário disponível nesta data.</p>
                       ) : (
                         <div className="grid grid-cols-4 gap-2">
-                          {availableSlots.map((slot) => (
-                            <button
-                              key={slot}
-                              onClick={() => setSelectedTime(slot)}
-                              className={`rounded-lg py-2.5 text-center text-sm font-medium transition-all ${
-                                selectedTime === slot
-                                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25"
-                                  : "bg-[#171717] text-[#F5F5F5] hover:bg-[#262626]"
-                              }`}
-                            >
-                              {slot}
-                            </button>
-                          ))}
+                          {availableSlots.map((slot) => {
+                            const timeLabel = new Date(slot.slot_start).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                            return (
+                              <button
+                                key={slot.slot_start}
+                                onClick={() => setSelectedTime(timeLabel)}
+                                className={`rounded-lg py-2.5 text-center text-sm font-medium transition-all ${
+                                  selectedTime === timeLabel
+                                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25"
+                                    : "bg-[#171717] text-[#F5F5F5] hover:bg-[#262626]"
+                                }`}
+                              >
+                                {timeLabel}
+                              </button>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
