@@ -258,7 +258,7 @@ export async function getPublicBookings(filters?: {
       `
       *,
       service:barber_service_id(name),
-      barber:assigned_barber_id(profiles(full_name))
+      barber:assigned_barber_id(user_id(full_name))
     `
     )
     .eq("organization_id", org.id)
@@ -280,6 +280,6 @@ export async function getPublicBookings(filters?: {
   return (data ?? []).map((row: any) => ({
     ...row,
     service_name: row.service?.name ?? null,
-    barber_name: row.barber?.profiles?.full_name ?? null,
+    barber_name: row.barber?.user_id?.full_name ?? null,
   })) as PublicBooking[];
 }
