@@ -41,8 +41,8 @@ export async function getComandas(filters?: {
     .select(
       `
       *,
-      customer:customer_id(full_name),
-      barber:assigned_barber_id(full_name)
+      customer:customer_id(name),
+      barber:assigned_barber_id(user_id(full_name))
     `
     )
     .eq("organization_id", org.id)
@@ -66,8 +66,8 @@ export async function getComandas(filters?: {
 
   return (data ?? []).map((row: any) => ({
     ...row,
-    customer_name: row.customer?.full_name ?? null,
-    barber_name: row.barber?.full_name ?? null,
+    customer_name: row.customer?.name ?? null,
+    barber_name: row.barber?.user_id?.full_name ?? null,
   })) as Comanda[];
 }
 
@@ -83,8 +83,8 @@ export async function getComandaById(orderId: string): Promise<Comanda | null> {
     .select(
       `
       *,
-      customer:customer_id(full_name),
-      barber:assigned_barber_id(full_name),
+      customer:customer_id(name),
+      barber:assigned_barber_id(user_id(full_name)),
       items:order_items(*)
     `
     )
@@ -99,8 +99,8 @@ export async function getComandaById(orderId: string): Promise<Comanda | null> {
 
   return {
     ...data,
-    customer_name: (data as any).customer?.full_name ?? null,
-    barber_name: (data as any).barber?.full_name ?? null,
+    customer_name: (data as any).customer?.name ?? null,
+    barber_name: (data as any).barber?.user_id?.full_name ?? null,
     items: ((data as any).items ?? []) as ComandaItem[],
   } as Comanda;
 }

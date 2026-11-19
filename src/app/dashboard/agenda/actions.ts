@@ -161,7 +161,7 @@ export async function getAppointmentById(
       all_day,
       color,
       location,
-      recurrence
+      recurrence_rule
     `
     )
     .eq("id", eventId)

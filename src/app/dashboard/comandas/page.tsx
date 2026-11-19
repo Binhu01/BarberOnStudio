@@ -1,3 +1,7 @@
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
+export const instant = false;
+
+import { connection } from "next/server";
 import { getComandas, getComandaStats } from "./actions";
 import { getOpenCashSession } from "./cash-actions";
 import { ComandaList } from "./_components/comanda-list";
@@ -9,6 +13,9 @@ export default async function ComandasPage({
 }: {
   searchParams: Promise<{ status?: string; barber?: string }>;
 }) {
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
+
   const params = await searchParams;
 
   const [comandas, stats, openSession] = await Promise.all([

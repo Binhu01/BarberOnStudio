@@ -131,7 +131,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   { label: "Integrações", href: "/dashboard/integracoes", icon: Puzzle },
   { label: "Meu plano", href: "/dashboard/billing", icon: CreditCard },
-  { label: "Renovar assinatura", href: "/dashboard/billing", icon: RefreshCw },
+  { label: "Renovar assinatura", href: "/dashboard/billing/renew", icon: RefreshCw },
 ];
 
 interface DashboardShellProps {
