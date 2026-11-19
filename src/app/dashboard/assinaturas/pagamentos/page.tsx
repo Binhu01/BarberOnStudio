@@ -9,7 +9,7 @@ const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: typeof CheckCircle2 }> = {
   active: { label: "Pago", color: "text-barber-success", bg: "bg-barber-success/10", icon: CheckCircle2 },
   expired: { label: "Vencido", color: "text-barber-error", bg: "bg-barber-error/10", icon: XCircle },
-  paused: { label: "Pausado", color: "text-amber-400", bg: "bg-amber-400/10", icon: Clock },
+  paused: { label: "Pausado", color: "text-barber-warning", bg: "bg-barber-warning/10", icon: Clock },
   cancelled: { label: "Cancelado", color: "text-barber-muted", bg: "bg-barber-muted/10", icon: XCircle },
 };
 

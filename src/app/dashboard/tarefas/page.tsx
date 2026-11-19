@@ -14,10 +14,9 @@ import {
 } from "lucide-react";
 import { getTasksDashboardStats, getTasks } from "./actions";
 
-const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-
 export default async function TarefasDashboardPage() {
   // Opt out of static prerendering — required when cacheComponents: true
+
   await connection();
 
   const [stats, recentResult] = await Promise.all([
@@ -90,7 +89,7 @@ export default async function TarefasDashboardPage() {
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg font-semibold text-barber-white">Tarefas recentes</h2>
           <Link
-            href="/dashboard/tarefas/lista"
+            href="/dashboard/tarefas"
             className="inline-flex items-center gap-1 text-sm font-medium text-barber-gold transition-colors hover:text-barber-copper"
           >
             Ver todas

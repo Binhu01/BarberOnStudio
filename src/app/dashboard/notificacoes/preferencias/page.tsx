@@ -97,7 +97,7 @@ export default async function PreferenciasNotificacoesPage() {
                     const enabled = matrix[cat]?.[ch] ?? false;
                     return (
                       <td key={ch} className="px-4 py-3 text-center">
-                        <div className={`mx-auto inline-flex h-5 w-9 items-center rounded-full ${enabled ? "bg-barber-gold" : "bg-gray-200"} relative cursor-default`}>
+                        <div className={`mx-auto inline-flex h-5 w-9 items-center rounded-full ${enabled ? "bg-barber-gold" : "bg-barber-border"} relative cursor-default`}>
                           <span className={`inline-block h-3.5 w-3.5 rounded-full bg-barber-graphite shadow-sm transition-transform ${enabled ? "translate-x-[18px]" : "translate-x-[3px]"}`} />
                         </div>
                       </td>

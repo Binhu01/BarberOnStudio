@@ -55,7 +55,7 @@ export default async function AssinaturasPlanosPage() {
               <div className="flex items-start justify-between">
                 <h3 className="text-lg font-semibold text-barber-white">{plan.name}</h3>
                 {plan.is_active ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  <CheckCircle2 className="h-5 w-5 text-barber-success" />
                 ) : (
                   <span className="rounded bg-barber-border/40 px-2 py-0.5 text-[10px] font-medium text-barber-muted">
                     Inativo

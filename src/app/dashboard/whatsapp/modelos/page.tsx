@@ -88,7 +88,7 @@ export default async function WhatsappModelosPage() {
                       <h3 className="text-sm font-medium text-barber-white">
                         {tpl.name}
                       </h3>
-                      <span className="rounded bg-barber-success/10 px-1.5 py-0.5 text-[10px] font-medium text-green-700">
+                      <span className="rounded bg-barber-success/10 px-1.5 py-0.5 text-[10px] font-medium text-barber-success">
                         Ativo
                       </span>
                     </div>
