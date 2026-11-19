@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   Users,
@@ -14,15 +14,10 @@ import {
 } from "lucide-react";
 import { getTeamDashboard } from "./actions";
 
-const roleLabels: Record<string, string> = {
-  OWNER: "Proprietário",
-  ADMIN: "Administrador",
-  MANAGER: "Gerente",
-  EMPLOYEE: "Colaborador",
-};
-
 export default async function EquipePage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
   const stats = await getTeamDashboard();
 
   return (

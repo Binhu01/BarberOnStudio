@@ -1,7 +1,8 @@
 // This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -14,7 +15,6 @@ import {
   FileText,
   Building2,
   User,
-  Archive,
   ShoppingCart,
 } from "lucide-react";
 import { getSupplierById } from "../../actions";
@@ -23,8 +23,8 @@ import type { SupplierStatus, SupplierType } from "@/types/purchases";
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 const STATUS_BADGE: Record<SupplierStatus, { label: string; color: string }> = {
-  active: { label: "Ativo", color: "bg-green-100 text-green-700" },
-  inactive: { label: "Inativo", color: "bg-gray-100 text-gray-600" },
+  active: { label: "Ativo", color: "bg-barber-success/10 text-barber-success" },
+  inactive: { label: "Inativo", color: "bg-barber-dark text-barber-muted" },
 };
 
 const TYPE_LABEL: Record<SupplierType, string> = {
@@ -33,7 +33,8 @@ const TYPE_LABEL: Record<SupplierType, string> = {
 };
 
 export default async function FornecedorDetailPage(props: { params: Promise<{ id: string }> }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const { id } = await props.params;
   const supplier = await getSupplierById(id);
 
@@ -152,8 +153,8 @@ export default async function FornecedorDetailPage(props: { params: Promise<{ id
         </div>
 
         {supplier.notes && (
-          <div className="mt-4 rounded-lg border border-barber-border/50 bg-amber-50/50 p-4">
-            <p className="text-xs font-medium text-amber-700">Observações</p>
+          <div className="mt-4 rounded-lg border border-barber-border/50 bg-barber-warning/10 p-4">
+            <p className="text-xs font-medium text-barber-warning">Observações</p>
             <p className="mt-1 text-sm text-barber-white whitespace-pre-line">{supplier.notes}</p>
           </div>
         )}

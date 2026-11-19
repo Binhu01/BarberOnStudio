@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -23,7 +23,8 @@ const STATUS_CONFIG: Record<GoodsReceiptStatus, { label: string; color: string; 
 };
 
 export default async function RecebimentoDetailPage(props: { params: Promise<{ id: string }> }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const { id } = await props.params;
   const receipt = await getGoodsReceiptById(id);
 
@@ -123,7 +124,7 @@ export default async function RecebimentoDetailPage(props: { params: Promise<{ i
             </thead>
             <tbody className="divide-y divide-barber-border">
               {items.map((item) => (
-                <tr key={item.id} className={`transition-colors hover:bg-barber-dark/50/30 ${item.quantity_rejected > 0 ? "bg-barber-error/10/30" : ""}`}>
+                <tr key={item.id} className={`transition-colors hover:bg-barber-dark/15 ${item.quantity_rejected > 0 ? "bg-barber-error/5" : ""}`}>
                   <td className="px-4 py-2.5">
                     <p className="font-medium text-barber-white">{item.product_name ?? item.product_id}</p>
                     {item.sku && (

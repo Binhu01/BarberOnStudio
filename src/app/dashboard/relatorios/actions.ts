@@ -862,8 +862,8 @@ export async function getTeamPerformance(dateRange: DateRange): Promise<TeamPerf
     .from("v_team_performance")
     .select("*")
     .eq("organization_id", orgId)
-    .gte("last_order_at", dateToISO(dateRange.from))
-    .lte("first_order_at", dateToEndISO(dateRange.to))
+    .gte("first_order_at", dateToISO(dateRange.from))
+    .lte("last_order_at", dateToEndISO(dateRange.to))
     .order("total_revenue", { ascending: false });
 
   if (error) throw error;

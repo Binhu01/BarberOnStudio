@@ -1,6 +1,6 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import {
   MessageCircle,
   Send,
@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { getAutomationStats } from "./actions";
 
-const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-
 export default async function WhatsappCentralPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const stats = await getAutomationStats().catch(() => ({
     today_notifications: 0,

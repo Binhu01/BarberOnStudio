@@ -131,9 +131,6 @@ export async function getAppointments(params?: {
 export async function getAppointmentById(
   eventId: string
 ): Promise<AppointmentWithDetails | null> {
-  const results = await getAppointments({ limit: 1 });
-  // Filtrar pelo ID específico (a RPC não tem filtro por ID, então usamos lista)
-  // Para otimizar, fazemos query direta
   const supabase = await createClient();
   const org = await getOrg();
 

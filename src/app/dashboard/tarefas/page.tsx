@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   CheckSquare,
@@ -17,7 +17,8 @@ import { getTasksDashboardStats, getTasks } from "./actions";
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function TarefasDashboardPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const [stats, recentResult] = await Promise.all([
     getTasksDashboardStats(),

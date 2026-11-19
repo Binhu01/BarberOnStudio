@@ -266,29 +266,13 @@ export async function updateSupplier(id: string, input: unknown) {
 export async function archiveSupplier(id: string) {
   const { supabase, orgId, user } = await getCtx();
 
-  // Check for existing purchase orders
-  const { count } = await supabase
-    .from("purchase_orders")
-    .select("id", { count: "exact", head: true })
-    .eq("supplier_id", id)
+  // Archive supplier (preserve history regardless of existing orders)
+  const { error } = await supabase
+    .from("suppliers")
+    .update({ archived_at: new Date().toISOString(), status: "inactive" })
+    .eq("id", id)
     .eq("organization_id", orgId);
-
-  if ((count ?? 0) > 0) {
-    // Archive instead of delete — preserve history
-    const { error } = await supabase
-      .from("suppliers")
-      .update({ archived_at: new Date().toISOString(), status: "inactive" })
-      .eq("id", id)
-      .eq("organization_id", orgId);
-    if (error) throw error;
-  } else {
-    const { error } = await supabase
-      .from("suppliers")
-      .update({ archived_at: new Date().toISOString(), status: "inactive" })
-      .eq("id", id)
-      .eq("organization_id", orgId);
-    if (error) throw error;
-  }
+  if (error) throw error;
 
   await supabase.rpc("log_audit", {
     p_org_id: orgId, p_actor: user.id, p_action: "supplier_archived",
@@ -913,7 +897,7 @@ export async function generatePayableFromPurchase(input: unknown) {
       .insert({
         organization_id: orgId,
         counterparty_name: supplierName,
-        description: `Compra `,
+        description: `Compra PO-${parsed.purchase_order_id.slice(0, 8)}`,
         original_amount: parsed.amount,
         issue_date: new Date().toISOString().split("T")[0],
         due_date: parsed.due_date,
@@ -1147,7 +1131,7 @@ export async function getMostPurchasedProducts(dateRange: { from: string; to: st
 
   const { data, error } = await supabase
     .from("purchase_order_items")
-    .select("product_id, product_name_snapshot, sku_snapshot, quantity_ordered, line_total, purchase_orders!inner(issue_date, organization_id)")
+    .select("product_id, product_name_snapshot, sku_snapshot, quantity_ordered, line_total, purchase_orders!inner(issue_date, organization_id, supplier_id)")
     .eq("organization_id", orgId)
     .gte("purchase_orders.issue_date", dateRange.from)
     .lte("purchase_orders.issue_date", dateRange.to);
@@ -1158,6 +1142,10 @@ export async function getMostPurchasedProducts(dateRange: { from: string; to: st
     const existing = map.get(row.product_id) ?? { name: row.product_name_snapshot, sku: row.sku_snapshot, qty: 0, total: 0, suppliers: new Set() };
     existing.qty += Number(row.quantity_ordered);
     existing.total += Number(row.line_total);
+    const po = row.purchase_orders as any;
+    if (po?.supplier_id) {
+      existing.suppliers.add(po.supplier_id);
+    }
     map.set(row.product_id, existing);
   }
 

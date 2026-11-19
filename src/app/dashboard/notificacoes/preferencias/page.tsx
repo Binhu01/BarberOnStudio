@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { ArrowLeft, Bell, Mail, Smartphone } from "lucide-react";
 import { getNotificationPreferences } from "../../tarefas/actions";
@@ -29,7 +29,9 @@ const CHANNEL_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 };
 
 export default async function PreferenciasNotificacoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
   const prefs = await getNotificationPreferences();
 
   // Group by category
@@ -87,7 +89,7 @@ export default async function PreferenciasNotificacoesPage() {
             </thead>
             <tbody className="divide-y divide-barber-border">
               {categories.map((cat) => (
-                <tr key={cat} className="transition-colors hover:bg-barber-dark/50/30">
+                <tr key={cat} className="transition-colors hover:bg-barber-dark/15">
                   <td className="px-4 py-3 font-medium text-barber-white">
                     {CATEGORY_LABELS[cat] ?? cat}
                   </td>

@@ -1,13 +1,15 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { CalendarDays, TrendingUp, Users, Clock, AlertTriangle } from "lucide-react";
 import { getAppointmentsReport } from "@/app/dashboard/integracoes/actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function RelatoriosAgendamentosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const report = await getAppointmentsReport().catch(() => []);
 
@@ -96,7 +98,7 @@ export default async function RelatoriosAgendamentosPage() {
                     year: "numeric",
                   });
                   return (
-                    <tr key={i} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={i} className="transition-colors hover:bg-barber-dark/15">
                       <td className="py-3 pr-4 font-medium capitalize text-barber-white">
                         {label}
                       </td>

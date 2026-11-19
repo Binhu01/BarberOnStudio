@@ -1098,13 +1098,19 @@ export async function getAuditLogs(filters?: AuditFilters) {
 // PERMISSIONS CATALOG (for UI)
 // ============================================================
 
-export async function getPermissionsCatalog() {
+export async function getPermissionsCatalog(): Promise<Record<string, { key: string; label: string }[]>> {
   const { supabase } = await getCtx();
   const { data, error } = await supabase
     .from("permissions")
-    .select("*")
+    .select("permission_key, module, description")
     .order("module")
     .order("action");
   if (error) throw error;
-  return data ?? [];
+
+  const grouped: Record<string, { key: string; label: string }[]> = {};
+  for (const p of data ?? []) {
+    if (!grouped[p.module]) grouped[p.module] = [];
+    grouped[p.module].push({ key: p.permission_key, label: p.description });
+  }
+  return grouped;
 }

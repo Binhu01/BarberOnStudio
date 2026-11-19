@@ -192,8 +192,8 @@ BEGIN
     SELECT 1 FROM schedule_blocks
     WHERE organization_id = p_org_id
       AND (membership_id IS NULL OR membership_id = p_barber_id)
-      AND starts_at < (p_scheduled_at + (p_duration_minutes || ' minutes')::INTERVAL)
-      AND ends_at > p_scheduled_at
+      AND start_at < (p_scheduled_at + (p_duration_minutes || ' minutes')::INTERVAL)
+      AND end_at > p_scheduled_at
   ) INTO v_has_block;
 
   IF v_has_block THEN

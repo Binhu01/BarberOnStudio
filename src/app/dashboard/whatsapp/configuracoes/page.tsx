@@ -1,11 +1,12 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { Settings, Save, AlertTriangle, CheckCircle2, MessageCircle } from "lucide-react";
 import { getWhatsappConfig } from "../actions";
 
 export default async function WhatsappConfiguracoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const config = await getWhatsappConfig().catch(() => null);
 
@@ -26,27 +27,27 @@ export default async function WhatsappConfiguracoesPage() {
       <div
         className={`rounded-xl border p-6 shadow-sm ${
           isConnected
-            ? "border-green-200 bg-barber-success/10"
-            : "border-amber-200 bg-amber-50"
+            ? "border-barber-success/30 bg-barber-success/10"
+            : "border-barber-warning/30 bg-barber-warning/10"
         }`}
       >
         <div className="flex items-center gap-3">
           {isConnected ? (
             <CheckCircle2 className="h-6 w-6 text-barber-success" />
           ) : (
-            <AlertTriangle className="h-6 w-6 text-amber-600" />
+            <AlertTriangle className="h-6 w-6 text-barber-warning" />
           )}
           <div>
             <h2
               className={`text-sm font-semibold ${
-                isConnected ? "text-green-800" : "text-amber-800"
+                isConnected ? "text-barber-success" : "text-barber-warning"
               }`}
             >
               {isConnected ? "Conectado" : "Não conectado"}
             </h2>
             <p
               className={`text-xs ${
-                isConnected ? "text-green-700" : "text-amber-700"
+                isConnected ? "text-barber-success/80" : "text-barber-warning/80"
               }`}
             >
               {isConnected
@@ -156,14 +157,14 @@ export default async function WhatsappConfiguracoesPage() {
       </div>
 
       {/* Info Card */}
-      <div className="rounded-xl border border-blue-100 bg-barber-gold/10 p-5">
+      <div className="rounded-xl border border-barber-border bg-barber-gold/10 p-5">
         <div className="flex items-start gap-3">
           <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-barber-gold" />
           <div>
-            <h3 className="text-sm font-medium text-blue-800">
+            <h3 className="text-sm font-medium text-barber-white">
               Como configurar
             </h3>
-            <ol className="mt-2 list-inside list-decimal space-y-1 text-xs text-blue-700">
+            <ol className="mt-2 list-inside list-decimal space-y-1 text-xs text-barber-muted">
               <li>
                 Acesse{" "}
                 <a

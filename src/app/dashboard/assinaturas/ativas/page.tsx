@@ -1,7 +1,7 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { CreditCard, Users, CheckCircle2, AlertTriangle, Clock, Search } from "lucide-react";
+import { connection } from "next/server";
+import { CreditCard, CheckCircle2, Search } from "lucide-react";
 import { getClientSubscriptions } from "../actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -14,7 +14,8 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
 };
 
 export default async function AssinaturasAtivasPage() {
- await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+ await connection();
 
  const subscriptions = await getClientSubscriptions().catch(() => []);
 
@@ -72,7 +73,7 @@ export default async function AssinaturasAtivasPage() {
  {activeOnly.map((sub: any) => {
  const statusCfg = STATUS_CONFIG[sub.status] ?? STATUS_CONFIG.active;
  return (
- <tr key={sub.id} className="transition-colors hover:bg-barber-dark/50/30">
+ <tr key={sub.id} className="transition-colors hover:bg-barber-dark/15">
  <td className="px-4 py-3">
  <p className="font-medium text-barber-white">{sub.customer_name ?? "Sem nome"}</p>
  <p className="text-[10px] text-barber-muted">{sub.customer_phone ?? ""}</p>

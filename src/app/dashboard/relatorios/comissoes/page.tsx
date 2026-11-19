@@ -1,13 +1,15 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { DollarSign, Users, TrendingUp, BarChart3 } from "lucide-react";
+import { connection } from "next/server";
+import { DollarSign, Users, BarChart3 } from "lucide-react";
 import { getBarberRanking } from "@/app/dashboard/integracoes/actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function RelatoriosComissoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const ranking = await getBarberRanking().catch(() => []);
 
@@ -51,8 +53,8 @@ export default async function RelatoriosComissoesPage() {
         </div>
         <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
-              <BarChart3 className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+              <BarChart3 className="h-5 w-5 text-barber-gold" />
             </div>
             <div>
               <p className="text-2xl font-bold text-barber-white">{totalAppointments}</p>
@@ -90,7 +92,7 @@ export default async function RelatoriosComissoesPage() {
               </thead>
               <tbody className="divide-y divide-barber-border/50">
                 {ranking.map((barber, i) => (
-                  <tr key={i} className="transition-colors hover:bg-barber-dark/50/30">
+                  <tr key={barber.barber_id ?? i} className="transition-colors hover:bg-barber-dark/30">
                     <td className="py-3 pr-4 font-medium text-barber-muted">{i + 1}</td>
                     <td className="py-3 pr-4">
                       <div className="flex items-center gap-2">

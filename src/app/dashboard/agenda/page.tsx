@@ -1,12 +1,12 @@
 // This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   Plus,
   CalendarDays,
-  Clock,
   Scissors,
   User,
   CheckCircle2,
@@ -30,43 +30,43 @@ const STATUS_CONFIG: Record<
   scheduled: {
     label: "Agendado",
     color: "text-barber-gold",
-    bg: "bg-barber-gold/10 border-blue-200",
+    bg: "bg-barber-gold/10 border-barber-gold/20",
     icon: CalendarDays,
   },
   confirmed: {
     label: "Confirmado",
-    color: "text-emerald-600",
-    bg: "bg-emerald-50 border-emerald-200",
+    color: "text-barber-success",
+    bg: "bg-barber-success/10 border-barber-success/20",
     icon: CalendarCheck,
   },
   arrived: {
     label: "Cliente chegou",
-    color: "text-amber-600",
-    bg: "bg-amber-50 border-amber-200",
+    color: "text-barber-gold",
+    bg: "bg-barber-gold/10 border-barber-gold/20",
     icon: CircleDot,
   },
   in_progress: {
     label: "Em andamento",
-    color: "text-indigo-600",
-    bg: "bg-indigo-50 border-indigo-200",
+    color: "text-barber-copper",
+    bg: "bg-barber-copper/10 border-barber-copper/20",
     icon: Timer,
   },
   completed: {
     label: "Concluído",
     color: "text-barber-success",
-    bg: "bg-barber-success/10 border-green-200",
+    bg: "bg-barber-success/10 border-barber-success/20",
     icon: CheckCircle2,
   },
   cancelled: {
     label: "Cancelado",
     color: "text-barber-error",
-    bg: "bg-barber-error/10 border-red-200",
+    bg: "bg-barber-error/10 border-barber-error/20",
     icon: XCircle,
   },
   no_show: {
     label: "Não compareceu",
-    color: "text-orange-600",
-    bg: "bg-orange-50 border-orange-200",
+    color: "text-barber-warning",
+    bg: "bg-barber-warning/10 border-barber-warning/20",
     icon: AlertCircle,
   },
 };
@@ -86,7 +86,8 @@ const formatCurrency = (value: number) =>
 // ---------------------------------------------------------------------------
 
 export default async function AgendaPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const now = new Date();
   const startDate = new Date(
@@ -269,7 +270,8 @@ export default async function AgendaPage() {
                           {/* Customer */}
                           {appt.customer_name && (
                             <span className="flex items-center gap-1">
-                              👤 {appt.customer_name}
+                              <User className="h-3 w-3" />
+                              {appt.customer_name}
                             </span>
                           )}
 

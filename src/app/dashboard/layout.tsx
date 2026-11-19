@@ -13,6 +13,7 @@ export default async function DashboardLayout({
 }: {
  children: React.ReactNode;
 }) {
+  // Opt out of static prerendering — required when cacheComponents: true
  await connection();
 
  const supabase = await createClient();

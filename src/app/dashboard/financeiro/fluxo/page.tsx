@@ -1,14 +1,15 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { ArrowLeftRight, TrendingUp, TrendingDown } from "lucide-react";
 import { getCashFlow } from "../actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function FluxoPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();

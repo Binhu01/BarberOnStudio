@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -11,7 +11,8 @@ import { ReceiptConfirmationForm } from "../_components/receipt-confirmation-for
 export default async function NovoRecebimentoPage(props: {
   searchParams: Promise<{ order_id?: string }>;
 }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await props.searchParams;
   const orderId = params.order_id;
 

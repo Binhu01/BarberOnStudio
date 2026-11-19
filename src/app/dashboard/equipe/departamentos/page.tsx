@@ -1,13 +1,13 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
-import Link from "next/link";
+import { connection } from "next/server";
 import { Building2, Plus, Archive, Users } from "lucide-react";
 import { getDepartments } from "../actions";
 
 export default async function DepartamentosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const departments = await getDepartments();
 
   const active = departments.filter((d) => d.is_active);

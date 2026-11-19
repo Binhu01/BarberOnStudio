@@ -1,7 +1,8 @@
 // This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { Plus, Search, Filter, TrendingDown, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { getPayables } from "../actions";
@@ -25,7 +26,8 @@ interface PageProps {
 }
 
 export default async function PagarPage({ searchParams }: PageProps) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await searchParams;
   const search = params.search || "";
   const status = params.status || "all";

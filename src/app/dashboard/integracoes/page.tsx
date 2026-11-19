@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import {
   Plug,
   MessageCircle,
@@ -37,7 +37,9 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; 
 };
 
 export default async function IntegracoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const [connections, webhookEvents] = await Promise.all([
     getIntegrationConnections().catch(() => []),

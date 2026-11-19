@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   BarChart3,
@@ -31,7 +31,8 @@ function formatChange(value: number | null): { text: string; color: string; Icon
 }
 
 export default async function RelatoriosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   // Default: last 30 days
   const now = new Date();

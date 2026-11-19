@@ -1,7 +1,8 @@
 // This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { EventForm } from "../_components/event-form";
@@ -10,43 +11,46 @@ import { createClient } from "@/lib/supabase/server";
 import { getActiveOrganization } from "@/lib/organizations";
 
 export default async function NovoAgendamentoPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
-  const [members, services, customers] = await Promise.all([
+  const [members, orgResult, supabase] = await Promise.all([
     getActiveMembers(),
-    (async () => {
-      const supabase = await createClient();
-      const result = await getActiveOrganization();
-      if (!result) return [];
-      const { data } = await supabase
+    getActiveOrganization(),
+    createClient(),
+  ]);
+
+  let services: { id: string; name: string; duration_minutes: number; price: number }[] = [];
+  let customers: { id: string; full_name: string; phone: string | null }[] = [];
+
+  if (orgResult) {
+    const [servicesResult, customersResult] = await Promise.all([
+      supabase
         .from("barber_services")
         .select("id, name, duration_minutes, price")
-        .eq("organization_id", result.org.id)
+        .eq("organization_id", orgResult.org.id)
         .eq("is_active", true)
-        .order("name");
-      return (data ?? []).map((s: any) => ({
-        id: s.id,
-        name: s.name,
-        duration_minutes: s.duration_minutes,
-        price: Number(s.price ?? 0),
-      }));
-    })(),
-    (async () => {
-      const supabase = await createClient();
-      const result = await getActiveOrganization();
-      if (!result) return [];
-      const { data } = await supabase
+        .order("name"),
+      supabase
         .from("profiles")
         .select("id, full_name, phone")
         .order("full_name")
-        .limit(200);
-      return (data ?? []).map((c: any) => ({
-        id: c.id,
-        full_name: c.full_name,
-        phone: c.phone ?? null,
-      }));
-    })(),
-  ]);
+        .limit(200),
+    ]);
+
+    services = (servicesResult.data ?? []).map((s: any) => ({
+      id: s.id,
+      name: s.name,
+      duration_minutes: s.duration_minutes,
+      price: Number(s.price ?? 0),
+    }));
+
+    customers = (customersResult.data ?? []).map((c: any) => ({
+      id: c.id,
+      full_name: c.full_name,
+      phone: c.phone ?? null,
+    }));
+  }
 
   return (
     <div className="space-y-6">

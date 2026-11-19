@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   BarChart3,
@@ -20,7 +20,8 @@ import {
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function RelatoriosComprasPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   // Default date range: last 12 months
   const to = new Date().toISOString().slice(0, 10);
@@ -72,8 +73,8 @@ export default async function RelatoriosComprasPage() {
         </div>
         <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
-              <ShoppingCart className="h-5 w-5 text-indigo-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+              <ShoppingCart className="h-5 w-5 text-barber-gold" />
             </div>
             <div>
               <p className="text-xs font-medium text-barber-muted">Total de ordens</p>
@@ -120,7 +121,7 @@ export default async function RelatoriosComprasPage() {
                 {bySupplier.map((supplier) => {
                   const share = totalAmount > 0 ? (supplier.totalAmount / totalAmount) * 100 : 0;
                   return (
-                    <tr key={supplier.supplierId} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={supplier.supplierId} className="transition-colors hover:bg-barber-dark/15">
                       <td className="px-4 py-2.5 font-medium text-barber-white">{supplier.supplierName}</td>
                       <td className="px-4 py-2.5 text-right text-barber-muted">{supplier.orderCount}</td>
                       <td className="px-4 py-2.5 text-right font-semibold text-barber-white">
@@ -209,7 +210,7 @@ export default async function RelatoriosComprasPage() {
                 </thead>
                 <tbody className="divide-y divide-barber-border">
                   {topProducts.map((product) => (
-                    <tr key={product.productId} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={product.productId} className="transition-colors hover:bg-barber-dark/15">
                       <td className="px-3 py-2">
                         <p className="font-medium text-barber-white">{product.productName}</p>
                         {product.sku && (

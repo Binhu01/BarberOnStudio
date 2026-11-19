@@ -1,7 +1,7 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Users, DollarSign, Clock, TrendingUp, UserCheck, UserX } from "lucide-react";
+import { connection } from "next/server";
+import { Users, DollarSign, Clock, UserCheck, UserX } from "lucide-react";
 import { getCustomerRetention } from "@/app/dashboard/integracoes/actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -13,7 +13,9 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; 
 };
 
 export default async function RelatoriosClientesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const customers = await getCustomerRetention().catch(() => []);
 
@@ -100,7 +102,7 @@ export default async function RelatoriosClientesPage() {
                   const statusCfg = STATUS_CONFIG[cust.retention_status] ?? STATUS_CONFIG.churned;
                   const StatusIcon = statusCfg.icon;
                   return (
-                    <tr key={i} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={i} className="transition-colors hover:bg-barber-dark/30">
                       <td className="py-3 pr-4 font-medium text-barber-muted">{i + 1}</td>
                       <td className="py-3 pr-4">
                         <p className="font-medium text-barber-white">{cust.customer_name ?? "Sem nome"}</p>

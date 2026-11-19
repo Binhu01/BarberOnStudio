@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   Package,
@@ -23,7 +23,8 @@ const STATUS_CONFIG: Record<GoodsReceiptStatus, { label: string; color: string; 
 export default async function RecebimentosPage(props: {
   searchParams: Promise<{ q?: string; status?: string; page?: string }>;
 }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await props.searchParams;
   const search = params.q ?? "";
   const statusFilter = (params.status as GoodsReceiptStatus | undefined) ?? undefined;
@@ -104,7 +105,7 @@ export default async function RecebimentosPage(props: {
                   const statusInfo = STATUS_CONFIG[receipt.status] ?? STATUS_CONFIG.confirmed;
                   const StatusIcon = statusInfo.icon;
                   return (
-                    <tr key={receipt.id} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={receipt.id} className="transition-colors hover:bg-barber-dark/15">
                       <td className="px-4 py-3">
                         <Link
                           href={`/dashboard/compras/recebimentos/${receipt.id}`}

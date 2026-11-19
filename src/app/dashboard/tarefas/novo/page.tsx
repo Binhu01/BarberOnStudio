@@ -1,14 +1,16 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { TaskForm } from "../_components/task-form";
 import { getActiveMembers } from "../actions";
 
 export default async function NovaTarefaPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
   const members = await getActiveMembers();
 
   return (

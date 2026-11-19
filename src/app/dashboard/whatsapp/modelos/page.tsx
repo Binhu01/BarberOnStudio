@@ -1,6 +1,6 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { FileText, Plus, Search, Tag } from "lucide-react";
 import { getNotificationTemplates } from "../actions";
 
@@ -14,7 +14,9 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default async function WhatsappModelosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const templates = await getNotificationTemplates().catch(() => []);
 

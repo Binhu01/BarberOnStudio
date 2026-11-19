@@ -386,7 +386,7 @@ export default function ClientesPage() {
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                           customer.customer_type === "pj"
-                            ? "bg-barber-gold/100/10 text-blue-400"
+                            ? "bg-barber-gold/10 text-blue-400"
                             : "bg-emerald-500/10 text-emerald-400"
                         }`}
                       >
