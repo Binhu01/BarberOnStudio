@@ -14,6 +14,7 @@ import type {
   SubscriptionHistoryEntry,
   SubscriptionSummary,
   RenewalResult,
+  ExpiringSubscription,
   CreateSubscriptionPlanInput,
   UpdateSubscriptionPlanInput,
   CreateClientSubscriptionInput,
@@ -644,4 +645,60 @@ export async function generateSubscriptionReceivable(
   if (error) throw error;
 
   return { success: true, receivable_id: data };
+}
+
+// =============================================================================
+// EXPIRING SUBSCRIPTIONS — Alertas de vencimento (3 dias)
+// =============================================================================
+
+export async function getExpiringSubscriptions(
+  daysThreshold: number = 3
+): Promise<ExpiringSubscription[]> {
+  const supabase = await createClient();
+  const org = await getOrg();
+
+  // Calcular data limite (hoje + N dias)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const thresholdDate = new Date(today);
+  thresholdDate.setDate(thresholdDate.getDate() + daysThreshold);
+
+  const todayStr = today.toISOString().slice(0, 10);
+  const thresholdStr = thresholdDate.toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from("client_subscriptions")
+    .select(
+      `
+      id,
+      current_period_end,
+      auto_renew,
+      customer:customer_profile_id(full_name),
+      plan:subscription_plan_id(name, price)
+    `
+    )
+    .eq("organization_id", org.id)
+    .in("status", ["active", "trial"])
+    .gte("current_period_end", todayStr)
+    .lte("current_period_end", thresholdStr)
+    .order("current_period_end", { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((row: any) => {
+    const endDate = new Date(row.current_period_end);
+    endDate.setHours(0, 0, 0, 0);
+    const diffMs = endDate.getTime() - today.getTime();
+    const daysRemaining = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+
+    return {
+      id: row.id,
+      customer_name: row.customer?.full_name ?? null,
+      plan_name: row.plan?.name ?? null,
+      plan_price: row.plan?.price ?? null,
+      current_period_end: row.current_period_end,
+      days_remaining: daysRemaining,
+      auto_renew: row.auto_renew,
+    };
+  }) as ExpiringSubscription[];
 }

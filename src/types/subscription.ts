@@ -151,3 +151,17 @@ export interface RenewalResult {
  renewed_count: number;
  expired_count: number;
 }
+
+// -----------------------------------------------------------------------------
+// EXPIRING SUBSCRIPTIONS (alertas de vencimento)
+// -----------------------------------------------------------------------------
+
+export interface ExpiringSubscription {
+ id: string;
+ customer_name: string | null;
+ plan_name: string | null;
+ plan_price: number | null;
+ current_period_end: string;
+ days_remaining: number;
+ auto_renew: boolean;
+}
