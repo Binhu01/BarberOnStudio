@@ -1,9 +1,9 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
-import { ArrowLeft, Plus, CheckSquare } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { getKanbanData } from "../actions";
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -14,7 +14,8 @@ const PRIORITY_COLORS: Record<string, string> = {
 };
 
 export default async function KanbanPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const columns = await getKanbanData();
 
   return (
@@ -33,7 +34,7 @@ export default async function KanbanPage() {
         </div>
         <Link
           href="/dashboard/tarefas/novo"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-barber-gold/90"
         >
           <Plus className="h-4 w-4" />
           Nova tarefa

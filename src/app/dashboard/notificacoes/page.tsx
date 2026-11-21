@@ -1,27 +1,10 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
-import { Bell, CheckCheck, Settings, Trash2 } from "lucide-react";
+import { Bell, CheckCheck, Settings } from "lucide-react";
 import { getNotifications } from "../tarefas/actions";
-
-const TYPE_LABELS: Record<string, string> = {
-  task_assigned: "Tarefa atribuída",
-  task_due_soon: "Prazo próximo",
-  task_overdue: "Tarefa atrasada",
-  task_completed: "Tarefa concluída",
-  event_reminder: "Lembrete de evento",
-  event_updated: "Evento atualizado",
-  event_cancelled: "Evento cancelado",
-  order_status_changed: "Pedido atualizado",
-  payment_received: "Pagamento recebido",
-  payment_overdue: "Pagamento atrasado",
-  stock_low: "Estoque baixo",
-  purchase_received: "Compra recebida",
-  member_joined: "Novo membro",
-  system: "Sistema",
-};
 
 const TYPE_COLORS: Record<string, string> = {
   task_assigned: "bg-barber-gold/10 text-barber-gold",
@@ -41,7 +24,9 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default async function NotificacoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
   const data = await getNotifications(1, 50);
 
   return (
@@ -79,7 +64,6 @@ export default async function NotificacoesPage() {
       ) : (
         <div className="space-y-2">
           {data.notifications.map((notification) => {
-            const typeLabel = TYPE_LABELS[notification.type] ?? notification.type;
             const typeColor = TYPE_COLORS[notification.type] ?? TYPE_COLORS.system;
 
             return (

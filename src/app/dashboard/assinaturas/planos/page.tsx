@@ -1,13 +1,14 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { CreditCard, Plus, Users, DollarSign, Star, CheckCircle2 } from "lucide-react";
+import { connection } from "next/server";
+import { CreditCard, Plus, Users, Star, CheckCircle2 } from "lucide-react";
 import { getSubscriptionPlans } from "../actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function AssinaturasPlanosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const plans = await getSubscriptionPlans().catch(() => []);
 
@@ -42,7 +43,7 @@ export default async function AssinaturasPlanosPage() {
               className={`relative rounded-xl border p-5 shadow-sm transition-all ${
                 plan.is_active
                   ? "border-barber-border bg-barber-graphite hover:border-barber-gold/40 hover:shadow-md"
-                  : "border-dashed border-barber-border/60 bg-gray-50 opacity-60"
+                  : "border-dashed border-barber-border/60 bg-barber-graphite/50 opacity-60"
               }`}
             >
               {plan.is_popular && (
@@ -54,9 +55,9 @@ export default async function AssinaturasPlanosPage() {
               <div className="flex items-start justify-between">
                 <h3 className="text-lg font-semibold text-barber-white">{plan.name}</h3>
                 {plan.is_active ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  <CheckCircle2 className="h-5 w-5 text-barber-success" />
                 ) : (
-                  <span className="rounded bg-gray-200 px-2 py-0.5 text-[10px] font-medium text-gray-600">
+                  <span className="rounded bg-barber-border/40 px-2 py-0.5 text-[10px] font-medium text-barber-muted">
                     Inativo
                   </span>
                 )}

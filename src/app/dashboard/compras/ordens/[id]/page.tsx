@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -9,7 +9,6 @@ import {
   Calendar,
   Truck,
   Package,
-  DollarSign,
   FileText,
   User,
   CheckCircle2,
@@ -34,7 +33,8 @@ const STATUS_CONFIG: Record<PurchaseOrderStatus, { label: string; color: string;
 };
 
 export default async function OrdemDetailPage(props: { params: Promise<{ id: string }> }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const { id } = await props.params;
   const order = await getPurchaseOrderById(id);
 
@@ -145,7 +145,7 @@ export default async function OrdemDetailPage(props: { params: Promise<{ id: str
               {items.map((item) => {
                 const pending = Math.max(0, item.quantity_ordered - item.quantity_received - item.quantity_cancelled);
                 return (
-                  <tr key={item.id} className="transition-colors hover:bg-barber-dark/50/30">
+                  <tr key={item.id} className="transition-colors hover:bg-barber-dark/15">
                     <td className="px-4 py-2.5">
                       <p className="font-medium text-barber-white">{item.product_name_snapshot}</p>
                       {item.sku_snapshot && (

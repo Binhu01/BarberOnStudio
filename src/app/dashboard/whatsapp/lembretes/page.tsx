@@ -1,7 +1,7 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Clock, Plus, Trash2, ToggleLeft, ToggleRight, Bell } from "lucide-react";
+import { connection } from "next/server";
+import { Clock, Plus, ToggleLeft, ToggleRight, Bell } from "lucide-react";
 import { getAutomationRules } from "../actions";
 
 const EVENT_LABELS: Record<string, string> = {
@@ -30,7 +30,9 @@ const CHANNEL_LABELS: Record<string, string> = {
 };
 
 export default async function WhatsappLembretesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const rules = await getAutomationRules().catch(() => []);
 
@@ -76,12 +78,12 @@ export default async function WhatsappLembretesPage() {
                 <div className="flex items-start gap-3">
                   <div
                     className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-                      rule.is_active ? "bg-barber-success/10" : "bg-gray-50"
+                      rule.is_active ? "bg-barber-success/10" : "bg-barber-dark"
                     }`}
                   >
                     <Clock
                       className={`h-4 w-4 ${
-                        rule.is_active ? "text-barber-success" : "text-gray-400"
+                        rule.is_active ? "text-barber-success" : "text-barber-muted"
                       }`}
                     />
                   </div>
@@ -95,19 +97,19 @@ export default async function WhatsappLembretesPage() {
                       </p>
                     )}
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded bg-barber-gold/10 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                      <span className="rounded bg-barber-gold/10 px-2 py-0.5 text-[10px] font-medium text-barber-gold">
                         {EVENT_LABELS[rule.event_type] ?? rule.event_type}
                       </span>
-                      <span className="rounded bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-700">
+                      <span className="rounded bg-barber-copper/10 px-2 py-0.5 text-[10px] font-medium text-barber-copper capitalize">
                         {CHANNEL_LABELS[rule.channel] ?? rule.channel}
                       </span>
                       {rule.delay_minutes > 0 && (
-                        <span className="rounded bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                        <span className="rounded bg-barber-warning/10 px-2 py-0.5 text-[10px] font-medium text-barber-warning">
                           Atraso: {rule.delay_minutes}min
                         </span>
                       )}
                       {rule.max_per_day && (
-                        <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600">
+                        <span className="rounded bg-barber-dark px-2 py-0.5 text-[10px] font-medium text-barber-muted">
                           Máx: {rule.max_per_day}/dia
                         </span>
                       )}
@@ -119,9 +121,9 @@ export default async function WhatsappLembretesPage() {
                     {rule.trigger_count} disparos
                   </span>
                   {rule.is_active ? (
-                    <ToggleRight className="h-6 w-6 text-green-500" />
+                    <ToggleRight className="h-6 w-6 text-barber-success" />
                   ) : (
-                    <ToggleLeft className="h-6 w-6 text-gray-300" />
+                    <ToggleLeft className="h-6 w-6 text-barber-muted" />
                   )}
                 </div>
               </div>

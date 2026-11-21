@@ -1,20 +1,21 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { CreditCard, Users, CheckCircle2, AlertTriangle, Clock, Search } from "lucide-react";
+import { connection } from "next/server";
+import { CreditCard, CheckCircle2, Search } from "lucide-react";
 import { getClientSubscriptions } from "../actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
  active: { label: "Ativa", color: "text-barber-success", bg: "bg-barber-success/10" },
- paused: { label: "Pausada", color: "text-amber-600", bg: "bg-amber-50" },
+ paused: { label: "Pausada", color: "text-barber-warning", bg: "bg-barber-warning/10" },
  expired: { label: "Expirada", color: "text-barber-error", bg: "bg-barber-error/10" },
- cancelled: { label: "Cancelada", color: "text-gray-600", bg: "bg-gray-50" },
+ cancelled: { label: "Cancelada", color: "text-barber-muted", bg: "bg-barber-dark" },
 };
 
 export default async function AssinaturasAtivasPage() {
- await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+ await connection();
 
  const subscriptions = await getClientSubscriptions().catch(() => []);
 
@@ -30,7 +31,7 @@ export default async function AssinaturasAtivasPage() {
  </p>
  </div>
  <div className="flex items-center gap-2 rounded-lg border border-barber-border bg-barber-graphite px-3 py-1.5 text-sm">
- <CheckCircle2 className="h-4 w-4 text-green-500" />
+ <CheckCircle2 className="h-4 w-4 text-barber-success" />
  <span className="font-medium text-barber-white">{activeOnly.length}</span>
  <span className="text-barber-muted">ativas</span>
  </div>
@@ -72,7 +73,7 @@ export default async function AssinaturasAtivasPage() {
  {activeOnly.map((sub: any) => {
  const statusCfg = STATUS_CONFIG[sub.status] ?? STATUS_CONFIG.active;
  return (
- <tr key={sub.id} className="transition-colors hover:bg-barber-dark/50/30">
+ <tr key={sub.id} className="transition-colors hover:bg-barber-dark/15">
  <td className="px-4 py-3">
  <p className="font-medium text-barber-white">{sub.customer_name ?? "Sem nome"}</p>
  <p className="text-[10px] text-barber-muted">{sub.customer_phone ?? ""}</p>

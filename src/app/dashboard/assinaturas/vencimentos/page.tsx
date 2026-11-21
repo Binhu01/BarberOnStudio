@@ -1,13 +1,15 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Clock, AlertTriangle, CreditCard, Users, RefreshCw } from "lucide-react";
+import { connection } from "next/server";
+import { Clock, AlertTriangle, CreditCard, RefreshCw } from "lucide-react";
 import { getClientSubscriptions } from "../actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function AssinaturasVencimentosPage() {
- await headers();
+ // Opt out of static prerendering — required when cacheComponents: true
+
+ await connection();
 
  const subscriptions = await getClientSubscriptions().catch(() => []);
 
@@ -69,7 +71,7 @@ export default async function AssinaturasVencimentosPage() {
  </thead>
  <tbody className="divide-y divide-barber-border/50">
  {items.map((sub: any) => (
- <tr key={sub.id} className="transition-colors hover:bg-barber-dark/50/30">
+ <tr key={sub.id} className="transition-colors hover:bg-barber-dark/15">
  <td className="py-2.5 pr-4">
  <p className="font-medium text-barber-white">{sub.customer_name ?? "Sem nome"}</p>
  <p className="text-[10px] text-barber-muted">{sub.customer_phone ?? ""}</p>
@@ -102,19 +104,19 @@ export default async function AssinaturasVencimentosPage() {
 
  {/* Summary */}
  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
- <div className="rounded-xl border border-red-100 bg-barber-error/10 p-4 text-center">
+ <div className="rounded-xl border border-barber-error/20 bg-barber-error/10 p-4 text-center">
  <AlertTriangle className="mx-auto mb-2 h-5 w-5 text-barber-error" />
- <p className="text-2xl font-bold text-red-700">{expired.length}</p>
+ <p className="text-2xl font-bold text-barber-error">{expired.length}</p>
  <p className="text-xs text-barber-error">Expiradas</p>
  </div>
- <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-center">
- <Clock className="mx-auto mb-2 h-5 w-5 text-amber-600" />
- <p className="text-2xl font-bold text-amber-700">{expiringSoon.length}</p>
- <p className="text-xs text-amber-600">Vencem em 7 dias</p>
+ <div className="rounded-xl border border-barber-warning/20 bg-barber-warning/10 p-4 text-center">
+ <Clock className="mx-auto mb-2 h-5 w-5 text-barber-warning" />
+ <p className="text-2xl font-bold text-barber-warning">{expiringSoon.length}</p>
+ <p className="text-xs text-barber-warning">Vencem em 7 dias</p>
  </div>
- <div className="rounded-xl border border-blue-100 bg-barber-gold/10 p-4 text-center">
+ <div className="rounded-xl border border-barber-gold/20 bg-barber-gold/10 p-4 text-center">
  <CreditCard className="mx-auto mb-2 h-5 w-5 text-barber-gold" />
- <p className="text-2xl font-bold text-blue-700">{expiringMonth.length}</p>
+ <p className="text-2xl font-bold text-barber-gold">{expiringMonth.length}</p>
  <p className="text-xs text-barber-gold">Vencem em 30 dias</p>
  </div>
  </div>
@@ -131,7 +133,7 @@ export default async function AssinaturasVencimentosPage() {
  title="Vencendo nos próximos 30 dias"
  items={expiringMonth}
  icon={Clock}
- color="text-amber-600"
+ color="text-barber-warning"
  emptyMsg="Nenhuma assinatura vencendo nos próximos 30 dias"
  />
 
@@ -139,7 +141,7 @@ export default async function AssinaturasVencimentosPage() {
  title="Expiradas"
  items={expired}
  icon={RefreshCw}
- color="text-gray-500"
+ color="text-barber-muted"
  emptyMsg="Nenhuma assinatura expirada"
  />
  </div>

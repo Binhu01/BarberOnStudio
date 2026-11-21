@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Circle,
   Clock,
-  Trash2,
   User,
 } from "lucide-react";
 import { getTaskById, getTaskChecklists, getSubtasks } from "../actions";
@@ -30,7 +29,8 @@ const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
 };
 
 export default async function TarefaDetailPage(props: { params: Promise<{ id: string }> }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const { id } = await props.params;
   const task = await getTaskById(id);
 
@@ -140,7 +140,7 @@ export default async function TarefaDetailPage(props: { params: Promise<{ id: st
                 <Link
                   key={sub.id}
                   href={`/dashboard/tarefas/${sub.id}`}
-                  className="flex items-center justify-between rounded-lg border border-barber-border p-3 transition-colors hover:bg-barber-dark/50/30"
+                  className="flex items-center justify-between rounded-lg border border-barber-border p-3 transition-colors hover:bg-barber-dark/30"
                 >
                   <span className="text-sm font-medium text-barber-white">{sub.title}</span>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${subStatus.color}`}>

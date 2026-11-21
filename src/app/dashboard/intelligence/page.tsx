@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   Sparkles,
@@ -27,7 +27,8 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default async function IntelligencePage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const [status, conversations, insights] = await Promise.all([
     getAiStatus(),

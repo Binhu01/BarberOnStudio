@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { ShieldCheck, Users, Lock, Plus } from "lucide-react";
 import { getRoles, getPermissionsCatalog } from "../actions";
 
@@ -20,7 +20,8 @@ const roleDescriptions: Record<string, string> = {
 };
 
 export default async function CargosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const [roles, catalog] = await Promise.all([getRoles(), getPermissionsCatalog()]);
 
   const systemRoles = roles.filter((r) => r.is_system_role);

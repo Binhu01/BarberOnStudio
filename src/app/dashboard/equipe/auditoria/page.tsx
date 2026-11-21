@@ -1,9 +1,9 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
-import { ScrollText, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { ScrollText, ChevronLeft, ChevronRight } from "lucide-react";
 import { getAuditLogs } from "../actions";
 
 interface PageProps {
@@ -18,7 +18,8 @@ interface PageProps {
 }
 
 export default async function AuditoriaPage({ searchParams }: PageProps) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await searchParams;
   const page = parseInt(params.page || "1", 10);
 

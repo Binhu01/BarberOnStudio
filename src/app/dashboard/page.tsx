@@ -1,7 +1,8 @@
 // This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveOrganization, getOrganizationMemberCount } from "@/lib/organizations";
 import { redirect } from "next/navigation";
@@ -28,8 +29,9 @@ import { getInventoryStats } from "./estoque/actions";
 import { getFinancialDashboard } from "./financeiro/actions";
 
 export default async function DashboardPage() {
-  // Force dynamic rendering — reads request headers to opt out of static caching
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -40,8 +42,7 @@ export default async function DashboardPage() {
   const activeData = await getActiveOrganization();
 
   // Se não há organização ativa, renderiza placeholder e deixa o middleware
-  // redirecionar para /dashboard/onboarding. Não usamos redirect() aqui
-  // porque causa NEXT_REDIRECT durante a validação do instant.
+  // redirecionar para /dashboard/onboarding.
   if (!activeData) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -50,55 +51,34 @@ export default async function DashboardPage() {
     );
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", user.id)
-    .single();
+  // Parallel data fetching — all independent queries run concurrently
+  const [profileResult, memberCount, customerStats, leadStats, salesResult, productResult, financialResult, pipelineResult] =
+    await Promise.all([
+      supabase.from("profiles").select("full_name").eq("id", user.id).single(),
+      getOrganizationMemberCount(activeData.org.id),
+      getCustomerStats(activeData.org.id).catch(() => ({ active: 0, total: 0, inactive: 0 })),
+      getLeadStats(activeData.org.id).catch(() => ({ open: 0, won: 0, lost: 0, overdue: 0 })),
+      Promise.all([
+        getSalesStats(activeData.org.id).catch(() => null),
+        getQuoteStats(activeData.org.id).catch(() => null),
+      ]),
+      Promise.all([
+        getProductStats(activeData.org.id).catch(() => null),
+        getInventoryStats(activeData.org.id).catch(() => null),
+      ]),
+      getFinancialDashboard().catch(() => null),
+      getPipelineAndStages()
+        .then(async (pd) =>
+          pd?.pipeline?.id ? getLeadsByStage(pd.pipeline.id) : []
+        )
+        .catch(() => []),
+    ]);
 
-  const memberCount = await getOrganizationMemberCount(activeData.org.id);
-
-  // CRM metrics
-  const customerStats = await getCustomerStats(activeData.org.id);
-  const leadStats = await getLeadStats(activeData.org.id);
-
-  // Sales metrics
-  let salesStats: Awaited<ReturnType<typeof getSalesStats>> | null = null;
-  let quoteStats: Awaited<ReturnType<typeof getQuoteStats>> | null = null;
-  try {
-    salesStats = await getSalesStats(activeData.org.id);
-    quoteStats = await getQuoteStats(activeData.org.id);
-  } catch {
-    // Sales module may not have data yet
-  }
-
-  // Inventory & Product metrics
-  let productStats: Awaited<ReturnType<typeof getProductStats>> | null = null;
-  let inventoryStats: Awaited<ReturnType<typeof getInventoryStats>> | null = null;
-  try {
-    productStats = await getProductStats(activeData.org.id);
-    inventoryStats = await getInventoryStats(activeData.org.id);
-  } catch {
-    // Inventory module may not have data yet
-  }
-
-  // Financial metrics
-  let financialStats: Awaited<ReturnType<typeof getFinancialDashboard>> | null = null;
-  try {
-    financialStats = await getFinancialDashboard();
-  } catch {
-    // Financial module may not have data yet
-  }
-
-  let pipelineStages: { stage: { id: string; name: string }; leads: unknown[] }[] = [];
-  try {
-    const pipelineData = await getPipelineAndStages();
-    if (pipelineData?.pipeline?.id) {
-      pipelineStages = await getLeadsByStage(pipelineData.pipeline.id);
-    }
-  } catch {
-    // Pipeline may not exist yet — show empty state gracefully
-  }
+  const { data: profile } = profileResult;
+  const [salesStats, quoteStats] = salesResult;
+  const [productStats, inventoryStats] = productResult;
+  const financialStats = financialResult;
+  const pipelineStages = pipelineResult;
 
   const roleName: Record<string, string> = {
     OWNER: "Proprietário",

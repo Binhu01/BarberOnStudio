@@ -1,13 +1,15 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Scissors, TrendingUp, Clock, DollarSign } from "lucide-react";
+import { connection } from "next/server";
+import { Scissors, TrendingUp, DollarSign } from "lucide-react";
 import { getServicePopularity } from "@/app/dashboard/integracoes/actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function RelatoriosServicosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const services = await getServicePopularity().catch(() => []);
 
@@ -51,8 +53,8 @@ export default async function RelatoriosServicosPage() {
         </div>
         <div className="rounded-xl border border-barber-border bg-barber-graphite p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
-              <TrendingUp className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-barber-gold/10">
+              <TrendingUp className="h-5 w-5 text-barber-gold" />
             </div>
             <div>
               <p className="text-2xl font-bold text-barber-white">{totalPerformed}</p>
@@ -89,7 +91,7 @@ export default async function RelatoriosServicosPage() {
               </thead>
               <tbody className="divide-y divide-barber-border/50">
                 {services.map((svc, i) => (
-                  <tr key={i} className="transition-colors hover:bg-barber-dark/50/30">
+                  <tr key={i} className="transition-colors hover:bg-barber-dark/15">
                     <td className="py-3 pr-4 font-medium text-barber-muted">{i + 1}</td>
                     <td className="py-3 pr-4 font-medium text-barber-white">
                       {svc.service_name ?? "Sem nome"}

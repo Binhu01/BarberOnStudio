@@ -1,3 +1,8 @@
+// This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
+export const instant = false;
+
+import { connection } from "next/server";
 import { getScheduleBlocks } from "./actions";
 import { BlockManager } from "./_components/block-manager";
 import { Ban, CalendarDays, Users } from "lucide-react";
@@ -7,6 +12,8 @@ export default async function BloqueiosPage({
 }: {
   searchParams: Promise<{ member?: string }>;
 }) {
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await searchParams;
 
   const blocks = await getScheduleBlocks({

@@ -1,13 +1,14 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Package, DollarSign, TrendingUp, ShoppingCart } from "lucide-react";
+import { connection } from "next/server";
+import { Package, DollarSign, ShoppingCart } from "lucide-react";
 import { getProductSalesReport } from "@/app/dashboard/integracoes/actions";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function RelatoriosProdutosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const products = await getProductSalesReport().catch(() => []);
 
@@ -90,7 +91,7 @@ export default async function RelatoriosProdutosPage() {
               </thead>
               <tbody className="divide-y divide-barber-border/50">
                 {products.map((prod, i) => (
-                  <tr key={i} className="transition-colors hover:bg-barber-dark/50/30">
+                  <tr key={i} className="transition-colors hover:bg-barber-dark/30">
                     <td className="py-3 pr-4 font-medium text-barber-muted">{i + 1}</td>
                     <td className="py-3 pr-4 font-medium text-barber-white">
                       {prod.product_name ?? "Sem nome"}

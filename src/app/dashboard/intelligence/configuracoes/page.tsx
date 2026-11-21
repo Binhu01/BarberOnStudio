@@ -1,13 +1,15 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { ArrowLeft, Settings, Shield, AlertTriangle, Save } from "lucide-react";
 import { getAiSettings, getAiUsageStats, updateAiSettings } from "../actions";
 
 export default async function AiConfiguracoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const [settings, usage] = await Promise.all([
     getAiSettings().catch(() => null),
@@ -26,10 +28,10 @@ export default async function AiConfiguracoesPage() {
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
-        <div className="rounded-xl border border-red-200 bg-barber-error/10 p-8 text-center">
+        <div className="rounded-xl border border-barber-error/20 bg-barber-error/10 p-8 text-center">
           <Shield className="mx-auto h-12 w-12 text-barber-error" />
-          <h2 className="mt-4 font-display text-lg font-semibold text-red-900">Acesso negado</h2>
-          <p className="mt-2 text-sm text-red-800">
+          <h2 className="mt-4 font-display text-lg font-semibold text-barber-white">Acesso negado</h2>
+          <p className="mt-2 text-sm text-barber-muted">
             Apenas proprietários e administradores podem acessar as configurações do Barber-On Intelligence.
           </p>
         </div>
@@ -143,7 +145,7 @@ export default async function AiConfiguracoesPage() {
               defaultValue={settings.daily_limit}
               min={1}
               max={1000}
-              className="mt-2 block w-40 rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
+              className="mt-2 block w-40 rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             />
           </div>
 
@@ -163,7 +165,7 @@ export default async function AiConfiguracoesPage() {
               min={256}
               max={16384}
               step={256}
-              className="mt-2 block w-40 rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
+              className="mt-2 block w-40 rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             />
           </div>
 
@@ -203,7 +205,7 @@ export default async function AiConfiguracoesPage() {
               defaultValue={settings.custom_instructions ?? ""}
               rows={3}
               placeholder="Ex: Somos uma distribuidora de alimentos orgânicos com foco em varejo..."
-              className="mt-2 block w-full rounded-lg border border-barber-border px-3 py-2 text-sm text-barber-white placeholder:text-barber-muted/50 focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
+              className="mt-2 block w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white placeholder:text-barber-muted/50 focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             />
           </div>
 
@@ -211,7 +213,7 @@ export default async function AiConfiguracoesPage() {
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gold px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-barber-copper"
             >
               <Save className="h-4 w-4" />
               Salvar configurações
@@ -221,12 +223,12 @@ export default async function AiConfiguracoesPage() {
       </div>
 
       {/* Security Notice */}
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-5">
+      <div className="rounded-xl border border-barber-warning/20 bg-barber-warning/10 p-5">
         <div className="flex gap-3">
-          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" />
+          <AlertTriangle className="h-5 w-5 shrink-0 text-barber-warning" />
           <div>
-            <h3 className="text-sm font-semibold text-amber-900">Segurança e privacidade</h3>
-            <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-amber-800">
+            <h3 className="text-sm font-semibold text-barber-white">Segurança e privacidade</h3>
+            <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-barber-muted">
               <li>A IA consulta apenas dados que o usuário tem permissão para acessar.</li>
               <li>Ferramentas de escrita (criar tarefas, etc.) retornam propostas — nada é criado automaticamente.</li>
               <li>Todas as conversas são registradas e auditáveis pela organização.</li>

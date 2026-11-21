@@ -1,6 +1,6 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { MessageCircle, CheckCircle2, XCircle, Clock, Search, Filter } from "lucide-react";
 import { getNotificationLogs } from "../actions";
 
@@ -8,7 +8,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; 
   sent: { label: "Enviado", color: "text-barber-gold", bg: "bg-barber-gold/10", icon: MessageCircle },
   delivered: { label: "Entregue", color: "text-barber-success", bg: "bg-barber-success/10", icon: CheckCircle2 },
   failed: { label: "Falha", color: "text-barber-error", bg: "bg-barber-error/10", icon: XCircle },
-  pending: { label: "Pendente", color: "text-amber-600", bg: "bg-amber-50", icon: Clock },
+  pending: { label: "Pendente", color: "text-barber-warning", bg: "bg-barber-warning/10", icon: Clock },
 };
 
 const CHANNEL_LABELS: Record<string, string> = {
@@ -19,7 +19,8 @@ const CHANNEL_LABELS: Record<string, string> = {
 };
 
 export default async function WhatsappHistoricoPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const logs = await getNotificationLogs({ limit: 50 }).catch(() => []);
 
@@ -76,9 +77,9 @@ export default async function WhatsappHistoricoPage() {
                 const statusCfg = STATUS_CONFIG[log.status] ?? STATUS_CONFIG.pending;
                 const StatusIcon = statusCfg.icon;
                 return (
-                  <tr key={log.id} className="transition-colors hover:bg-barber-dark/50/30">
+                  <tr key={log.id} className="transition-colors hover:bg-barber-dark/30">
                     <td className="px-4 py-3">
-                      <span className="rounded bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-700 capitalize">
+                      <span className="rounded bg-barber-copper/10 px-2 py-0.5 text-[10px] font-medium text-barber-copper capitalize">
                         {CHANNEL_LABELS[log.channel] ?? log.channel}
                       </span>
                     </td>
@@ -95,7 +96,7 @@ export default async function WhatsappHistoricoPage() {
                     <td className="px-4 py-3 text-xs text-barber-muted">
                       {log.sent_at ? new Date(log.sent_at).toLocaleString("pt-BR") : "—"}
                     </td>
-                    <td className="max-w-[200px] truncate px-4 py-3 text-xs text-red-500">
+                    <td className="max-w-[200px] truncate px-4 py-3 text-xs text-barber-error">
                       {log.error_message ?? "—"}
                     </td>
                   </tr>

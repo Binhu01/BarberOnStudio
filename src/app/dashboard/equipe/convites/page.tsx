@@ -1,24 +1,49 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
-import Link from "next/link";
-import { MailPlus, Clock, CheckCircle2, XCircle, Copy, UserPlus } from "lucide-react";
-import { getInvitations, getDepartments } from "../actions";
+import { connection } from "next/server";
+import { MailPlus, Clock, CheckCircle2, XCircle, UserPlus } from "lucide-react";
+import { getInvitations, getDepartments, createInvitation, revokeInvitation } from "../actions";
 
 const statusConfig: Record<string, { label: string; icon: typeof Clock; className: string }> = {
-  pending: { label: "Pendente", icon: Clock, className: "bg-amber-50 text-amber-700" },
-  accepted: { label: "Aceito", icon: CheckCircle2, className: "bg-barber-success/10 text-green-700" },
-  revoked: { label: "Revogado", icon: XCircle, className: "bg-barber-error/10 text-red-700" },
-  expired: { label: "Expirado", icon: XCircle, className: "bg-gray-100 text-gray-600" },
+  pending: { label: "Pendente", icon: Clock, className: "bg-amber-500/10 text-amber-400" },
+  accepted: { label: "Aceito", icon: CheckCircle2, className: "bg-barber-success/10 text-green-400" },
+  revoked: { label: "Revogado", icon: XCircle, className: "bg-barber-error/10 text-red-400" },
+  expired: { label: "Expirado", icon: XCircle, className: "bg-white/5 text-barber-muted" },
 };
 
 export default async function ConvitesPage() {
-  await headers();
+  await connection();
   const [invitations, departments] = await Promise.all([getInvitations(), getDepartments()]);
 
   const pending = invitations.filter((i) => !i.accepted_at && !i.revoked_at);
   const past = invitations.filter((i) => i.accepted_at || i.revoked_at);
+
+  async function handleCreateInvite(formData: FormData) {
+    "use server";
+    const email = formData.get("email") as string;
+    const role = formData.get("role") as "OWNER" | "ADMIN" | "MANAGER" | "EMPLOYEE";
+    const departmentId = formData.get("department_id") as string | null;
+    if (!email || !role) return;
+    try {
+      await createInvitation({
+        email,
+        role,
+        department_id: departmentId || undefined,
+      });
+    } catch {
+      // Error handling via revalidation / UI feedback
+    }
+  }
+
+  async function handleRevoke(invitationId: string) {
+    "use server";
+    try {
+      await revokeInvitation(invitationId);
+    } catch {
+      // Error handling via revalidation
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -44,7 +69,7 @@ export default async function ConvitesPage() {
             </p>
           </div>
         </div>
-        <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <form action={handleCreateInvite} className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
             <label className="mb-1 block text-xs font-medium text-barber-muted">E-mail</label>
             <input
@@ -52,14 +77,14 @@ export default async function ConvitesPage() {
               name="email"
               required
               placeholder="nome@empresa.com"
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white placeholder:text-barber-muted/50 focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             />
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-barber-muted">Papel</label>
             <select
               name="role"
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="EMPLOYEE">Colaborador</option>
               <option value="MANAGER">Gerente</option>
@@ -70,7 +95,7 @@ export default async function ConvitesPage() {
             <label className="mb-1 block text-xs font-medium text-barber-muted">Departamento</label>
             <select
               name="department_id"
-              className="w-full rounded-lg border border-barber-border px-3 py-2 text-sm focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
+              className="w-full rounded-lg border border-barber-border bg-barber-dark px-3 py-2 text-sm text-barber-white focus:border-barber-gold focus:outline-none focus:ring-1 focus:ring-barber-gold"
             >
               <option value="">Sem departamento</option>
               {departments.filter((d) => d.is_active).map((d) => (
@@ -124,12 +149,14 @@ export default async function ConvitesPage() {
                       {new Date(inv.expires_at).toLocaleDateString("pt-BR")}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button
-                        type="button"
-                        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-barber-error hover:bg-barber-error/10"
-                      >
-                        Revogar
-                      </button>
+                      <form action={handleRevoke.bind(null, inv.id)} className="inline">
+                        <button
+                          type="submit"
+                          className="rounded-lg border border-barber-error/30 px-3 py-1.5 text-xs font-medium text-barber-error hover:bg-barber-error/10 transition-colors"
+                        >
+                          Revogar
+                        </button>
+                      </form>
                     </td>
                   </tr>
                 ))}

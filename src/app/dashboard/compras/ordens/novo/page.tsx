@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getSuppliers } from "../../actions";
@@ -10,7 +10,8 @@ import { PurchaseOrderForm } from "../_components/purchase-order-form";
 export default async function NovaOrdemPage(props: {
   searchParams: Promise<{ supplier_id?: string }>;
 }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await props.searchParams;
   const preselectedSupplierId = params.supplier_id ?? undefined;
 

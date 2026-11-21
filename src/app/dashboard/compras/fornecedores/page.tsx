@@ -1,18 +1,15 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   Users,
   Plus,
   Search,
   MoreHorizontal,
-  Archive,
   Mail,
   Phone,
-  MapPin,
-  Package,
 } from "lucide-react";
 import { getSuppliers } from "../actions";
 import type { SupplierStatus, SupplierType } from "@/types/purchases";
@@ -30,7 +27,8 @@ const TYPE_LABEL: Record<SupplierType, string> = {
 export default async function FornecedoresPage(props: {
   searchParams: Promise<{ q?: string; status?: string; page?: string }>;
 }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await props.searchParams;
   const search = params.q ?? "";
   const statusFilter = (params.status as SupplierStatus | undefined) ?? undefined;
@@ -124,7 +122,7 @@ export default async function FornecedoresPage(props: {
                 {result.suppliers.map((supplier) => {
                   const badge = STATUS_BADGE[supplier.status];
                   return (
-                    <tr key={supplier.id} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={supplier.id} className="transition-colors hover:bg-barber-dark/15">
                       <td className="px-4 py-3">
                         <Link
                           href={`/dashboard/compras/fornecedores/${supplier.id}`}

@@ -1,13 +1,14 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { SupplierForm } from "../_components/supplier-form";
 
 export default async function NovoFornecedorPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   return (
     <div className="space-y-6">

@@ -1,3 +1,8 @@
+// This page uses dynamic server data
+// With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
+export const instant = false;
+
+import { connection } from "next/server";
 import {
   getOpenCashSession,
   getCashSessions,
@@ -14,6 +19,8 @@ export default async function CaixaPage({
 }: {
   searchParams: Promise<{ date?: string; tab?: string }>;
 }) {
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const params = await searchParams;
   const targetDate = params.date ?? new Date().toISOString().slice(0, 10);
 

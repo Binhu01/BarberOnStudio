@@ -1,13 +1,13 @@
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Send, Plus, Users, CheckCircle2, XCircle, Clock, BarChart3 } from "lucide-react";
+import { connection } from "next/server";
+import { Send, Plus, Clock } from "lucide-react";
 import { getCampaigns } from "../actions";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  draft: { label: "Rascunho", color: "text-gray-600", bg: "bg-gray-50" },
+  draft: { label: "Rascunho", color: "text-barber-muted", bg: "bg-barber-dark" },
   scheduled: { label: "Agendada", color: "text-barber-gold", bg: "bg-barber-gold/10" },
-  sending: { label: "Enviando", color: "text-amber-600", bg: "bg-amber-50" },
+  sending: { label: "Enviando", color: "text-barber-warning", bg: "bg-barber-warning/10" },
   completed: { label: "Concluída", color: "text-barber-success", bg: "bg-barber-success/10" },
   cancelled: { label: "Cancelada", color: "text-barber-error", bg: "bg-barber-error/10" },
 };
@@ -22,7 +22,8 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 export default async function WhatsappCampanhasPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const campaigns = await getCampaigns().catch(() => []);
 
@@ -70,10 +71,10 @@ export default async function WhatsappCampanhasPage() {
                       <p className="mt-1 text-xs text-barber-muted">{campaign.description}</p>
                     )}
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-700">
+                      <span className="rounded bg-barber-gold/10 px-2 py-0.5 text-[10px] font-medium text-barber-gold">
                         {TYPE_LABELS[campaign.campaign_type] ?? campaign.campaign_type}
                       </span>
-                      <span className="rounded bg-barber-gold/10 px-2 py-0.5 text-[10px] font-medium text-blue-700 capitalize">
+                      <span className="rounded bg-barber-copper/10 px-2 py-0.5 text-[10px] font-medium text-barber-copper capitalize">
                         {campaign.channel}
                       </span>
                     </div>
@@ -97,7 +98,7 @@ export default async function WhatsappCampanhasPage() {
                     <p className="text-[10px] text-barber-muted">Entregues</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-amber-600">{campaign.sent_count - campaign.delivered_count}</p>
+                    <p className="text-lg font-bold text-barber-warning">{campaign.sent_count - campaign.delivered_count}</p>
                     <p className="text-[10px] text-barber-muted">Pendentes</p>
                   </div>
                   <div className="text-center">

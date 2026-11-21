@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { Package, AlertTriangle, Warehouse, ArrowRightLeft } from "lucide-react";
 import { getInventoryKPIs, getInventoryValuation, getMovementSummary } from "../actions";
 import { KPICard } from "../_components/kpi-card";
@@ -9,7 +9,8 @@ import { KPICard } from "../_components/kpi-card";
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 export default async function RelatoriosEstoquePage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
 
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000);

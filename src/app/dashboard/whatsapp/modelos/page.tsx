@@ -1,6 +1,6 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { FileText, Plus, Search, Tag } from "lucide-react";
 import { getNotificationTemplates } from "../actions";
 
@@ -14,7 +14,9 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default async function WhatsappModelosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const templates = await getNotificationTemplates().catch(() => []);
 
@@ -86,7 +88,7 @@ export default async function WhatsappModelosPage() {
                       <h3 className="text-sm font-medium text-barber-white">
                         {tpl.name}
                       </h3>
-                      <span className="rounded bg-barber-success/10 px-1.5 py-0.5 text-[10px] font-medium text-green-700">
+                      <span className="rounded bg-barber-success/10 px-1.5 py-0.5 text-[10px] font-medium text-barber-success">
                         Ativo
                       </span>
                     </div>

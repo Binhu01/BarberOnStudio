@@ -1,6 +1,6 @@
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { DollarSign, CreditCard, CheckCircle2, XCircle, Clock, Search } from "lucide-react";
 import { getClientSubscriptions } from "../actions";
 
@@ -9,12 +9,14 @@ const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: typeof CheckCircle2 }> = {
   active: { label: "Pago", color: "text-barber-success", bg: "bg-barber-success/10", icon: CheckCircle2 },
   expired: { label: "Vencido", color: "text-barber-error", bg: "bg-barber-error/10", icon: XCircle },
-  paused: { label: "Pausado", color: "text-amber-600", bg: "bg-amber-50", icon: Clock },
-  cancelled: { label: "Cancelado", color: "text-gray-600", bg: "bg-gray-50", icon: XCircle },
+  paused: { label: "Pausado", color: "text-barber-warning", bg: "bg-barber-warning/10", icon: Clock },
+  cancelled: { label: "Cancelado", color: "text-barber-muted", bg: "bg-barber-muted/10", icon: XCircle },
 };
 
 export default async function AssinaturasPagamentosPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
 
   const subscriptions = await getClientSubscriptions().catch(() => []);
 
@@ -114,7 +116,7 @@ export default async function AssinaturasPagamentosPage() {
                   const statusCfg = STATUS_CONFIG[sub.status] ?? STATUS_CONFIG.active;
                   const StatusIcon = statusCfg.icon;
                   return (
-                    <tr key={sub.id} className="transition-colors hover:bg-barber-dark/50/30">
+                    <tr key={sub.id} className="transition-colors hover:bg-barber-dark/30">
                       <td className="py-3 pr-4">
                         <p className="font-medium text-barber-white">{sub.customer_name ?? "Sem nome"}</p>
                         <p className="text-[10px] text-barber-muted">{sub.customer_phone ?? ""}</p>

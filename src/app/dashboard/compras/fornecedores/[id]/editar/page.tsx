@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -9,7 +9,8 @@ import { getSupplierById } from "../../../actions";
 import { SupplierForm } from "../../_components/supplier-form";
 
 export default async function EditarFornecedorPage(props: { params: Promise<{ id: string }> }) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const { id } = await props.params;
   const supplier = await getSupplierById(id);
 

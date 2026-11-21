@@ -7,7 +7,9 @@ import { getActiveOrganization } from "@/lib/organizations";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { SubscriptionManager } from "./_components/subscription-manager";
-import { getSubscriptionPlans, getClientSubscriptions, getSubscriptionSummary } from "./actions";
+import { getSubscriptionPlans, getClientSubscriptions, getSubscriptionSummary, getExpiringSubscriptions } from "./actions";
+import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Assinaturas | Barber-On Studio",
@@ -23,10 +25,11 @@ export default async function AssinaturasPage() {
   const orgResult = await getActiveOrganization();
   if (!orgResult) redirect("/onboarding");
 
-  const [plans, subscriptions, summary] = await Promise.all([
+  const [plans, subscriptions, summary, expiringSubs] = await Promise.all([
     getSubscriptionPlans(),
     getClientSubscriptions(),
     getSubscriptionSummary(),
+    getExpiringSubscriptions(3),
   ]);
 
   return (
@@ -93,6 +96,45 @@ export default async function AssinaturasPage() {
             </p>
           </div>
         </div>
+
+        {/* Expiring Subscriptions Alert */}
+        {expiringSubs.length > 0 && (
+          <div className="rounded-xl border border-barber-warning/30 bg-barber-warning/5 p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-barber-warning" />
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-semibold text-barber-warning">
+                  ⚠️ {expiringSubs.length} assinatura{expiringSubs.length !== 1 ? "s" : ""} vencendo em até 3 dias
+                </h3>
+                <ul className="mt-2 space-y-1">
+                  {expiringSubs.map((sub) => (
+                    <li key={sub.id} className="text-sm text-barber-light">
+                      <span className="font-medium text-barber-white">
+                        {sub.customer_name ?? "Cliente"}
+                      </span>{" "}
+                      — {sub.plan_name ?? "Plano"}{" "}
+                      <span className="text-barber-muted">
+                        (vence em {sub.days_remaining} dia{sub.days_remaining !== 1 ? "s" : ""} —{" "}
+                        {new Date(sub.current_period_end).toLocaleDateString("pt-BR")})
+                      </span>
+                      {!sub.auto_renew && (
+                        <span className="ml-1 text-xs font-medium text-barber-error">
+                          · Renovação automática desativada
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/dashboard/notificacoes"
+                  className="mt-2 inline-block text-xs font-medium text-barber-gold hover:text-barber-copper"
+                >
+                  Ver notificações →
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <SubscriptionManager

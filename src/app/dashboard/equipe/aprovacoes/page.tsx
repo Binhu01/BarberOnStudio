@@ -1,7 +1,7 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
+import { connection } from "next/server";
 import { ShieldAlert, CheckCircle2, XCircle, Clock, Ban, Users } from "lucide-react";
 import { getApprovalRequests } from "../actions";
 
@@ -21,7 +21,8 @@ const typeLabels: Record<string, string> = {
 };
 
 export default async function AprovacoesPage() {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+  await connection();
   const requests = await getApprovalRequests();
 
   const pending = requests.filter((r) => r.status === "pending");

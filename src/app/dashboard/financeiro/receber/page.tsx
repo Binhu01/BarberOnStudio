@@ -1,8 +1,8 @@
 // This page uses dynamic server data
 export const instant = false;
 
-import { headers } from "next/headers";
-import { Plus, Search, Filter, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { connection } from "next/server";
+import { Plus, Search, Filter, TrendingUp, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { getReceivables } from "../actions";
 
@@ -25,7 +25,9 @@ interface PageProps {
 }
 
 export default async function ReceberPage({ searchParams }: PageProps) {
-  await headers();
+  // Opt out of static prerendering — required when cacheComponents: true
+
+  await connection();
   const params = await searchParams;
   const search = params.search || "";
   const status = params.status || "all";
