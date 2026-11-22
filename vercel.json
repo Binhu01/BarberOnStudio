@@ -3,10 +3,6 @@
     {
       "path": "/api/cron/subscription-expiry",
       "schedule": "0 8 * * *"
-    },
-    {
-      "path": "/api/cron/notification-dispatch",
-      "schedule": "*/5 * * * *"
     }
   ]
 }
