@@ -1,14 +1,16 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
+ const baseUrl = "https://barberon.com.br";
+
  return {
  rules: [
  {
  userAgent: "*",
- allow: "/",
- disallow: ["/dashboard/", "/api/"],
+ allow: ["/", "/planos", "/login", "/cadastro", "/termos", "/privacidade"],
+ disallow: ["/dashboard/", "/api/", "/_next/"],
  },
  ],
- sitemap: "https://barberon.com.br/sitemap.xml",
+ sitemap: `${baseUrl}/sitemap.xml`,
  };
 }

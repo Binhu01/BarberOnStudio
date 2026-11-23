@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat, Geist } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { PWAInstallPrompt } from "./_components/pwa-install-prompt";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -121,6 +123,12 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-bo-black font-sans text-bo-white antialiased">
         {children}
+        <PWAInstallPrompt />
+        <Script
+          src="https://plausible.io/js/script.js"
+          data-domain="barberon.com.br"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
