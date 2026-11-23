@@ -29,6 +29,7 @@ import {
   getAppointmentStatusHistory,
   type AppointmentStatus,
 } from "../actions";
+import { AppointmentActions } from "../_components/appointment-actions";
 
 // ---------------------------------------------------------------------------
 // Status config
@@ -136,6 +137,9 @@ export default async function AppointmentDetailPage(props: {
   const StatusIcon = statusCfg.icon;
   const nextStatuses =
     VALID_TRANSITIONS[appointment.status] ?? [];
+  const canCancelOrReschedule = ["scheduled", "confirmed", "arrived", "in_progress"].includes(
+    appointment.status
+  );
 
   return (
     <div className="space-y-6">
@@ -324,38 +328,46 @@ export default async function AppointmentDetailPage(props: {
         </div>
       </div>
 
-      {/* Quick Actions — Status Transition Buttons */}
-      {nextStatuses.length > 0 && (
+      {/* Quick Actions — Status Transition Buttons + Cancel/Reschedule */}
+      {(nextStatuses.length > 0 || canCancelOrReschedule) && (
         <div className="rounded-xl border border-barber-border bg-barber-graphite p-5">
           <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-barber-muted">
             Ações rápidas
           </h3>
           <div className="flex flex-wrap gap-2">
-            {nextStatuses.map((nextStatus) => {
-              const cfg = STATUS_CONFIG[nextStatus];
-              const Icon = cfg.icon;
-              return (
-                <form
-                  key={nextStatus}
-                  action={`/dashboard/agenda/${id}/status`}
-                  method="POST"
-                  className="inline"
-                >
-                  <input
-                    type="hidden"
-                    name="new_status"
-                    value={nextStatus}
-                  />
-                  <button
-                    type="submit"
-                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${cfg.bg} ${cfg.color} hover:opacity-80`}
+            {nextStatuses
+              .filter((s) => s !== "cancelled")
+              .map((nextStatus) => {
+                const cfg = STATUS_CONFIG[nextStatus];
+                const Icon = cfg.icon;
+                return (
+                  <form
+                    key={nextStatus}
+                    action={`/dashboard/agenda/${id}/status`}
+                    method="POST"
+                    className="inline"
                   >
-                    <Icon className="h-3.5 w-3.5" />
-                    {cfg.label}
-                  </button>
-                </form>
-              );
-            })}
+                    <input
+                      type="hidden"
+                      name="new_status"
+                      value={nextStatus}
+                    />
+                    <button
+                      type="submit"
+                      className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${cfg.bg} ${cfg.color} hover:opacity-80`}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      {cfg.label}
+                    </button>
+                  </form>
+                );
+              })}
+            <AppointmentActions
+              eventId={id}
+              currentStatus={appointment.status}
+              currentStartAt={appointment.start_at}
+              currentEndAt={appointment.end_at}
+            />
           </div>
           <p className="mt-3 text-[11px] text-barber-muted">
             As alterações são registradas automaticamente no histórico.
