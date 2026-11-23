@@ -100,6 +100,126 @@ export async function getPlanEntitlements(planVersionId: string): Promise<PlanEn
 }
 
 // ============================================================================
+// TRIAL SELF-SERVICE
+// ============================================================================
+
+/**
+ * Inicia um trial gratuito no plano PRO para uma organização.
+ * Chamado automaticamente durante o onboarding (createOrganization).
+ * Usa service role client pois é executado em contexto server-to-server.
+ */
+export async function startTrialSubscription(organizationId: string) {
+  const supabase = await createClient();
+
+  // Buscar a versão atual do plano PRO (published, sem valid_until)
+  const { data: proPlan } = await supabase
+    .from("subscription_plans")
+    .select("id")
+    .eq("slug", "pro")
+    .eq("is_active", true)
+    .single();
+
+  if (!proPlan) {
+    console.error("[startTrial] Plano PRO não encontrado");
+    return { error: "Plano PRO não configurado" };
+  }
+
+  const { data: proVersion } = await supabase
+    .from("subscription_plan_versions")
+    .select("id, trial_days")
+    .eq("plan_id", proPlan.id)
+    .not("published_at", "is", null)
+    .is("valid_until", null)
+    .order("version", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (!proVersion) {
+    console.error("[startTrial] Versão do plano PRO não encontrada");
+    return { error: "Versão do plano PRO não disponível" };
+  }
+
+  const trialDays = proVersion.trial_days ?? 14;
+  const now = new Date();
+  const trialEnd = new Date(now);
+  trialEnd.setDate(trialEnd.getDate() + trialDays);
+
+  // Verificar se já existe assinatura (UNIQUE constraint)
+  const { data: existingSub } = await supabase
+    .from("subscriptions")
+    .select("id, status")
+    .eq("organization_id", organizationId)
+    .maybeSingle();
+
+  if (existingSub) {
+    // Se já tem assinatura ativa/trialing, não fazer nada
+    if (["active", "trialing"].includes(existingSub.status)) {
+      return { subscriptionId: existingSub.id, alreadyExisted: true };
+    }
+    // Se está cancelada/expirada, atualizar para novo trial
+    const { error: updateError } = await supabase
+      .from("subscriptions")
+      .update({
+        plan_version_id: proVersion.id,
+        status: "trialing",
+        trial_start: now.toISOString(),
+        trial_end: trialEnd.toISOString(),
+        current_period_start: now.toISOString(),
+        current_period_end: trialEnd.toISOString(),
+        billing_interval: "monthly",
+        updated_at: now.toISOString(),
+      })
+      .eq("id", existingSub.id);
+
+    if (updateError) {
+      console.error("[startTrial] Erro ao reativar assinatura:", updateError);
+      return { error: updateError.message };
+    }
+
+    // Log event
+    await supabase.from("subscription_events").insert({
+      organization_id: organizationId,
+      subscription_id: existingSub.id,
+      event_type: "trial_started",
+      metadata: { trial_days: trialDays, plan: "pro", source: "onboarding_reactivation" },
+    });
+
+    return { subscriptionId: existingSub.id, reactivated: true };
+  }
+
+  // Criar nova assinatura com trial
+  const { data: newSub, error: subError } = await supabase
+    .from("subscriptions")
+    .insert({
+      organization_id: organizationId,
+      plan_version_id: proVersion.id,
+      status: "trialing",
+      trial_start: now.toISOString(),
+      trial_end: trialEnd.toISOString(),
+      current_period_start: now.toISOString(),
+      current_period_end: trialEnd.toISOString(),
+      billing_interval: "monthly",
+    })
+    .select("id")
+    .single();
+
+  if (subError || !newSub) {
+    console.error("[startTrial] Erro ao criar assinatura:", subError);
+    return { error: subError?.message ?? "Erro desconhecido" };
+  }
+
+  // Log event
+  await supabase.from("subscription_events").insert({
+    organization_id: organizationId,
+    subscription_id: newSub.id,
+    event_type: "trial_started",
+    metadata: { trial_days: trialDays, plan: "pro", source: "onboarding" },
+  });
+
+  return { subscriptionId: newSub.id };
+}
+
+// ============================================================================
 // EMPRESA: Minha Assinatura
 // ============================================================================
 

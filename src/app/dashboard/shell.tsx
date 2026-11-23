@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { switchOrganization } from "./actions";
+import { TrialBanner } from "./_components/trial-banner";
 import type { UserRole } from "@/types/database";
 
 interface NavSubItem {
@@ -134,6 +135,12 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Renovar assinatura", href: "/dashboard/billing/renew", icon: RefreshCw },
 ];
 
+interface TrialInfo {
+  trialEnd: string;
+  planName: string;
+  status: string;
+}
+
 interface DashboardShellProps {
   user: {
     id: string;
@@ -148,6 +155,7 @@ interface DashboardShellProps {
     role: UserRole;
   } | null;
   allOrgs: Array<{ id: string; name: string; slug: string }>;
+  trial?: TrialInfo | null;
   children: React.ReactNode;
 }
 
@@ -155,6 +163,7 @@ export function DashboardShell({
   user,
   activeOrg,
   allOrgs,
+  trial,
   children,
 }: DashboardShellProps) {
   const pathname = usePathname();
@@ -413,7 +422,16 @@ export function DashboardShell({
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6">
+          {trial && (
+            <TrialBanner
+              trialEnd={trial.trialEnd}
+              planName={trial.planName}
+              status={trial.status}
+            />
+          )}
+          {children}
+        </main>
       </div>
     </div>
   );

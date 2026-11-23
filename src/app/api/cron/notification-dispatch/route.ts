@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { connection } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { processNotificationLog } from "@/lib/notifications/whatsapp-sender";
+import { createModuleLogger } from "@/lib/observability/logger";
+
+const logger = createModuleLogger("cron:notification-dispatch");
 
 // This route uses dynamic server data
 export const instant = false;
@@ -54,6 +57,8 @@ async function handleDispatch(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   try {
+    logger.info("Notification dispatch started");
+
     // Buscar notificações pendentes na fila (queued ou failed com retries restantes)
     const { data: pendingLogs, error: queryError } = await supabase
       .from("notification_logs")
@@ -96,6 +101,13 @@ async function handleDispatch(request: Request) {
       }
     }
 
+    logger.info("Notification dispatch completed", {
+      total_pending: pendingLogs?.length ?? 0,
+      sent,
+      failed,
+      skipped,
+    });
+
     return NextResponse.json({
       success: true,
       processed_at: new Date().toISOString(),
@@ -105,7 +117,7 @@ async function handleDispatch(request: Request) {
       skipped,
     });
   } catch (error) {
-    console.error("[cron/notification-dispatch] Error:", error);
+    logger.fatal("Notification dispatch failed", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         error: "Internal server error",

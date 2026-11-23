@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { connection } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { processNotificationLog } from "@/lib/notifications/whatsapp-sender";
+import { createModuleLogger } from "@/lib/observability/logger";
+
+const logger = createModuleLogger("cron:subscription-expiry");
 
 // This route uses dynamic server data
 export const instant = false;
@@ -248,12 +251,12 @@ async function handleExpiryCheck(request: Request) {
             try {
               await processNotificationLog(supabase, newLog as any);
             } catch (sendErr) {
-              console.error(`[cron/subscription-expiry] Immediate send failed for subscription ${sub.id}:`, sendErr);
+              logger.error("Immediate send failed", { subscription_id: sub.id }, sendErr instanceof Error ? sendErr : new Error(String(sendErr)));
               // Não bloqueia — o cron de dispatch tentará novamente
             }
           }
         } else {
-          console.error(`[cron/subscription-expiry] Failed to create notification_log for subscription ${sub.id}:`, logError);
+          logger.error("Failed to create notification_log", { subscription_id: sub.id, error: logError?.message });
         }
       }
 
@@ -270,7 +273,7 @@ async function handleExpiryCheck(request: Request) {
       date_range: { from: todayStr, to: thresholdStr },
     });
   } catch (error) {
-    console.error("[cron/subscription-expiry] Error:", error);
+    logger.fatal("Cron execution failed", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         error: "Internal server error",
