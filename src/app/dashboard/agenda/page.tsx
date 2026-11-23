@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { getAppointments, getAppointmentStats } from "./actions";
 import type { AppointmentStatus } from "./actions";
+import { AppointmentListActions } from "./_components/appointment-list-actions";
 
 // ---------------------------------------------------------------------------
 // Status helpers
@@ -291,7 +292,7 @@ export default async function AgendaPage() {
                         </div>
                       </div>
 
-                      {/* Status badge */}
+                      {/* Status badge + actions */}
                       <div className="flex items-center gap-2 sm:justify-end">
                         <span
                           className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium ${statusCfg.bg} ${statusCfg.color}`}
@@ -299,6 +300,12 @@ export default async function AgendaPage() {
                           <StatusIcon className="h-3 w-3" />
                           {statusCfg.label}
                         </span>
+                        <AppointmentListActions
+                          eventId={appt.event_id}
+                          status={appt.status}
+                          startAt={appt.start_at}
+                          endAt={appt.end_at}
+                        />
                       </div>
                     </Link>
                   );
