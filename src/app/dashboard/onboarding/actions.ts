@@ -71,16 +71,16 @@ export async function createOrganization(input: CreateOrgInput) {
     return { error: "Erro ao vincular usuário à organização." };
   }
 
-  // Ativar trial gratuito no plano PRO automaticamente
+  // Ativar assinatura PRO diretamente (cobrança mensal manual)
   try {
-    const { startTrialSubscription } = await import("@/app/dashboard/billing/actions");
-    const trialResult = await startTrialSubscription(org.id);
-    if (trialResult.error) {
-      console.warn("[createOrganization] Trial não ativado:", trialResult.error);
-      // Não bloquear onboarding se trial falhar — org já criada com sucesso
+    const { activateSubscription } = await import("@/app/dashboard/billing/actions");
+    const subResult = await activateSubscription(org.id);
+    if (subResult.error) {
+      console.warn("[createOrganization] Assinatura não ativada:", subResult.error);
+      // Não bloquear onboarding se ativação falhar — org já criada com sucesso
     }
-  } catch (trialErr) {
-    console.warn("[createOrganization] Erro ao iniciar trial:", trialErr);
+  } catch (subErr) {
+    console.warn("[createOrganization] Erro ao ativar assinatura:", subErr);
     // Não bloquear onboarding
   }
 

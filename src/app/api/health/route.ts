@@ -5,8 +5,7 @@
 // Retorna status dos serviços críticos: DB, Auth, APIs externas.
 // =============================================================================
 
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+import { connection } from "next/server";
 
 interface HealthCheckResult {
   status: "healthy" | "degraded" | "unhealthy";
@@ -79,6 +78,8 @@ async function checkSupabaseAuth(): Promise<{ status: "up" | "down" | "slow"; la
 }
 
 export async function GET(request: Request): Promise<Response> {
+  await connection();
+
   // Opcional: proteger com token para evitar exposição pública
   const authHeader = request.headers.get("authorization");
   const expectedToken = process.env.HEALTH_CHECK_TOKEN;

@@ -100,15 +100,15 @@ export async function getPlanEntitlements(planVersionId: string): Promise<PlanEn
 }
 
 // ============================================================================
-// TRIAL SELF-SERVICE
+// ATIVAÇÃO DE ASSINATURA (SEM TRIAL — COBRANÇA MANUAL MENSAL)
 // ============================================================================
 
 /**
- * Inicia um trial gratuito no plano PRO para uma organização.
+ * Ativa assinatura PRO diretamente para uma organização (sem período de trial).
+ * Cobrança mensal é feita manualmente pelo administrador via PIX/transferência.
  * Chamado automaticamente durante o onboarding (createOrganization).
- * Usa service role client pois é executado em contexto server-to-server.
  */
-export async function startTrialSubscription(organizationId: string) {
+export async function activateSubscription(organizationId: string) {
   const supabase = await createClient();
 
   // Buscar a versão atual do plano PRO (published, sem valid_until)
@@ -120,13 +120,13 @@ export async function startTrialSubscription(organizationId: string) {
     .single();
 
   if (!proPlan) {
-    console.error("[startTrial] Plano PRO não encontrado");
+    console.error("[activateSubscription] Plano PRO não encontrado");
     return { error: "Plano PRO não configurado" };
   }
 
   const { data: proVersion } = await supabase
     .from("subscription_plan_versions")
-    .select("id, trial_days")
+    .select("id")
     .eq("plan_id", proPlan.id)
     .not("published_at", "is", null)
     .is("valid_until", null)
@@ -135,14 +135,14 @@ export async function startTrialSubscription(organizationId: string) {
     .single();
 
   if (!proVersion) {
-    console.error("[startTrial] Versão do plano PRO não encontrada");
+    console.error("[activateSubscription] Versão do plano PRO não encontrada");
     return { error: "Versão do plano PRO não disponível" };
   }
 
-  const trialDays = proVersion.trial_days ?? 14;
   const now = new Date();
-  const trialEnd = new Date(now);
-  trialEnd.setDate(trialEnd.getDate() + trialDays);
+  // Período mensal: hoje até daqui a 30 dias
+  const periodEnd = new Date(now);
+  periodEnd.setDate(periodEnd.getDate() + 30);
 
   // Verificar se já existe assinatura (UNIQUE constraint)
   const { data: existingSub } = await supabase
@@ -152,27 +152,27 @@ export async function startTrialSubscription(organizationId: string) {
     .maybeSingle();
 
   if (existingSub) {
-    // Se já tem assinatura ativa/trialing, não fazer nada
-    if (["active", "trialing"].includes(existingSub.status)) {
+    // Se já tem assinatura ativa, não fazer nada
+    if (existingSub.status === "active") {
       return { subscriptionId: existingSub.id, alreadyExisted: true };
     }
-    // Se está cancelada/expirada, atualizar para novo trial
+    // Se está cancelada/expirada/trialing, atualizar para active
     const { error: updateError } = await supabase
       .from("subscriptions")
       .update({
         plan_version_id: proVersion.id,
-        status: "trialing",
-        trial_start: now.toISOString(),
-        trial_end: trialEnd.toISOString(),
+        status: "active",
+        trial_start: null,
+        trial_end: null,
         current_period_start: now.toISOString(),
-        current_period_end: trialEnd.toISOString(),
+        current_period_end: periodEnd.toISOString(),
         billing_interval: "monthly",
         updated_at: now.toISOString(),
       })
       .eq("id", existingSub.id);
 
     if (updateError) {
-      console.error("[startTrial] Erro ao reativar assinatura:", updateError);
+      console.error("[activateSubscription] Erro ao reativar assinatura:", updateError);
       return { error: updateError.message };
     }
 
@@ -180,31 +180,31 @@ export async function startTrialSubscription(organizationId: string) {
     await supabase.from("subscription_events").insert({
       organization_id: organizationId,
       subscription_id: existingSub.id,
-      event_type: "trial_started",
-      metadata: { trial_days: trialDays, plan: "pro", source: "onboarding_reactivation" },
+      event_type: "subscription_activated",
+      metadata: { plan: "pro", billing: "manual_monthly", source: "onboarding_reactivation" },
     });
 
     return { subscriptionId: existingSub.id, reactivated: true };
   }
 
-  // Criar nova assinatura com trial
+  // Criar nova assinatura ativa (sem trial)
   const { data: newSub, error: subError } = await supabase
     .from("subscriptions")
     .insert({
       organization_id: organizationId,
       plan_version_id: proVersion.id,
-      status: "trialing",
-      trial_start: now.toISOString(),
-      trial_end: trialEnd.toISOString(),
+      status: "active",
+      trial_start: null,
+      trial_end: null,
       current_period_start: now.toISOString(),
-      current_period_end: trialEnd.toISOString(),
+      current_period_end: periodEnd.toISOString(),
       billing_interval: "monthly",
     })
     .select("id")
     .single();
 
   if (subError || !newSub) {
-    console.error("[startTrial] Erro ao criar assinatura:", subError);
+    console.error("[activateSubscription] Erro ao criar assinatura:", subError);
     return { error: subError?.message ?? "Erro desconhecido" };
   }
 
@@ -212,11 +212,16 @@ export async function startTrialSubscription(organizationId: string) {
   await supabase.from("subscription_events").insert({
     organization_id: organizationId,
     subscription_id: newSub.id,
-    event_type: "trial_started",
-    metadata: { trial_days: trialDays, plan: "pro", source: "onboarding" },
+    event_type: "subscription_activated",
+    metadata: { plan: "pro", billing: "manual_monthly", source: "onboarding" },
   });
 
   return { subscriptionId: newSub.id };
+}
+
+/** @deprecated Use activateSubscription instead. Kept for backward compatibility. */
+export async function startTrialSubscription(organizationId: string) {
+  return activateSubscription(organizationId);
 }
 
 // ============================================================================
