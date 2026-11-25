@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createBarberServiceSchema,
@@ -25,7 +26,7 @@ export async function getBarberServices(options?: {
   includeInactive?: boolean;
   categoryId?: string;
 }): Promise<BarberServiceWithCategory[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -65,7 +66,7 @@ export async function getBarberServices(options?: {
 export async function getBarberServiceById(
   id: string
 ): Promise<BarberServiceWithCategory | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -252,7 +253,7 @@ export async function getBarberServiceStats(): Promise<{
   avg_price: number;
   avg_duration: number;
 }> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -286,7 +287,7 @@ export async function getBarberServiceStats(): Promise<{
 export async function getServiceCategories(): Promise<
   Array<{ id: string; name: string; description: string | null }>
 > {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase

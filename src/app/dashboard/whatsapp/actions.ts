@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { automationRuleSchema, campaignSchema } from "./schemas";
 import type { AutomationRule, Campaign, NotificationLogEntry, AutomationStats } from "./schemas";
@@ -24,7 +25,7 @@ async function getOrg() {
 // ---------------------------------------------------------------------------
 
 export async function getAutomationRules(): Promise<AutomationRule[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -132,7 +133,7 @@ export async function getCampaigns(filters?: {
   status?: string;
   type?: string;
 }): Promise<Campaign[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -208,10 +209,11 @@ export async function createCampaign(
 
 export async function resolveCampaignRecipients(campaignId: string): Promise<number> {
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
   const org = await getOrg();
 
   // Verificar propriedade
-  const { data: campaign } = await supabase
+  const { data: campaign } = await adminSupabase
     .from("campaigns")
     .select("id")
     .eq("id", campaignId)
@@ -220,7 +222,7 @@ export async function resolveCampaignRecipients(campaignId: string): Promise<num
 
   if (!campaign) throw new Error("Campanha não encontrada");
 
-  const { data, error } = await supabase.rpc("resolve_campaign_recipients", {
+  const { data, error } = await adminSupabase.rpc("resolve_campaign_recipients", {
     p_campaign_id: campaignId,
   });
 
@@ -231,11 +233,12 @@ export async function resolveCampaignRecipients(campaignId: string): Promise<num
 
 export async function launchCampaign(campaignId: string): Promise<void> {
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
   // Verificar propriedade
-  const { data: campaign } = await supabase
+  const { data: campaign } = await adminSupabase
     .from("campaigns")
     .select("id, status, total_recipients")
     .eq("id", campaignId)
@@ -256,7 +259,7 @@ export async function launchCampaign(campaignId: string): Promise<void> {
     .eq("id", campaignId);
 
   // Buscar destinatários pendentes e criar notification_logs
-  const { data: recipients } = await supabase
+  const { data: recipients } = await adminSupabase
     .from("campaign_recipients")
     .select("id, recipient_profile_id, recipient_phone, recipient_email, recipient_name")
     .eq("campaign_id", campaignId)
@@ -291,7 +294,7 @@ export async function launchCampaign(campaignId: string): Promise<void> {
   }
 
   // Atualizar contadores
-  const { count: sentCount } = await supabase
+  const { count: sentCount } = await adminSupabase
     .from("campaign_recipients")
     .select("id", { count: "exact", head: true })
     .eq("campaign_id", campaignId)
@@ -326,7 +329,7 @@ export async function getNotificationLogs(filters?: {
   channel?: string;
   limit?: number;
 }): Promise<NotificationLogEntry[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -383,7 +386,7 @@ export async function getNotificationTemplates(category?: string): Promise<{
   variables: any[];
   is_active: boolean;
 }[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -410,7 +413,7 @@ export async function getNotificationTemplates(category?: string): Promise<{
 // ---------------------------------------------------------------------------
 
 export async function getAutomationStats(): Promise<AutomationStats> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -472,7 +475,7 @@ export async function getWhatsappConfig(): Promise<{
   reminder_hours_before: number;
   expiry_reminder_days: number;
 } | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -529,7 +532,7 @@ export async function upsertWhatsappConfig(input: {
 // ---------------------------------------------------------------------------
 
 export async function processPendingAutomationEvents(): Promise<{ queued: number }> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data: events, error } = await supabase.rpc("get_pending_automation_events", {

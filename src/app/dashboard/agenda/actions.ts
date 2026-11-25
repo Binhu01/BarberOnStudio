@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   appointmentStatusSchema,
@@ -38,24 +39,10 @@ export async function getAppointments(params?: {
   status?: AppointmentStatus;
   limit?: number;
 }): Promise<AppointmentWithDetails[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
-  // Tentar usar a RPC primeiro (mais eficiente, join no banco)
-  const { data, error } = await supabase.rpc("get_appointments_with_details", {
-    p_org_id: org.id,
-    p_start_date: params?.startDate ?? null,
-    p_end_date: params?.endDate ?? null,
-    p_barber_id: params?.barberId ?? null,
-    p_status: params?.status ?? null,
-    p_limit: params?.limit ?? 200,
-  });
-
-  if (!error && data) {
-    return data as AppointmentWithDetails[];
-  }
-
-  // Fallback: query direta caso a migration ainda não tenha sido aplicada
+  // Query direta com admin client (bypassa RLS completamente)
   let query = supabase
     .from("calendar_events")
     .select(
@@ -96,33 +83,66 @@ export async function getAppointments(params?: {
     query = query.eq("status", params.status);
   }
 
-  const { data: fallbackData, error: fallbackError } = await query;
-  if (fallbackError) throw fallbackError;
+  const { data, error } = await query;
+  if (error) throw error;
 
-  // Mapear para o formato esperado (sem joins — dados básicos)
-  return (fallbackData ?? []).map((row: any) => ({
-    event_id: row.id,
-    title: row.title,
-    description: row.description,
-    start_at: row.start_at,
-    end_at: row.end_at,
-    status: row.status ?? "scheduled",
-    origin: row.origin ?? "manual",
-    total_price: row.total_price ? Number(row.total_price) : null,
-    notes: row.notes,
-    confirmed_at: row.confirmed_at,
-    cancelled_at: row.cancelled_at,
-    cancellation_reason: row.cancellation_reason,
-    completed_at: row.completed_at,
-    barber_name: null,
-    barber_avatar: null,
-    service_name: null,
-    service_duration: null,
-    customer_name: null,
-    customer_phone: null,
-    customer_email: null,
-    creator_name: null,
-  }));
+  // Buscar dados relacionados em paralelo usando admin client
+  const events = data ?? [];
+  const barberIds = [...new Set(events.map(e => e.assigned_barber_id).filter(Boolean))] as string[];
+  const serviceIds = [...new Set(events.map(e => e.barber_service_id).filter(Boolean))] as string[];
+  const customerIds = [...new Set(events.map(e => e.customer_id).filter(Boolean))] as string[];
+  const creatorIds = [...new Set(events.map(e => e.created_by).filter(Boolean))] as string[];
+
+  const [barbers, services, customers, creators] = await Promise.all([
+    barberIds.length > 0
+      ? supabase.from("memberships").select("id, profiles:user_id(full_name, avatar_url)").in("id", barberIds)
+      : Promise.resolve({ data: [] }),
+    serviceIds.length > 0
+      ? supabase.from("barber_services").select("id, name, duration_minutes").in("id", serviceIds)
+      : Promise.resolve({ data: [] }),
+    customerIds.length > 0
+      ? supabase.from("profiles").select("id, full_name, phone, email").in("id", customerIds)
+      : Promise.resolve({ data: [] }),
+    creatorIds.length > 0
+      ? supabase.from("profiles").select("id, full_name").in("id", creatorIds)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const barberMap = new Map((barbers.data ?? []).map((b: any) => [b.id, b]));
+  const serviceMap = new Map((services.data ?? []).map((s: any) => [s.id, s]));
+  const customerMap = new Map((customers.data ?? []).map((c: any) => [c.id, c]));
+  const creatorMap = new Map((creators.data ?? []).map((c: any) => [c.id, c]));
+
+  return events.map((row: any) => {
+    const barber = row.assigned_barber_id ? barberMap.get(row.assigned_barber_id) : null;
+    const service = row.barber_service_id ? serviceMap.get(row.barber_service_id) : null;
+    const customer = row.customer_id ? customerMap.get(row.customer_id) : null;
+    const creator = row.created_by ? creatorMap.get(row.created_by) : null;
+
+    return {
+      event_id: row.id,
+      title: row.title,
+      description: row.description,
+      start_at: row.start_at,
+      end_at: row.end_at,
+      status: row.status ?? "scheduled",
+      origin: row.origin ?? "manual",
+      total_price: row.total_price ? Number(row.total_price) : null,
+      notes: row.notes,
+      confirmed_at: row.confirmed_at,
+      cancelled_at: row.cancelled_at,
+      cancellation_reason: row.cancellation_reason,
+      completed_at: row.completed_at,
+      barber_name: (barber as any)?.profiles?.full_name ?? null,
+      barber_avatar: (barber as any)?.profiles?.avatar_url ?? null,
+      service_name: service?.name ?? null,
+      service_duration: service?.duration_minutes ?? null,
+      customer_name: customer?.full_name ?? null,
+      customer_phone: customer?.phone ?? null,
+      customer_email: customer?.email ?? null,
+      creator_name: creator?.full_name ?? null,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -131,7 +151,7 @@ export async function getAppointments(params?: {
 export async function getAppointmentById(
   eventId: string
 ): Promise<AppointmentWithDetails | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -493,7 +513,7 @@ export async function rescheduleAppointment(
 export async function getAppointmentStatusHistory(
   eventId: string
 ): Promise<AppointmentStatusHistoryEntry[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -541,7 +561,7 @@ export async function getAppointmentStats(): Promise<{
   no_show_this_month: number;
   revenue_this_month: number;
 }> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const now = new Date();

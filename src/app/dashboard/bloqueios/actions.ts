@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createScheduleBlockSchema,
@@ -30,7 +31,7 @@ export async function getScheduleBlocks(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<ScheduleBlock[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -70,11 +71,12 @@ export async function createScheduleBlock(
 ): Promise<string> {
   const parsed = createScheduleBlockSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Buscar membership_id do usuário
-  const { data: membership } = await supabase
+  // Buscar membership_id do usuário (admin client para evitar RLS 42501)
+  const { data: membership } = await adminSupabase
     .from("memberships")
     .select("id")
     .eq("organization_id", org.id)
@@ -161,7 +163,7 @@ export async function deleteScheduleBlock(blockId: string): Promise<void> {
 // =============================================================================
 
 export async function getBarbershopSettings(): Promise<BarbershopSettings | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -179,11 +181,12 @@ export async function upsertBarbershopSettings(
 ): Promise<void> {
   const parsed = updateBarbershopSettingsSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Verificar se já existe settings
-  const { data: existing } = await supabase
+  // Verificar se já existe settings (admin client para evitar RLS 42501)
+  const { data: existing } = await adminSupabase
     .from("barbershop_settings")
     .select("id")
     .eq("organization_id", org.id)

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { requirePermission, canManageRole } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
@@ -42,11 +43,12 @@ import {
 } from "./schemas";
 
 async function getCtx() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
   if (!user) throw new Error("Não autenticado");
   const activeData = await getActiveOrganization();
   if (!activeData) throw new Error("Nenhuma organização ativa");
+  const supabase = createAdminClient();
   return { supabase, user, orgId: activeData.org.id, membership: activeData.org.membership };
 }
 

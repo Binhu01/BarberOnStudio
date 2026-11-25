@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { Customer, CustomerType, CustomerStatus } from "@/types/crm";
 import {
   createCustomerSchema,
@@ -72,7 +73,7 @@ export async function getCustomers(params: {
   page?: number;
   pageSize?: number;
 }) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getActiveOrg(supabase);
 
   if ("error" in org) {
@@ -124,7 +125,7 @@ export async function getCustomers(params: {
 }
 
 export async function getCustomerById(id: string) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getActiveOrg(supabase);
 
   if ("error" in org) {
@@ -153,7 +154,8 @@ export async function createCustomer(data: CreateCustomerInput) {
   }
 
   const supabase = await createClient();
-  const org = await getActiveOrg(supabase);
+  const adminSupabase = createAdminClient();
+  const org = await getActiveOrg(adminSupabase);
 
   if ("error" in org) {
     return { error: org.error };
@@ -183,14 +185,15 @@ export async function updateCustomer(id: string, data: UpdateCustomerInput) {
   }
 
   const supabase = await createClient();
-  const org = await getActiveOrg(supabase);
+  const adminSupabase = createAdminClient();
+  const org = await getActiveOrg(adminSupabase);
 
   if ("error" in org) {
     return { error: org.error };
   }
 
   // Verify customer belongs to user's org
-  const { data: existing } = await supabase
+  const { data: existing } = await adminSupabase
     .from("customers")
     .select("id")
     .eq("id", id)
@@ -217,14 +220,15 @@ export async function updateCustomer(id: string, data: UpdateCustomerInput) {
 
 export async function archiveCustomer(id: string) {
   const supabase = await createClient();
-  const org = await getActiveOrg(supabase);
+  const adminSupabase = createAdminClient();
+  const org = await getActiveOrg(adminSupabase);
 
   if ("error" in org) {
     return { error: org.error };
   }
 
   // Verify customer belongs to user's org
-  const { data: existing } = await supabase
+  const { data: existing } = await adminSupabase
     .from("customers")
     .select("id")
     .eq("id", id)
@@ -248,7 +252,7 @@ export async function archiveCustomer(id: string) {
 }
 
 export async function getCustomerStats(orgId: string) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from("customers")

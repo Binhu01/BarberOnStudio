@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createSubscriptionPlanSchema,
@@ -32,7 +33,7 @@ async function getOrg() {
 // =============================================================================
 
 export async function getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -47,7 +48,7 @@ export async function getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
 }
 
 export async function getActiveSubscriptionPlans(): Promise<SubscriptionPlan[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -165,7 +166,7 @@ export async function getClientSubscriptions(filters?: {
   status?: string;
   customer_id?: string;
 }): Promise<ClientSubscription[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -395,7 +396,7 @@ export async function processRenewals(): Promise<RenewalResult> {
 export async function getSubscriptionHistory(
   subscriptionId: string
 ): Promise<SubscriptionHistoryEntry[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -419,7 +420,7 @@ export async function getSubscriptionHistory(
 }
 
 export async function getSubscriptionSummary(): Promise<SubscriptionSummary> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase.rpc("get_subscription_summary", {
@@ -451,7 +452,7 @@ export async function getPlanBenefits(planId: string): Promise<{
   description: string | null;
   is_active: boolean;
 }[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -522,7 +523,7 @@ export async function getSubscriptionServiceUsage(
   used_at: string;
   calendar_event_id: string | null;
 }[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -550,7 +551,7 @@ export async function getSubscriptionUsageSummary(
   period_start: string;
   period_end: string;
 } | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -654,7 +655,7 @@ export async function generateSubscriptionReceivable(
 export async function getExpiringSubscriptions(
   daysThreshold: number = 3
 ): Promise<ExpiringSubscription[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   // Calcular data limite (hoje + N dias)

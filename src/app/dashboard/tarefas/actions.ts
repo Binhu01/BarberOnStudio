@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type {
   Task,
   TaskWithDetails,
@@ -123,11 +124,32 @@ const updateEventSchema = z.object({
 });
 
 // ============================================================================
+// ADMIN CONTEXT HELPER (bypasses RLS for read-only operations)
+// ============================================================================
+
+async function getAdminCtx() {
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) throw new Error("Não autenticado");
+
+  const supabase = createAdminClient();
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) throw new Error("Organização não encontrada");
+
+  return { supabase, user, orgId: membership.organization_id };
+}
+
+// ============================================================================
 // TASKS — READ
 // ============================================================================
 
 export async function getTasks(filters?: TaskFilters) {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 20;
@@ -222,7 +244,7 @@ export async function getTasks(filters?: TaskFilters) {
 }
 
 export async function getTaskById(taskId: string): Promise<TaskWithDetails | null> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data, error } = await supabase
     .from("tasks")
@@ -271,7 +293,7 @@ export async function getTaskById(taskId: string): Promise<TaskWithDetails | nul
 }
 
 export async function getSubtasks(parentTaskId: string): Promise<Task[]> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data, error } = await supabase
     .from("tasks")
@@ -285,7 +307,7 @@ export async function getSubtasks(parentTaskId: string): Promise<Task[]> {
 }
 
 export async function getTaskChecklists(taskId: string): Promise<TaskChecklist[]> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data: task } = await supabase
     .from("tasks").select("id").eq("id", taskId).eq("organization_id", orgId).single();
@@ -302,7 +324,7 @@ export async function getTaskChecklists(taskId: string): Promise<TaskChecklist[]
 }
 
 export async function getTasksDashboardStats(): Promise<TasksDashboardStats> {
-  const { supabase, user, orgId } = await getCtx();
+  const { supabase, user, orgId } = await getAdminCtx();
 
   const { data: membership } = await supabase
     .from("memberships")
@@ -346,7 +368,7 @@ export async function getTasksDashboardStats(): Promise<TasksDashboardStats> {
 }
 
 export async function getKanbanData(): Promise<KanbanColumn[]> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const statuses: TaskStatus[] = ["todo", "in_progress", "done"];
   const labels: Record<string, string> = {
@@ -604,7 +626,7 @@ export async function deleteChecklistItem(itemId: string) {
 // ============================================================================
 
 export async function getCalendarEvents(filters: CalendarFilters) {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data, error } = await supabase
     .from("calendar_events")
@@ -641,7 +663,7 @@ export async function getCalendarEvents(filters: CalendarFilters) {
 }
 
 export async function getCalendarEventById(eventId: string): Promise<CalendarEventWithDetails | null> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data, error } = await supabase
     .from("calendar_events")
@@ -670,7 +692,7 @@ export async function getCalendarEventById(eventId: string): Promise<CalendarEve
 }
 
 export async function getEventAttendees(eventId: string): Promise<EventAttendee[]> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data: event } = await supabase
     .from("calendar_events").select("id").eq("id", eventId).eq("organization_id", orgId).single();
@@ -698,7 +720,7 @@ export async function getEventAttendees(eventId: string): Promise<EventAttendee[
 }
 
 export async function getEventReminders(eventId: string): Promise<EventReminder[]> {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data: event } = await supabase
     .from("calendar_events").select("id").eq("id", eventId).eq("organization_id", orgId).single();
@@ -880,7 +902,7 @@ export async function respondToEvent(eventId: string, rsvpStatus: "accepted" | "
 // ============================================================================
 
 export async function getNotifications(page = 1, perPage = 20): Promise<NotificationCenterData> {
-  const { supabase, user } = await getCtx();
+  const { supabase, user } = await getAdminCtx();
   const offset = (page - 1) * perPage;
 
   const { data, error, count } = await supabase
@@ -906,7 +928,7 @@ export async function getNotifications(page = 1, perPage = 20): Promise<Notifica
 }
 
 export async function getUnreadNotificationCount(): Promise<number> {
-  const { supabase, user } = await getCtx();
+  const { supabase, user } = await getAdminCtx();
 
   const { data, error } = await supabase.rpc("get_unread_notification_count", {
     p_user_id: user.id,
@@ -958,7 +980,7 @@ export async function deleteNotification(notificationId: string) {
 // ============================================================================
 
 export async function getNotificationPreferences(): Promise<NotificationPreferences[]> {
-  const { supabase, user, orgId } = await getCtx();
+  const { supabase, user, orgId } = await getAdminCtx();
 
   const { data, error } = await supabase
     .from("notification_preferences")
@@ -994,7 +1016,7 @@ export async function updateNotificationPreference(input: UpdateNotificationPref
 // ============================================================================
 
 export async function getActiveMembers() {
-  const { supabase, orgId } = await getCtx();
+  const { supabase, orgId } = await getAdminCtx();
 
   const { data, error } = await supabase
     .from("memberships")

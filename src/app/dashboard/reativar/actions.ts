@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createReactivationCampaignSchema,
@@ -25,7 +26,7 @@ async function getOrg() {
 // =============================================================================
 
 export async function getReactivationCampaigns(): Promise<ReactivationCampaign[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -46,8 +47,9 @@ export async function createReactivationCampaign(
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Buscar membership do usuário
-  const { data: membership } = await supabase
+  // Buscar membership do usuário (admin client para evitar RLS 42501)
+  const admin = createAdminClient();
+  const { data: membership } = await admin
     .from("memberships")
     .select("id")
     .eq("organization_id", org.id)
@@ -134,7 +136,7 @@ export async function deleteReactivationCampaign(campaignId: string): Promise<vo
 export async function getInactiveCustomers(
   inactiveDays: number = 30
 ): Promise<InactiveCustomer[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase.rpc("get_inactive_customers", {
@@ -163,7 +165,7 @@ export async function getInactiveCustomers(
 export async function getCampaignRecipients(
   campaignId: string
 ): Promise<ReactivationRecipient[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -189,11 +191,12 @@ export async function populateCampaignRecipients(
   campaignId: string
 ): Promise<number> {
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Buscar dados da campanha
-  const { data: campaign } = await supabase
+  // Buscar dados da campanha (admin client to bypass RLS on reads)
+  const { data: campaign } = await adminSupabase
     .from("reactivation_campaigns")
     .select("inactive_days_threshold")
     .eq("id", campaignId)

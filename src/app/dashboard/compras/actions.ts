@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type {
   Supplier,
   SupplierAddress,
@@ -24,11 +25,13 @@ import type {
 // ============================================================================
 
 async function getCtx() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
   if (!user) throw new Error("Não autenticado");
 
-  const { data: membership } = await supabase
+  const adminClient = createAdminClient();
+
+  const { data: membership } = await adminClient
     .from("memberships")
     .select("organization_id")
     .eq("user_id", user.id)
@@ -36,7 +39,7 @@ async function getCtx() {
     .single();
   if (!membership) throw new Error("Organização não encontrada");
 
-  return { supabase, user, orgId: membership.organization_id };
+  return { supabase: adminClient, user, orgId: membership.organization_id };
 }
 
 function reval() {

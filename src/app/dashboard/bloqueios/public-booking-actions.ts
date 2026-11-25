@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createPublicBookingSchema } from "./schemas";
 import type { PublicBooking, AvailableSlot, BarbershopSettings } from "@/types/booking";
 import crypto from "crypto";
@@ -16,7 +17,7 @@ import crypto from "crypto";
 export async function getBarbershopBySlug(
   slug: string
 ): Promise<BarbershopSettings | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from("barbershop_settings")
@@ -34,17 +35,24 @@ export async function getBarbershopBySlug(
 export async function getPublicServices(
   orgId: string
 ): Promise<Array<{ id: string; name: string; description: string | null; duration_minutes: number; price: number; category: string | null }>> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from("barber_services")
-    .select("id, name, description, duration_minutes, price, category")
+    .select("id, name, description, duration_minutes, price, category:product_categories(name)")
     .eq("organization_id", orgId)
     .eq("is_active", true)
     .order("display_order", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []) as Array<{ id: string; name: string; description: string | null; duration_minutes: number; price: number; category: string | null }>;
+  return (data ?? []).map((row: any) => ({
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    duration_minutes: row.duration_minutes,
+    price: Number(row.price),
+    category: row.category?.name ?? null,
+  }));
 }
 
 /**
@@ -53,27 +61,16 @@ export async function getPublicServices(
 export async function getPublicBarbers(
   orgId: string
 ): Promise<Array<{ membership_id: string; name: string; bio: string | null; specialties: string[] | null }>> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
-    .from("employee_profiles")
-    .select(
-      `
-      membership_id,
-      bio,
-      specialties,
-      is_available_for_booking,
-      memberships!inner(user_id, profiles(full_name))
-    `
-    )
-    .eq("organization_id", orgId)
-    .eq("is_available_for_booking", true);
+    .rpc("public_api.get_public_barbers", { p_org_id: orgId });
 
   if (error) throw error;
 
   return (data ?? []).map((row: any) => ({
     membership_id: row.membership_id,
-    name: row.memberships?.profiles?.full_name ?? "Profissional",
+    name: row.name ?? "Profissional",
     bio: row.bio ?? null,
     specialties: row.specialties ?? null,
   }));
@@ -88,7 +85,7 @@ export async function getAvailableSlots(
   barberId: string,
   date: string
 ): Promise<AvailableSlot[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase.rpc("get_public_available_slots", {
     p_org_id: orgId,
@@ -181,7 +178,7 @@ export async function createPublicBooking(
 export async function confirmPublicBooking(
   token: string
 ): Promise<{ success: boolean; message: string }> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: booking } = await supabase
     .from("public_bookings")
@@ -213,7 +210,7 @@ export async function confirmPublicBooking(
 export async function cancelPublicBooking(
   token: string
 ): Promise<{ success: boolean; message: string }> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: booking } = await supabase
     .from("public_bookings")
@@ -247,7 +244,7 @@ export async function getPublicBookings(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<PublicBooking[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const result = await (await import("@/lib/organizations")).getActiveOrganization();
   if (!result) throw new Error("Organização não encontrada");
   const org = result.org;
