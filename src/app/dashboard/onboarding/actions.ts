@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 
 const createOrgSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
@@ -33,7 +33,7 @@ export async function createOrganization(input: CreateOrgInput) {
   }
 
   // Check if slug already exists (use admin client to bypass RLS on read)
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const { data: existing } = await adminSupabase
     .from("organizations")
     .select("id")

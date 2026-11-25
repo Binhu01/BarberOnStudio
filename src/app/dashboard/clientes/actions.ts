@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import type { Customer, CustomerType, CustomerStatus } from "@/types/crm";
 import {
   createCustomerSchema,
@@ -73,7 +73,7 @@ export async function getCustomers(params: {
   page?: number;
   pageSize?: number;
 }) {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getActiveOrg(supabase);
 
   if ("error" in org) {
@@ -125,7 +125,7 @@ export async function getCustomers(params: {
 }
 
 export async function getCustomerById(id: string) {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getActiveOrg(supabase);
 
   if ("error" in org) {
@@ -154,7 +154,7 @@ export async function createCustomer(data: CreateCustomerInput) {
   }
 
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getActiveOrg(adminSupabase);
 
   if ("error" in org) {
@@ -185,7 +185,7 @@ export async function updateCustomer(id: string, data: UpdateCustomerInput) {
   }
 
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getActiveOrg(adminSupabase);
 
   if ("error" in org) {
@@ -220,7 +220,7 @@ export async function updateCustomer(id: string, data: UpdateCustomerInput) {
 
 export async function archiveCustomer(id: string) {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getActiveOrg(adminSupabase);
 
   if ("error" in org) {
@@ -252,7 +252,7 @@ export async function archiveCustomer(id: string) {
 }
 
 export async function getCustomerStats(orgId: string) {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   const { data, error } = await supabase
     .from("customers")

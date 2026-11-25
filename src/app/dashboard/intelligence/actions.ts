@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import type {
   AiConversation,
   AiMessage,
@@ -39,7 +39,7 @@ async function getAdminCtx() {
   const { data: { user } } = await userSupabase.auth.getUser();
   if (!user) throw new Error("Não autenticado");
 
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
 
   const { data: membership } = await adminSupabase
     .from("memberships")

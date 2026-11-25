@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createLoyaltyProgramSchema,
@@ -33,7 +33,7 @@ async function getOrg() {
 // =============================================================================
 
 export async function getLoyaltyPrograms(): Promise<LoyaltyProgram[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -106,7 +106,7 @@ export async function updateLoyaltyProgram(
 
 export async function deleteLoyaltyProgram(programId: string): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
@@ -150,7 +150,7 @@ export async function getLoyaltyCards(filters?: {
   status?: string;
   customer_id?: string;
 }): Promise<LoyaltyCard[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -274,7 +274,7 @@ export async function redeemLoyaltyPoints(input: RedeemPointsInput): Promise<voi
 export async function getLoyaltyTransactions(
   cardId: string
 ): Promise<LoyaltyTransaction[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -299,7 +299,7 @@ export async function getLoyaltyTransactions(
 }
 
 export async function getLoyaltySummary(): Promise<LoyaltySummary> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase.rpc("get_loyalty_summary", {

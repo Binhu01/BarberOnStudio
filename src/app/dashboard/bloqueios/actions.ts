@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createScheduleBlockSchema,
@@ -31,7 +31,7 @@ export async function getScheduleBlocks(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<ScheduleBlock[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -71,7 +71,7 @@ export async function createScheduleBlock(
 ): Promise<string> {
   const parsed = createScheduleBlockSchema.parse(input);
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
@@ -163,7 +163,7 @@ export async function deleteScheduleBlock(blockId: string): Promise<void> {
 // =============================================================================
 
 export async function getBarbershopSettings(): Promise<BarbershopSettings | null> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -181,7 +181,7 @@ export async function upsertBarbershopSettings(
 ): Promise<void> {
   const parsed = updateBarbershopSettingsSchema.parse(input);
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 

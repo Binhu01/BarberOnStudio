@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import type {
   Supplier,
   SupplierAddress,
@@ -29,7 +29,7 @@ async function getCtx() {
   const { data: { user } } = await userClient.auth.getUser();
   if (!user) throw new Error("Não autenticado");
 
-  const adminClient = createAdminClient();
+  const adminClient = requireAdminClient();
 
   const { data: membership } = await adminClient
     .from("memberships")

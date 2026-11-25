@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { cookies } from "next/headers";
 import type {
   Lead,
@@ -23,7 +23,7 @@ import {
 // ---------------------------------------------------------------------------
 
 async function getActiveOrgId(userId: string): Promise<string> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const cookieStore = await cookies();
   const activeOrgCookie = cookieStore.get("barber_active_org")?.value;
 
@@ -80,7 +80,7 @@ export async function getLeads(params: {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const page = params.page ?? 1;
   const pageSize = params.pageSize ?? 20;
   const from = (page - 1) * pageSize;
@@ -151,7 +151,7 @@ export async function getLeadsByStage(pipelineId: string) {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   // Fetch stages ordered by position
   const { data: stages, error: stagesError } = await supabase
@@ -197,7 +197,7 @@ export async function getPipelineAndStages() {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   const { data: pipeline, error: pipelineError } = await supabase
     .from("pipelines")
@@ -236,7 +236,7 @@ export async function getLeadById(id: string) {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   const { data, error } = await supabase
     .from("leads")
@@ -269,7 +269,7 @@ export async function createLead(data: CreateLeadInput) {
   const orgId = await getActiveOrgId(user.id);
 
   // Resolve default pipeline (use admin client to bypass RLS on reads)
-  const adminClient = createAdminClient();
+  const adminClient = requireAdminClient();
   const { data: pipeline } = await adminClient
     .from("pipelines")
     .select("id")
@@ -319,7 +319,7 @@ export async function updateLead(id: string, data: UpdateLeadInput) {
   const orgId = await getActiveOrgId(user.id);
 
   // Verify lead belongs to user's org (use admin client to bypass RLS on reads)
-  const adminClient = createAdminClient();
+  const adminClient = requireAdminClient();
   const { data: existing } = await adminClient
     .from("leads")
     .select("id")
@@ -357,7 +357,7 @@ export async function moveLeadStage(leadId: string, newStageId: string) {
   const orgId = await getActiveOrgId(user.id);
 
   // Use admin client for reads to bypass RLS
-  const adminClient = createAdminClient();
+  const adminClient = requireAdminClient();
 
   // Verify lead belongs to org
   const { data: lead } = await adminClient
@@ -411,7 +411,7 @@ export async function archiveLead(id: string) {
   const orgId = await getActiveOrgId(user.id);
 
   // Use admin client for reads to bypass RLS
-  const adminClient = createAdminClient();
+  const adminClient = requireAdminClient();
 
   // Verify lead belongs to org
   const { data: existing } = await adminClient
@@ -439,7 +439,7 @@ export async function archiveLead(id: string) {
  * Get aggregate lead statistics for an organization.
  */
 export async function getLeadStats(orgId: string) {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   const now = new Date().toISOString();
 

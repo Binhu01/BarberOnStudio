@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import type {
   Task,
   TaskWithDetails,
@@ -132,7 +132,7 @@ async function getAdminCtx() {
   const { data: { user } } = await userClient.auth.getUser();
   if (!user) throw new Error("Não autenticado");
 
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const { data: membership } = await supabase
     .from("memberships")
     .select("organization_id")

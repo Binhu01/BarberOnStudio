@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { DashboardShell } from "../shell";
 import { getActiveOrganization } from "@/lib/organizations";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { RecurrenceManager } from "./_components/recurrence-manager";
 import { getSubscriptionPlans, getClientSubscriptions, getSubscriptionSummary } from "../assinaturas/actions";
@@ -25,7 +25,7 @@ export default async function RecorrenciasPage() {
   if (!orgResult) redirect("/onboarding");
 
   // Buscar também lista de clientes para o formulário (admin client para evitar RLS 42501)
-  const admin = createAdminClient();
+  const admin = requireAdminClient();
   const { data: customers } = await admin
     .from("profiles")
     .select("id, full_name, phone")

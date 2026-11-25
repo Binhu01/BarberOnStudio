@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   appointmentStatusSchema,
@@ -39,7 +39,7 @@ export async function getAppointments(params?: {
   status?: AppointmentStatus;
   limit?: number;
 }): Promise<AppointmentWithDetails[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   // Query direta com admin client (bypassa RLS completamente)
@@ -151,7 +151,7 @@ export async function getAppointments(params?: {
 export async function getAppointmentById(
   eventId: string
 ): Promise<AppointmentWithDetails | null> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -513,7 +513,7 @@ export async function rescheduleAppointment(
 export async function getAppointmentStatusHistory(
   eventId: string
 ): Promise<AppointmentStatusHistoryEntry[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -561,7 +561,7 @@ export async function getAppointmentStats(): Promise<{
   no_show_this_month: number;
   revenue_this_month: number;
 }> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const now = new Date();

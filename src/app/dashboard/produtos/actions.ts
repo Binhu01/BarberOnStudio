@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import type { ProductWithDetails, ProductCategory, ProductStats } from "@/types/inventory";
@@ -18,7 +18,7 @@ import {
 
 async function getCtx() {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Não autenticado");
   const activeData = await getActiveOrganization();
@@ -350,7 +350,7 @@ export async function archiveProduct(id: string) {
 }
 
 export async function getProductStats(orgId: string): Promise<ProductStats> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   const { data: allProducts } = await supabase
     .from("products")

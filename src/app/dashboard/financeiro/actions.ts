@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import {
@@ -34,7 +34,7 @@ async function getCtx() {
 }
 
 function getAdminCtx() {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   // orgId still needed for filtering; getActiveOrganization reads from cookies/cache, not Supabase
   return getActiveOrganization().then((activeData) => {
     if (!activeData) throw new Error("Nenhuma organização ativa");

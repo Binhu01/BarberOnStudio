@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createComandaSchema,
@@ -34,7 +34,7 @@ export async function getComandas(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<Comanda[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   let query = supabase
@@ -76,7 +76,7 @@ export async function getComandas(filters?: {
 // GET — Buscar comanda por ID com itens
 // -----------------------------------------------------------------------------
 export async function getComandaById(orderId: string): Promise<Comanda | null> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -112,7 +112,7 @@ export async function getComandaById(orderId: string): Promise<Comanda | null> {
 export async function createComanda(input: CreateComandaInput): Promise<string> {
   const parsed = createComandaSchema.parse(input);
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
@@ -169,7 +169,7 @@ export async function createComanda(input: CreateComandaInput): Promise<string> 
 export async function addComandaItem(input: AddComandaItemInput): Promise<void> {
   const parsed = addComandaItemSchema.parse(input);
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
 
   // Verificar se a comanda existe e está aberta
@@ -223,7 +223,7 @@ export async function updateComandaItem(
 ): Promise<void> {
   const parsed = updateComandaItemSchema.parse(input);
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
 
   // Buscar item atual
@@ -265,7 +265,7 @@ export async function updateComandaItem(
 // -----------------------------------------------------------------------------
 export async function removeComandaItem(itemId: string): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
 
   const { data: item } = await adminSupabase
@@ -290,7 +290,7 @@ export async function removeComandaItem(itemId: string): Promise<void> {
 export async function completeComanda(input: CompleteComandaInput): Promise<void> {
   const parsed = completeComandaSchema.parse(input);
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
@@ -368,7 +368,7 @@ export async function completeComanda(input: CompleteComandaInput): Promise<void
 // -----------------------------------------------------------------------------
 export async function cancelComanda(orderId: string): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
@@ -395,7 +395,7 @@ export async function cancelComanda(orderId: string): Promise<void> {
 // STATS — Estatísticas de comandas
 // -----------------------------------------------------------------------------
 export async function getComandaStats(): Promise<ComandaStats> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const today = new Date().toISOString().slice(0, 10);
@@ -433,7 +433,7 @@ export async function getComandaStats(): Promise<ComandaStats> {
 // -----------------------------------------------------------------------------
 async function recalculateOrderTotals(orderId: string): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
 
   const { data: items } = await adminSupabase
     .from("order_items")
@@ -471,7 +471,7 @@ export async function addOrderPayment(input: {
   reference?: string | null;
 }): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
 
   // Verificar se a comanda existe e pertence à org
@@ -522,7 +522,7 @@ export async function getOrderPayments(orderId: string): Promise<{
   reference: string | null;
   created_at: string;
 }[]> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -591,7 +591,7 @@ export async function linkAppointmentToOrder(input: {
   appointment_id: string;
 }): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
 
   // Verificar se ambos existem na org
@@ -638,7 +638,7 @@ export async function completeComandaWithPayments(input: CompleteComandaInput & 
   payments?: { payment_method: string; amount: number; change_amount?: number; reference?: string }[];
 }): Promise<void> {
   const supabase = await createClient();
-  const adminSupabase = createAdminClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
 
   // Se houver pagamentos combinados, usar fluxo novo

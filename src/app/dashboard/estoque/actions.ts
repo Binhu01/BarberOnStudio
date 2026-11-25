@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import type {
@@ -28,7 +28,7 @@ import {
 
 async function getCtx() {
   const supabase = await createClient();
-  const admin = createAdminClient();
+  const admin = requireAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Não autenticado");
   const activeData = await getActiveOrganization();
@@ -490,7 +490,7 @@ export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
 // ============================================================================
 
 export async function getInventoryStats(orgId: string): Promise<InventoryStats> {
-  const supabase = createAdminClient();
+  const supabase = requireAdminClient();
 
   const { count: warehouseCount } = await supabase
     .from("warehouses")

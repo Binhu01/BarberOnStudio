@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { createClient as createServerClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import type { Organization, Membership, UserRole } from "@/types/database";
 
 export interface UserOrganization extends Organization {
@@ -21,7 +21,7 @@ export async function getUserOrganizations(): Promise<UserOrganization[]> {
  if (!user) return [];
 
  // Use admin client to bypass RLS for membership queries
- const admin = createAdminClient();
+ const admin = requireAdminClient();
 
  const { data: memberships, error } = await admin
  .from("memberships")
@@ -101,7 +101,7 @@ export async function getActiveOrganization(): Promise<{
 export async function getOrganizationMemberCount(
  organizationId: string
 ): Promise<number> {
- const admin = createAdminClient();
+ const admin = requireAdminClient();
 
  const { count, error } = await admin
  .from("memberships")

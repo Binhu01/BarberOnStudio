@@ -5,7 +5,7 @@ export const instant = false;
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { DashboardShell } from "./shell";
 import { OrganizationProvider } from "./organization-context";
@@ -41,7 +41,7 @@ export default async function DashboardLayout({
   let userAvatar: string | null = null;
 
   // Use admin client to bypass RLS for profile query
-  const admin = createAdminClient();
+  const admin = requireAdminClient();
   const { data: profile } = await admin
     .from("profiles")
     .select("full_name, avatar_url")
