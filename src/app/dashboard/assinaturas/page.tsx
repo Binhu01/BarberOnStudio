@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { DashboardShell } from "../shell";
 import { getActiveOrganization } from "@/lib/organizations";
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { SubscriptionManager } from "./_components/subscription-manager";
 import { getSubscriptionPlans, getClientSubscriptions, getSubscriptionSummary, getExpiringSubscriptions } from "./actions";
@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 
 export default async function AssinaturasPage() {
   const supabase = await createClient();
-  const admin = requireAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");

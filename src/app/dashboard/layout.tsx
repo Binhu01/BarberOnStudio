@@ -5,7 +5,7 @@ export const instant = false;
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { DashboardShell } from "./shell";
 import { OrganizationProvider } from "./organization-context";
@@ -40,16 +40,18 @@ export default async function DashboardLayout({
   let userName: string | null = null;
   let userAvatar: string | null = null;
 
-  // Use admin client to bypass RLS for profile query
-  const admin = requireAdminClient();
-  const { data: profile } = await admin
-    .from("profiles")
-    .select("full_name, avatar_url")
-    .eq("id", user.id)
-    .single();
+  // Use admin client to bypass RLS for profile query (graceful fallback)
+  const admin = createAdminClient();
+  if (admin) {
+    const { data: profile } = await admin
+      .from("profiles")
+      .select("full_name, avatar_url")
+      .eq("id", user.id)
+      .single();
 
-  userName = profile?.full_name ?? null;
-  userAvatar = profile?.avatar_url ?? null;
+    userName = profile?.full_name ?? null;
+    userAvatar = profile?.avatar_url ?? null;
+  }
 
   return (
     <OrganizationProvider
