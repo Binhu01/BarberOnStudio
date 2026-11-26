@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import type {
@@ -41,7 +41,11 @@ async function getCtx() {
 // ============================================================================
 
 export async function getWarehouses(): Promise<Warehouse[]> {
-  const { admin, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
   const { data, error } = await admin
     .from("warehouses")
     .select("*")
@@ -145,7 +149,11 @@ export async function deleteWarehouse(id: string) {
 // ============================================================================
 
 export async function getInventoryBalances(warehouseId?: string) {
-  const { admin, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   let query = admin
     .from("inventory_balances")
@@ -372,7 +380,11 @@ export async function getInventoryMovements(params?: {
   page?: number;
   perPage?: number;
 }) {
-  const { admin, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return { movements: [] as unknown as MovementWithDetails[], total: 0 };
+  const activeData = await getActiveOrganization();
+  if (!activeData) return { movements: [] as unknown as MovementWithDetails[], total: 0 };
+  const orgId = activeData.org.id;
   const page = params?.page ?? 1;
   const perPage = params?.perPage ?? 20;
   const from = (page - 1) * perPage;
@@ -412,7 +424,11 @@ export async function getInventoryMovements(params?: {
 // ============================================================================
 
 export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
-  const { admin, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   const { data: products } = await admin
     .from("products")
@@ -490,7 +506,8 @@ export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
 // ============================================================================
 
 export async function getInventoryStats(orgId: string): Promise<InventoryStats> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { count: warehouseCount } = await supabase
     .from("warehouses")

@@ -17,7 +17,7 @@ export default async function NovaConversaPage(props: {
 
  const status = await getAiStatus();
 
- if (status.needs_setup) {
+ if (!status || status.needs_setup) {
  return (
  <div className="space-y-6">
  <Link

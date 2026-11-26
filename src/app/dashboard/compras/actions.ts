@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import type {
   Supplier,
   SupplierAddress,
@@ -166,7 +166,22 @@ export async function getSuppliers(filters?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return { suppliers: [], total: 0, page: filters?.page ?? 1, perPage: filters?.perPage ?? 20 };
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return { suppliers: [], total: 0, page: filters?.page ?? 1, perPage: filters?.perPage ?? 20 };
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return { suppliers: [], total: 0, page: filters?.page ?? 1, perPage: filters?.perPage ?? 20 };
+
+  const orgId = membership.organization_id;
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 20;
 
@@ -198,7 +213,22 @@ export async function getSuppliers(filters?: {
 }
 
 export async function getSupplierById(id: string) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return null;
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return null;
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return null;
+
+  const orgId = membership.organization_id;
 
   const { data, error } = await supabase
     .from("suppliers")
@@ -401,7 +431,22 @@ export async function getPurchaseOrders(filters?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return { orders: [], total: 0, page: filters?.page ?? 1, perPage: filters?.perPage ?? 20 };
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return { orders: [], total: 0, page: filters?.page ?? 1, perPage: filters?.perPage ?? 20 };
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return { orders: [], total: 0, page: filters?.page ?? 1, perPage: filters?.perPage ?? 20 };
+
+  const orgId = membership.organization_id;
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 20;
 
@@ -431,7 +476,22 @@ export async function getPurchaseOrders(filters?: {
 }
 
 export async function getPurchaseOrderById(id: string): Promise<PurchaseOrderWithItems> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return null as unknown as PurchaseOrderWithItems;
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return null as unknown as PurchaseOrderWithItems;
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return null as unknown as PurchaseOrderWithItems;
+
+  const orgId = membership.organization_id;
 
   const { data, error } = await supabase
     .from("purchase_orders")
@@ -967,7 +1027,22 @@ export async function updateProductCostFromPurchase(input: unknown) {
 // ============================================================================
 
 export async function getPurchasesDashboard(): Promise<PurchasesDashboardStats> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return null as unknown as PurchasesDashboardStats;
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return null as unknown as PurchasesDashboardStats;
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return null as unknown as PurchasesDashboardStats;
+
+  const orgId = membership.organization_id;
 
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000);
@@ -1070,7 +1145,22 @@ export async function getPurchasesDashboard(): Promise<PurchasesDashboardStats> 
 // ============================================================================
 
 export async function getPurchasesBySupplier(dateRange: { from: string; to: string }): Promise<PurchasesBySupplier[]> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return [];
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return [];
+
+  const orgId = membership.organization_id;
 
   const { data, error } = await supabase
     .from("purchase_orders")
@@ -1103,7 +1193,22 @@ export async function getPurchasesBySupplier(dateRange: { from: string; to: stri
 }
 
 export async function getPurchasesByPeriod(dateRange: { from: string; to: string }): Promise<PurchasesByPeriod[]> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return [];
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return [];
+
+  const orgId = membership.organization_id;
 
   const { data, error } = await supabase
     .from("purchase_orders")
@@ -1130,7 +1235,22 @@ export async function getPurchasesByPeriod(dateRange: { from: string; to: string
 }
 
 export async function getMostPurchasedProducts(dateRange: { from: string; to: string }): Promise<MostPurchasedProducts[]> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) return [];
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+  if (!membership) return [];
+
+  const orgId = membership.organization_id;
 
   const { data, error } = await supabase
     .from("purchase_order_items")

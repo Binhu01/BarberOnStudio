@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import type { Customer, CustomerType, CustomerStatus } from "@/types/crm";
 import {
   createCustomerSchema,
@@ -73,7 +73,8 @@ export async function getCustomers(params: {
   page?: number;
   pageSize?: number;
 }) {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getActiveOrg(supabase);
 
   if ("error" in org) {
@@ -125,7 +126,8 @@ export async function getCustomers(params: {
 }
 
 export async function getCustomerById(id: string) {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getActiveOrg(supabase);
 
   if ("error" in org) {
@@ -252,7 +254,8 @@ export async function archiveCustomer(id: string) {
 }
 
 export async function getCustomerStats(orgId: string) {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return { active: 0, inactive: 0, total: 0 };
 
   const { data, error } = await supabase
     .from("customers")

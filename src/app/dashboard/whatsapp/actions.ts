@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { automationRuleSchema, campaignSchema } from "./schemas";
 import type { AutomationRule, Campaign, NotificationLogEntry, AutomationStats } from "./schemas";
@@ -25,7 +25,8 @@ async function getOrg() {
 // ---------------------------------------------------------------------------
 
 export async function getAutomationRules(): Promise<AutomationRule[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -133,7 +134,8 @@ export async function getCampaigns(filters?: {
   status?: string;
   type?: string;
 }): Promise<Campaign[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -329,7 +331,8 @@ export async function getNotificationLogs(filters?: {
   channel?: string;
   limit?: number;
 }): Promise<NotificationLogEntry[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -386,7 +389,8 @@ export async function getNotificationTemplates(category?: string): Promise<{
   variables: any[];
   is_active: boolean;
 }[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -413,7 +417,8 @@ export async function getNotificationTemplates(category?: string): Promise<{
 // ---------------------------------------------------------------------------
 
 export async function getAutomationStats(): Promise<AutomationStats> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -475,7 +480,8 @@ export async function getWhatsappConfig(): Promise<{
   reminder_hours_before: number;
   expiry_reminder_days: number;
 } | null> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getOrg();
 
   const { data, error } = await supabase

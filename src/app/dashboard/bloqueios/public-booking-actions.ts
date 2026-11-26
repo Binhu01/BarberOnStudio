@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { createPublicBookingSchema } from "./schemas";
 import type { PublicBooking, AvailableSlot, BarbershopSettings } from "@/types/booking";
 import crypto from "crypto";
@@ -17,7 +17,8 @@ import crypto from "crypto";
 export async function getBarbershopBySlug(
   slug: string
 ): Promise<BarbershopSettings | null> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null;
 
   const { data, error } = await supabase
     .from("barbershop_settings")
@@ -35,7 +36,8 @@ export async function getBarbershopBySlug(
 export async function getPublicServices(
   orgId: string
 ): Promise<Array<{ id: string; name: string; description: string | null; duration_minutes: number; price: number; category: string | null }>> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from("barber_services")
@@ -61,7 +63,8 @@ export async function getPublicServices(
 export async function getPublicBarbers(
   orgId: string
 ): Promise<Array<{ membership_id: string; name: string; bio: string | null; specialties: string[] | null }>> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .rpc("public_api.get_public_barbers", { p_org_id: orgId });
@@ -85,7 +88,8 @@ export async function getAvailableSlots(
   barberId: string,
   date: string
 ): Promise<AvailableSlot[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase.rpc("get_public_available_slots", {
     p_org_id: orgId,
@@ -244,7 +248,8 @@ export async function getPublicBookings(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<PublicBooking[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const result = await (await import("@/lib/organizations")).getActiveOrganization();
   if (!result) throw new Error("Organização não encontrada");
   const org = result.org;

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { cookies } from "next/headers";
 import type {
   Lead,
@@ -80,7 +80,8 @@ export async function getLeads(params: {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return { leads: [], total: 0, page: params.page ?? 1, pageSize: params.pageSize ?? 20 };
   const page = params.page ?? 1;
   const pageSize = params.pageSize ?? 20;
   const from = (page - 1) * pageSize;
@@ -151,7 +152,8 @@ export async function getLeadsByStage(pipelineId: string) {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
 
   // Fetch stages ordered by position
   const { data: stages, error: stagesError } = await supabase
@@ -197,7 +199,8 @@ export async function getPipelineAndStages() {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { data: pipeline, error: pipelineError } = await supabase
     .from("pipelines")
@@ -236,7 +239,8 @@ export async function getLeadById(id: string) {
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { data, error } = await supabase
     .from("leads")
@@ -439,7 +443,8 @@ export async function archiveLead(id: string) {
  * Get aggregate lead statistics for an organization.
  */
 export async function getLeadStats(orgId: string) {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const now = new Date().toISOString();
 

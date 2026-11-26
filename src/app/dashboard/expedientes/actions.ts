@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { upsertBarberScheduleSchema, bulkUpsertBarberScheduleSchema } from "./schemas";
 import type { BarberScheduleWithName, UpsertBarberScheduleInput } from "@/types/barber";
@@ -18,7 +18,8 @@ async function getOrg() {
 export async function getBarberSchedules(
   membershipId: string
 ): Promise<BarberScheduleWithName[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   // Buscar nome do membro
@@ -52,7 +53,8 @@ export async function getBarberSchedules(
 export async function getAvailableBarbers(): Promise<
   Array<{ membership_id: string; name: string; role: string }>
 > {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase

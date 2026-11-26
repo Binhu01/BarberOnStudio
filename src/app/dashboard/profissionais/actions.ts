@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { updateBarberProfileSchema } from "./schemas";
 import type {
@@ -19,7 +19,8 @@ async function getOrg() {
 // GET — Listar profissionais
 // -----------------------------------------------------------------------------
 export async function getBarbers(): Promise<BarberProfileWithUser[]> {
- const supabase = requireAdminClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
  const org = await getOrg();
 
  const { data, error } = await supabase
@@ -59,7 +60,8 @@ export async function getBarbers(): Promise<BarberProfileWithUser[]> {
 export async function getBarberById(
  id: string
 ): Promise<BarberProfileWithUser | null> {
- const supabase = requireAdminClient();
+ const supabase = createAdminClient();
+ if (!supabase) return null as any;
  const org = await getOrg();
 
  const { data, error } = await supabase
@@ -193,7 +195,8 @@ export async function getBarberPerformance(membershipId: string): Promise<{
  avg_rating: number | null;
  last_appointment_at: string | null;
 } | null> {
- const supabase = requireAdminClient();
+ const supabase = createAdminClient();
+ if (!supabase) return null as any;
  const org = await getOrg();
 
  const { data, error } = await supabase
@@ -217,7 +220,8 @@ export async function getBarberStats(): Promise<{
  active: number;
  avg_commission: number;
 }> {
- const supabase = requireAdminClient();
+ const supabase = createAdminClient();
+ if (!supabase) return null as any;
  const org = await getOrg();
 
  const { data, error } = await supabase

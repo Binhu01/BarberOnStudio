@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createScheduleBlockSchema,
@@ -31,7 +31,8 @@ export async function getScheduleBlocks(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<ScheduleBlock[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -163,7 +164,8 @@ export async function deleteScheduleBlock(blockId: string): Promise<void> {
 // =============================================================================
 
 export async function getBarbershopSettings(): Promise<BarbershopSettings | null> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getOrg();
 
   const { data, error } = await supabase

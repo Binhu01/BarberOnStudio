@@ -36,7 +36,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
     track_inventory: product.track_inventory ?? false,
     minimum_stock: product.minimum_stock ?? 0,
     is_active: product.is_active ?? true,
-    variants: (product.variants ?? []).map((v) => ({
+    variants: (product.variants ?? []).map((v: any) => ({
       id: v.id,
       name: v.name,
       attributes: v.attributes ?? {},

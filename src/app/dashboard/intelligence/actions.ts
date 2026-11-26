@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import type {
   AiConversation,
   AiMessage,
@@ -39,7 +39,8 @@ async function getAdminCtx() {
   const { data: { user } } = await userSupabase.auth.getUser();
   if (!user) throw new Error("Não autenticado");
 
-  const adminSupabase = requireAdminClient();
+  const adminSupabase = createAdminClient();
+  if (!adminSupabase) return null;
 
   const { data: membership } = await adminSupabase
     .from("memberships")
@@ -61,7 +62,9 @@ function reval() {
 // ============================================================================
 
 export async function getConversations(): Promise<AiConversation[]> {
-  const { supabase, user, orgId } = await getAdminCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, user, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("ai_conversations")
@@ -144,7 +147,9 @@ export async function deleteConversation(conversationId: string) {
 // ============================================================================
 
 export async function getMessages(conversationId: string): Promise<AiMessage[]> {
-  const { supabase, user } = await getAdminCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, user } = ctx;
 
   // Verify conversation ownership
   const { data: conv } = await supabase
@@ -260,7 +265,9 @@ export async function saveAssistantMessage(
 // ============================================================================
 
 export async function getAiSettings(): Promise<AiSettings | null> {
-  const { supabase, orgId } = await getAdminCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return null;
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("ai_settings")
@@ -306,7 +313,9 @@ export async function updateAiSettings(input: UpdateAiSettingsInput) {
 // ============================================================================
 
 export async function getInsights(status?: string): Promise<AiInsight[]> {
-  const { supabase, orgId } = await getAdminCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   let query = supabase
     .from("ai_insights")
@@ -355,7 +364,9 @@ export async function dismissInsight(insightId: string) {
 // ============================================================================
 
 export async function getAiUsageStats(): Promise<AiUsageStats | null> {
-  const { supabase, orgId } = await getAdminCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return null;
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase.rpc("get_ai_usage_stats", {
     p_org_id: orgId,
@@ -370,7 +381,9 @@ export async function getAiUsageStats(): Promise<AiUsageStats | null> {
 // ============================================================================
 
 export async function getAiStatus() {
-  const { supabase, orgId, role } = await getAdminCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return null;
+  const { supabase, orgId, role } = ctx;
 
   const configured = isAiConfigured();
 
