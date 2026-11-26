@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import type {
  SubscriptionPlan,
  SubscriptionPlanVersion,
@@ -62,7 +62,8 @@ async function getPlatformAdminCtx() {
 // ============================================================================
 
 export async function getActivePlans(): Promise<PlanWithCurrentVersion[]> {
- const supabase = requireAdminClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data: plans } = await supabase
  .from("subscription_plans")
@@ -89,7 +90,8 @@ export async function getActivePlans(): Promise<PlanWithCurrentVersion[]> {
 }
 
 export async function getPlanEntitlements(planVersionId: string): Promise<PlanEntitlement[]> {
- const supabase = requireAdminClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data } = await supabase
  .from("plan_entitlements")
