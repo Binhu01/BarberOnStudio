@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { requireAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createReactivationCampaignSchema,
@@ -26,7 +26,8 @@ async function getOrg() {
 // =============================================================================
 
 export async function getReactivationCampaigns(): Promise<ReactivationCampaign[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -136,7 +137,8 @@ export async function deleteReactivationCampaign(campaignId: string): Promise<vo
 export async function getInactiveCustomers(
   inactiveDays: number = 30
 ): Promise<InactiveCustomer[]> {
-  const supabase = requireAdminClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase.rpc("get_inactive_customers", {
