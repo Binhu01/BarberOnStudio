@@ -12,6 +12,7 @@ export interface UserOrganization extends Organization {
  * Uses admin client to bypass RLS — authorization is handled by middleware.
  */
 export async function getUserOrganizations(): Promise<UserOrganization[]> {
+ "use cache";
  // Get user ID from the regular client (auth doesn't need admin)
  const supabase = await createServerClient();
  const {
