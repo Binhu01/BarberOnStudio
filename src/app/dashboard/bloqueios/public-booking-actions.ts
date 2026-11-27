@@ -1,7 +1,7 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { createPublicBookingSchema } from "./schemas";
 import type { PublicBooking, AvailableSlot, BarbershopSettings } from "@/types/booking";
 import crypto from "crypto";
@@ -9,7 +9,21 @@ import crypto from "crypto";
 // =============================================================================
 // PUBLIC BOOKING ACTIONS — NO AUTH REQUIRED
 // Estas ações são chamadas pela página pública /agendar/[slug]
+// Usa cliente anon (não admin) para funcionar sem SUPABASE_SERVICE_ROLE_KEY
 // =============================================================================
+
+/**
+ * Cliente Supabase anon para operações públicas (sem auth).
+ * Usa ANON_KEY que está sempre disponível via NEXT_PUBLIC_SUPABASE_ANON_KEY.
+ */
+function getPublicClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    throw new Error("Supabase credentials não configuradas");
+  }
+  return createSupabaseClient(url, key);
+}
 
 /**
  * Busca configurações da barbearia por slug público
@@ -17,8 +31,7 @@ import crypto from "crypto";
 export async function getBarbershopBySlug(
   slug: string
 ): Promise<BarbershopSettings | null> {
-  const supabase = createAdminClient();
-  if (!supabase) return null;
+  const supabase = getPublicClient();
 
   const { data, error } = await supabase
     .from("barbershop_settings")
@@ -36,8 +49,7 @@ export async function getBarbershopBySlug(
 export async function getPublicServices(
   orgId: string
 ): Promise<Array<{ id: string; name: string; description: string | null; duration_minutes: number; price: number; category: string | null }>> {
-  const supabase = createAdminClient();
-  if (!supabase) return [];
+  const supabase = getPublicClient();
 
   const { data, error } = await supabase
     .from("barber_services")
@@ -63,8 +75,7 @@ export async function getPublicServices(
 export async function getPublicBarbers(
   orgId: string
 ): Promise<Array<{ membership_id: string; name: string; bio: string | null; specialties: string[] | null }>> {
-  const supabase = createAdminClient();
-  if (!supabase) return [];
+  const supabase = getPublicClient();
 
   const { data, error } = await supabase
     .rpc("public_api.get_public_barbers", { p_org_id: orgId });
@@ -88,8 +99,7 @@ export async function getAvailableSlots(
   barberId: string,
   date: string
 ): Promise<AvailableSlot[]> {
-  const supabase = createAdminClient();
-  if (!supabase) return [];
+  const supabase = getPublicClient();
 
   const { data, error } = await supabase.rpc("get_public_available_slots", {
     p_org_id: orgId,
@@ -118,7 +128,7 @@ export async function createPublicBooking(
   }
 ): Promise<{ booking_id: string; confirmation_token: string }> {
   const parsed = createPublicBookingSchema.parse(input);
-  const supabase = await createClient();
+  const supabase = getPublicClient();
 
   // Buscar duração do serviço
   const { data: service } = await supabase
@@ -248,8 +258,7 @@ export async function getPublicBookings(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<PublicBooking[]> {
-  const supabase = createAdminClient();
-  if (!supabase) return [];
+  const supabase = requireAdminClient();
   const result = await (await import("@/lib/organizations")).getActiveOrganization();
   if (!result) throw new Error("Organização não encontrada");
   const org = result.org;
