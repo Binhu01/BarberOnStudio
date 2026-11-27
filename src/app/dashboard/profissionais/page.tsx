@@ -1,3 +1,6 @@
+// This page uses dynamic server data (auth + DB queries)
+export const instant = false;
+
 import { getBarbers, getBarberStats } from "./actions";
 import Link from "next/link";
 import { UserCog, Users, TrendingUp, DollarSign, Scissors } from "lucide-react";
