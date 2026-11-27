@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { requirePermission, canManageRole } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
@@ -42,11 +43,12 @@ import {
 } from "./schemas";
 
 async function getCtx() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
   if (!user) throw new Error("Não autenticado");
   const activeData = await getActiveOrganization();
   if (!activeData) throw new Error("Nenhuma organização ativa");
+  const supabase = requireAdminClient();
   return { supabase, user, orgId: activeData.org.id, membership: activeData.org.membership };
 }
 
@@ -59,7 +61,12 @@ function reval() {
 // ============================================================
 
 export async function getTeamDashboard(): Promise<TeamDashboardStats> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return { total_active_members: 0, pending_invitations: 0, owner_count: 0, admin_count: 0, manager_count: 0, employee_count: 0, department_count: 0, recent_activities: [] };
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return { total_active_members: 0, pending_invitations: 0, owner_count: 0, admin_count: 0, manager_count: 0, employee_count: 0, department_count: 0, recent_activities: [] };
+  const orgId = activeData.org.id;
 
   const [membersResult, invitesResult, deptsResult, auditResult] = await Promise.all([
     supabase.from("memberships").select("role, status").eq("organization_id", orgId),
@@ -88,7 +95,13 @@ export async function getTeamDashboard(): Promise<TeamDashboardStats> {
 // ============================================================
 
 export async function getMembers(filters?: MemberFilters) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return { members: [], total: 0 };
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return { members: [], total: 0 };
+  const orgId = activeData.org.id;
+
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 20;
   const from = (page - 1) * perPage;
@@ -170,7 +183,12 @@ export async function getMembers(filters?: MemberFilters) {
 }
 
 export async function getMemberById(membershipId: string) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return null;
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return null;
+  const orgId = activeData.org.id;
 
   const { data, error } = await supabase
     .from("memberships")
@@ -419,7 +437,12 @@ export async function removeMember(membershipId: string) {
 // ============================================================
 
 export async function getDepartments() {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   const { data, error } = await supabase
     .from("departments")
@@ -526,7 +549,12 @@ export async function archiveDepartment(id: string) {
 // ============================================================
 
 export async function getInvitations(status?: "pending" | "accepted" | "revoked") {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   let query = supabase
     .from("invitations")
@@ -678,7 +706,12 @@ export async function revokeInvitation(invitationId: string) {
 // ============================================================
 
 export async function getRoles(): Promise<RoleWithMemberCount[]> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   const { data: roles, error } = await supabase
     .from("organization_roles")
@@ -707,7 +740,12 @@ export async function getRoles(): Promise<RoleWithMemberCount[]> {
 }
 
 export async function getRolePermissions(roleId: string) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   const { data, error } = await supabase
     .from("role_permissions")
@@ -890,7 +928,12 @@ export async function resetMemberPermissions(membershipId: string) {
 // ============================================================
 
 export async function getApprovalRequests(status?: string): Promise<ApprovalRequestWithDetails[]> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
   let query = supabase
     .from("approval_requests")
@@ -1067,7 +1110,12 @@ export async function cancelApprovalRequest(requestId: string) {
 // ============================================================
 
 export async function getAuditLogs(filters?: AuditFilters) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return { logs: [], total: 0 };
+
+  const activeData = await getActiveOrganization();
+  if (!activeData) return { logs: [], total: 0 };
+  const orgId = activeData.org.id;
   await requirePermission("audit.view");
 
   const page = filters?.page ?? 1;
@@ -1099,7 +1147,9 @@ export async function getAuditLogs(filters?: AuditFilters) {
 // ============================================================
 
 export async function getPermissionsCatalog(): Promise<Record<string, { key: string; label: string }[]>> {
-  const { supabase } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return {};
+
   const { data, error } = await supabase
     .from("permissions")
     .select("permission_key, module, description")

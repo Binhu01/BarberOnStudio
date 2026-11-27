@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import type {
@@ -27,11 +28,12 @@ import {
 
 async function getCtx() {
   const supabase = await createClient();
+  const admin = requireAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Não autenticado");
   const activeData = await getActiveOrganization();
   if (!activeData) throw new Error("Nenhuma organização ativa");
-  return { supabase, user, orgId: activeData.org.id };
+  return { supabase, admin, user, orgId: activeData.org.id };
 }
 
 // ============================================================================
@@ -39,8 +41,12 @@ async function getCtx() {
 // ============================================================================
 
 export async function getWarehouses(): Promise<Warehouse[]> {
-  const { supabase, orgId } = await getCtx();
-  const { data, error } = await supabase
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
+  const { data, error } = await admin
     .from("warehouses")
     .select("*")
     .eq("organization_id", orgId)
@@ -143,9 +149,13 @@ export async function deleteWarehouse(id: string) {
 // ============================================================================
 
 export async function getInventoryBalances(warehouseId?: string) {
-  const { supabase, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
-  let query = supabase
+  let query = admin
     .from("inventory_balances")
     .select(`
       *,
@@ -370,13 +380,17 @@ export async function getInventoryMovements(params?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return { movements: [] as unknown as MovementWithDetails[], total: 0 };
+  const activeData = await getActiveOrganization();
+  if (!activeData) return { movements: [] as unknown as MovementWithDetails[], total: 0 };
+  const orgId = activeData.org.id;
   const page = params?.page ?? 1;
   const perPage = params?.perPage ?? 20;
   const from = (page - 1) * perPage;
   const to = from + perPage - 1;
 
-  let query = supabase
+  let query = admin
     .from("inventory_movements")
     .select(
       `*,
@@ -410,9 +424,13 @@ export async function getInventoryMovements(params?: {
 // ============================================================================
 
 export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
-  const { supabase, orgId } = await getCtx();
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
 
-  const { data: products } = await supabase
+  const { data: products } = await admin
     .from("products")
     .select("id, name, sku, minimum_stock, variants:product_variants(id, name, minimum_stock)")
     .eq("organization_id", orgId)
@@ -422,7 +440,7 @@ export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
   if (!products || products.length === 0) return [];
 
   const productIds = products.map((p) => p.id);
-  const { data: balances } = await supabase
+  const { data: balances } = await admin
     .from("inventory_balances")
     .select("*, warehouse:warehouses(id, name)")
     .in("product_id", productIds)
@@ -488,7 +506,8 @@ export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
 // ============================================================================
 
 export async function getInventoryStats(orgId: string): Promise<InventoryStats> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { count: warehouseCount } = await supabase
     .from("warehouses")

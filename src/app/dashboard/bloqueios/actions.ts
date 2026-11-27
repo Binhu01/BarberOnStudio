@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   createScheduleBlockSchema,
@@ -30,7 +31,8 @@ export async function getScheduleBlocks(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<ScheduleBlock[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -43,16 +45,16 @@ export async function getScheduleBlocks(filters?: {
     `
     )
     .eq("organization_id", org.id)
-    .order("starts_at", { ascending: false });
+    .order("start_at", { ascending: false });
 
   if (filters?.membership_id) {
     query = query.eq("membership_id", filters.membership_id);
   }
   if (filters?.date_from) {
-    query = query.gte("starts_at", filters.date_from);
+    query = query.gte("start_at", filters.date_from);
   }
   if (filters?.date_to) {
-    query = query.lte("starts_at", filters.date_to);
+    query = query.lte("start_at", filters.date_to);
   }
 
   const { data, error } = await query;
@@ -70,11 +72,12 @@ export async function createScheduleBlock(
 ): Promise<string> {
   const parsed = createScheduleBlockSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Buscar membership_id do usuário
-  const { data: membership } = await supabase
+  // Buscar membership_id do usuário (admin client para evitar RLS 42501)
+  const { data: membership } = await adminSupabase
     .from("memberships")
     .select("id")
     .eq("organization_id", org.id)
@@ -90,8 +93,8 @@ export async function createScheduleBlock(
       membership_id: parsed.membership_id ?? null,
       title: parsed.title,
       reason: parsed.reason ?? null,
-      starts_at: parsed.starts_at,
-      ends_at: parsed.ends_at,
+      start_at: parsed.start_at,
+      end_at: parsed.end_at,
       is_recurring: parsed.is_recurring ?? false,
       recurring_days: parsed.recurring_days ?? null,
       recurring_until: parsed.recurring_until ?? null,
@@ -161,7 +164,8 @@ export async function deleteScheduleBlock(blockId: string): Promise<void> {
 // =============================================================================
 
 export async function getBarbershopSettings(): Promise<BarbershopSettings | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -179,11 +183,12 @@ export async function upsertBarbershopSettings(
 ): Promise<void> {
   const parsed = updateBarbershopSettingsSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Verificar se já existe settings
-  const { data: existing } = await supabase
+  // Verificar se já existe settings (admin client para evitar RLS 42501)
+  const { data: existing } = await adminSupabase
     .from("barbershop_settings")
     .select("id")
     .eq("organization_id", org.id)

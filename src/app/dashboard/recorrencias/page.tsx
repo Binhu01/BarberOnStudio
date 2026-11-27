@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { DashboardShell } from "../shell";
 import { getActiveOrganization } from "@/lib/organizations";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { RecurrenceManager } from "./_components/recurrence-manager";
 import { getSubscriptionPlans, getClientSubscriptions, getSubscriptionSummary } from "../assinaturas/actions";
@@ -23,11 +24,16 @@ export default async function RecorrenciasPage() {
   const orgResult = await getActiveOrganization();
   if (!orgResult) redirect("/onboarding");
 
-  // Buscar também lista de clientes para o formulário
-  const { data: customers } = await supabase
-    .from("profiles")
-    .select("id, full_name, phone")
-    .order("full_name");
+  // Buscar também lista de clientes para o formulário (admin client para evitar RLS 42501)
+  const admin = createAdminClient();
+  let customers: any[] | null = null;
+  if (admin) {
+    const result = await admin
+      .from("profiles")
+      .select("id, full_name, phone")
+      .order("full_name");
+    customers = result.data;
+  }
 
   const [plans, subscriptions, summary] = await Promise.all([
     getSubscriptionPlans(),

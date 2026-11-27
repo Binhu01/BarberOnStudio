@@ -37,8 +37,8 @@ export function BlockManager({ initialBlocks }: BlockManagerProps) {
       await createScheduleBlock({
         title,
         reason: reason || null,
-        starts_at: startsAt,
-        ends_at: endsAt,
+        start_at: startsAt,
+        end_at: endsAt,
       });
       setSuccess("Bloqueio criado com sucesso!");
       setTitle("");
@@ -196,7 +196,7 @@ export function BlockManager({ initialBlocks }: BlockManagerProps) {
       ) : (
         <div className="space-y-2">
           {initialBlocks.map((block) => {
-            const isPast = new Date(block.ends_at) < new Date();
+            const isPast = new Date(block.end_at) < new Date();
             return (
               <div
                 key={block.id}
@@ -228,11 +228,11 @@ export function BlockManager({ initialBlocks }: BlockManagerProps) {
                   <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-barber-muted">
                     <span className="flex items-center gap-1">
                       <CalendarDays className="h-3 w-3" />
-                      {formatDate(block.starts_at)}
+                      {formatDate(block.start_at)}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {formatTime(block.starts_at)} → {formatTime(block.ends_at)}
+                      {formatTime(block.start_at)} → {formatTime(block.end_at)}
                     </span>
                     {block.member_name && (
                       <span className="flex items-center gap-1">

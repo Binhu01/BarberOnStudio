@@ -36,7 +36,7 @@ export default async function IntelligencePage() {
     getInsights("active").catch(() => []),
   ]);
 
-  if (status.needs_setup) {
+  if (!status || status.needs_setup) {
     return (
       <div className="space-y-6">
         <div>
@@ -52,11 +52,11 @@ export default async function IntelligencePage() {
             Configuração pendente
           </h2>
           <p className="mt-2 text-sm text-barber-muted">
-            {!status.is_configured
+            {!status?.is_configured
               ? "A variável de ambiente ANTHROPIC_API_KEY não está configurada no servidor. Configure-a para ativar o Barber-On Intelligence."
               : "O Barber-On Intelligence está desativado para esta organização. Ative-o nas configurações."}
           </p>
-          {["OWNER", "ADMIN"].includes(status.role ?? "") && (
+          {["OWNER", "ADMIN"].includes(status?.role ?? "") && (
             <Link
               href="/dashboard/intelligence/configuracoes"
               className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-barber-warning px-4 py-2 text-sm font-medium text-barber-white transition-colors hover:bg-barber-warning/90"

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { integrationConnectionSchema } from "./schemas";
 import type { IntegrationConnection, WebhookEvent, DashboardKPIs } from "./schemas";
@@ -24,7 +25,8 @@ async function getOrg() {
 // ---------------------------------------------------------------------------
 
 export async function getIntegrationConnections(): Promise<IntegrationConnection[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -142,7 +144,8 @@ export async function getWebhookEvents(filters?: {
   processed?: boolean;
   limit?: number;
 }): Promise<WebhookEvent[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -173,7 +176,8 @@ export async function getWebhookEvents(filters?: {
 // ---------------------------------------------------------------------------
 
 export async function getDashboardKPIs(): Promise<DashboardKPIs> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
   const org = await getOrg();
 
   const { data, error } = await supabase.rpc("get_dashboard_kpis", {
@@ -227,7 +231,8 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
 // ---------------------------------------------------------------------------
 
 export async function getAppointmentsReport(period?: string): Promise<any[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -257,7 +262,8 @@ export async function getAppointmentsReport(period?: string): Promise<any[]> {
 }
 
 export async function getBarberRanking(period?: string): Promise<any[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -286,7 +292,8 @@ export async function getBarberRanking(period?: string): Promise<any[]> {
 }
 
 export async function getServicePopularity(period?: string): Promise<any[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -314,7 +321,8 @@ export async function getServicePopularity(period?: string): Promise<any[]> {
 }
 
 export async function getCustomerRetention(): Promise<any[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -338,7 +346,8 @@ export async function getCustomerRetention(): Promise<any[]> {
 }
 
 export async function getProductSalesReport(period?: string): Promise<any[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase

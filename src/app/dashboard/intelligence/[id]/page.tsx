@@ -20,7 +20,7 @@ export default async function ConversaPage(props: {
     getConversations().catch(() => []),
   ]);
 
-  if (status.needs_setup) {
+  if (!status || status.needs_setup) {
     return (
       <div className="space-y-6">
         <Link

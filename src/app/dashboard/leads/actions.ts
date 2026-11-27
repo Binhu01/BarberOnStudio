@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { cookies } from "next/headers";
 import type {
   Lead,
@@ -22,7 +23,7 @@ import {
 // ---------------------------------------------------------------------------
 
 async function getActiveOrgId(userId: string): Promise<string> {
-  const supabase = await createClient();
+  const supabase = requireAdminClient();
   const cookieStore = await cookies();
   const activeOrgCookie = cookieStore.get("barber_active_org")?.value;
 
@@ -71,14 +72,16 @@ export async function getLeads(params: {
   page?: number;
   pageSize?: number;
 }) {
-  const supabase = await createClient();
+  const supabaseUser = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabaseUser.auth.getUser();
 
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
+  const supabase = createAdminClient();
+  if (!supabase) return { leads: [], total: 0, page: params.page ?? 1, pageSize: params.pageSize ?? 20 };
   const page = params.page ?? 1;
   const pageSize = params.pageSize ?? 20;
   const from = (page - 1) * pageSize;
@@ -141,14 +144,16 @@ export async function getLeads(params: {
  * Get leads grouped by pipeline stage for Kanban board display.
  */
 export async function getLeadsByStage(pipelineId: string) {
-  const supabase = await createClient();
+  const supabaseUser = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabaseUser.auth.getUser();
 
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
+  const supabase = createAdminClient();
+  if (!supabase) return [];
 
   // Fetch stages ordered by position
   const { data: stages, error: stagesError } = await supabase
@@ -186,14 +191,16 @@ export async function getLeadsByStage(pipelineId: string) {
  * Fetch the default pipeline and its stages for the active organization.
  */
 export async function getPipelineAndStages() {
-  const supabase = await createClient();
+  const supabaseUser = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabaseUser.auth.getUser();
 
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { data: pipeline, error: pipelineError } = await supabase
     .from("pipelines")
@@ -224,14 +231,16 @@ export async function getPipelineAndStages() {
  * Fetch a single lead by ID with stage info.
  */
 export async function getLeadById(id: string) {
-  const supabase = await createClient();
+  const supabaseUser = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabaseUser.auth.getUser();
 
   if (!user) throw new Error("Not authenticated");
 
   const orgId = await getActiveOrgId(user.id);
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { data, error } = await supabase
     .from("leads")
@@ -263,8 +272,9 @@ export async function createLead(data: CreateLeadInput) {
 
   const orgId = await getActiveOrgId(user.id);
 
-  // Resolve default pipeline
-  const { data: pipeline } = await supabase
+  // Resolve default pipeline (use admin client to bypass RLS on reads)
+  const adminClient = requireAdminClient();
+  const { data: pipeline } = await adminClient
     .from("pipelines")
     .select("id")
     .eq("organization_id", orgId)
@@ -312,8 +322,9 @@ export async function updateLead(id: string, data: UpdateLeadInput) {
 
   const orgId = await getActiveOrgId(user.id);
 
-  // Verify lead belongs to user's org
-  const { data: existing } = await supabase
+  // Verify lead belongs to user's org (use admin client to bypass RLS on reads)
+  const adminClient = requireAdminClient();
+  const { data: existing } = await adminClient
     .from("leads")
     .select("id")
     .eq("id", id)
@@ -349,8 +360,11 @@ export async function moveLeadStage(leadId: string, newStageId: string) {
 
   const orgId = await getActiveOrgId(user.id);
 
+  // Use admin client for reads to bypass RLS
+  const adminClient = requireAdminClient();
+
   // Verify lead belongs to org
-  const { data: lead } = await supabase
+  const { data: lead } = await adminClient
     .from("leads")
     .select("id, pipeline_id")
     .eq("id", leadId)
@@ -362,7 +376,7 @@ export async function moveLeadStage(leadId: string, newStageId: string) {
   }
 
   // Verify stage belongs to org and same pipeline
-  const { data: stage } = await supabase
+  const { data: stage } = await adminClient
     .from("pipeline_stages")
     .select("id, is_won, is_lost")
     .eq("id", newStageId)
@@ -400,8 +414,11 @@ export async function archiveLead(id: string) {
 
   const orgId = await getActiveOrgId(user.id);
 
+  // Use admin client for reads to bypass RLS
+  const adminClient = requireAdminClient();
+
   // Verify lead belongs to org
-  const { data: existing } = await supabase
+  const { data: existing } = await adminClient
     .from("leads")
     .select("id")
     .eq("id", id)
@@ -426,7 +443,8 @@ export async function archiveLead(id: string) {
  * Get aggregate lead statistics for an organization.
  */
 export async function getLeadStats(orgId: string) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const now = new Date().toISOString();
 

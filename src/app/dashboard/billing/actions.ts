@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import type {
  SubscriptionPlan,
  SubscriptionPlanVersion,
@@ -29,10 +30,12 @@ import type {
 
 async function getCtx() {
  const supabase = await createClient();
+ const adminSupabase = requireAdminClient();
  const { data: { user } } = await supabase.auth.getUser();
  if (!user) throw new Error("Não autenticado");
 
- const { data: membership } = await supabase
+ // Usar admin client para evitar recursão infinita RLS na tabela memberships
+ const { data: membership } = await adminSupabase
  .from("memberships")
  .select("organization_id, role, id, status")
  .eq("user_id", user.id)
@@ -61,7 +64,8 @@ async function getPlatformAdminCtx() {
 // ============================================================================
 
 export async function getActivePlans(): Promise<PlanWithCurrentVersion[]> {
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data: plans } = await supabase
  .from("subscription_plans")
@@ -88,7 +92,8 @@ export async function getActivePlans(): Promise<PlanWithCurrentVersion[]> {
 }
 
 export async function getPlanEntitlements(planVersionId: string): Promise<PlanEntitlement[]> {
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data } = await supabase
  .from("plan_entitlements")
@@ -459,7 +464,8 @@ export async function getMySupportTickets(): Promise<SupportTicket[]> {
 
 export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return null as any;
 
  const thirtyDaysAgo = new Date();
  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -529,7 +535,8 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
 
 export async function getAllPlans(): Promise<PlanWithCurrentVersion[]> {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data: plans } = await supabase
  .from("subscription_plans")
@@ -715,7 +722,8 @@ export async function adminGetOrganizations(filters?: {
  status?: string;
 }) {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  let query = supabase
  .from("organizations")
@@ -745,7 +753,8 @@ export async function adminGetOrganizations(filters?: {
 
 export async function adminGetSubscriptions() {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data } = await supabase
  .from("subscriptions")
@@ -770,7 +779,8 @@ export async function adminGetSubscriptions() {
 
 export async function adminGetSupportTickets(status?: string) {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  let query = supabase
  .from("support_tickets")
@@ -824,7 +834,8 @@ export async function adminUpdateTicketStatus(
 
 export async function adminGetAuditLogs(limit = 100) {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data } = await supabase
  .from("platform_audit_logs")
@@ -844,7 +855,8 @@ export async function adminGetAuditLogs(limit = 100) {
 
 export async function adminGetPlatformAdmins(): Promise<PlatformAdminWithProfile[]> {
  await getPlatformAdminCtx();
- const supabase = await createClient();
+ const supabase = createAdminClient();
+ if (!supabase) return [];
 
  const { data } = await supabase
  .from("platform_admins")

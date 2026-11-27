@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import {
@@ -32,6 +33,15 @@ async function getCtx() {
   return { supabase, user, orgId: activeData.org.id };
 }
 
+async function getAdminCtx() {
+  const supabase = createAdminClient();
+  if (!supabase) return null;
+  // orgId still needed for filtering; getActiveOrganization reads from cookies/cache, not Supabase
+  const activeData = await getActiveOrganization();
+  if (!activeData) return null;
+  return { supabase, orgId: activeData.org.id };
+}
+
 function reval() {
   revalidatePath("/dashboard/financeiro", "layout");
 }
@@ -41,7 +51,9 @@ function reval() {
 // ============================================================================
 
 export async function getAccounts() {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
   const { data, error } = await supabase
     .from("financial_accounts")
     .select("*")
@@ -52,7 +64,9 @@ export async function getAccounts() {
 }
 
 export async function getAccountBalance(accountId: string) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return 0;
+  const { supabase, orgId } = ctx;
   const { data, error } = await supabase
     .from("financial_transactions")
     .select("amount")
@@ -151,7 +165,9 @@ export async function archiveAccount(id: string) {
 // ============================================================================
 
 export async function getCategories(type?: "income" | "expense") {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
   let query = supabase
     .from("financial_categories")
     .select("*")
@@ -229,7 +245,9 @@ export async function getReceivables(filters?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return { receivables: [], total: 0 };
+  const { supabase, orgId } = ctx;
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 20;
   const from = (page - 1) * perPage;
@@ -255,7 +273,9 @@ export async function getReceivables(filters?: {
 }
 
 export async function getReceivableById(id: string) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return null;
+  const { supabase, orgId } = ctx;
   const { data, error } = await supabase
     .from("receivables")
     .select(`*, customer:customers(id, name, email), category:financial_categories(id, name), order:orders(id, document_number), allocations:payment_allocations(*, payment:financial_payments(id, payment_method, paid_at, description))`)
@@ -371,7 +391,9 @@ export async function getPayables(filters?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return { payables: [], total: 0 };
+  const { supabase, orgId } = ctx;
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 20;
   const from = (page - 1) * perPage;
@@ -396,7 +418,9 @@ export async function getPayables(filters?: {
 }
 
 export async function getPayableById(id: string) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return null;
+  const { supabase, orgId } = ctx;
   const { data, error } = await supabase
     .from("payables")
     .select(`*, category:financial_categories(id, name), allocations:payment_allocations(*, payment:financial_payments(id, payment_method, paid_at, description))`)
@@ -597,7 +621,9 @@ export async function reversePayment(paymentId: string, reason: string) {
 }
 
 export async function getPaymentHistory(targetId: string, targetType: "receivable" | "payable") {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
   const column = targetType === "receivable" ? "receivable_id" : "payable_id";
 
   const { data, error } = await supabase
@@ -669,7 +695,9 @@ export async function getTransactions(filters?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return { transactions: [], total: 0 };
+  const { supabase, orgId } = ctx;
   const page = filters?.page ?? 1;
   const perPage = filters?.perPage ?? 50;
   const from = (page - 1) * perPage;
@@ -699,7 +727,9 @@ export async function getCashFlow(params: {
   account_id?: string;
   mode?: "realized" | "projected";
 }) {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return { entries: [], opening_balance: 0, closing_balance: 0, total_income: 0, total_expense: 0, net_flow: 0, projected_receivables: 0, projected_payables: 0, projected_balance: 0 };
+  const { supabase, orgId } = ctx;
 
   // Realized: sum of financial_transactions in period
   let txQuery = supabase
@@ -785,7 +815,9 @@ export async function getCashFlow(params: {
 // ============================================================================
 
 export async function getFinancialDashboard() {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return { total_balance: 0, income_this_month: 0, expense_this_month: 0, net_flow_this_month: 0, receivables_open: 0, receivables_overdue: 0, payables_open: 0, payables_overdue: 0, receivables_amount_open: 0, payables_amount_open: 0, projected_balance: 0 };
+  const { supabase, orgId } = ctx;
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
@@ -904,7 +936,9 @@ export async function getMonthlyClosings(params?: {
   net_margin_pct: number;
   avg_ticket: number;
 }[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getAdminCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   let query = supabase
     .from("v_financial_dre")

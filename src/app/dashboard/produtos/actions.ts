@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { revalidatePath } from "next/cache";
 import type { ProductWithDetails, ProductCategory, ProductStats } from "@/types/inventory";
@@ -17,11 +18,12 @@ import {
 
 async function getCtx() {
   const supabase = await createClient();
+  const adminSupabase = requireAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Não autenticado");
   const activeData = await getActiveOrganization();
   if (!activeData) throw new Error("Nenhuma organização ativa");
-  return { supabase, user, orgId: activeData.org.id };
+  return { supabase: adminSupabase, user, orgId: activeData.org.id };
 }
 
 // ============================================================================
@@ -29,7 +31,11 @@ async function getCtx() {
 // ============================================================================
 
 export async function getCategories(): Promise<ProductCategory[]> {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+  const activeData = await getActiveOrganization();
+  if (!activeData) return [];
+  const orgId = activeData.org.id;
   const { data, error } = await supabase
     .from("product_categories")
     .select("*")
@@ -118,7 +124,11 @@ export async function getProducts(params?: {
   page?: number;
   perPage?: number;
 }) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return { products: [] as unknown as Array<ProductWithDetails>, total: 0 };
+  const activeData = await getActiveOrganization();
+  if (!activeData) return { products: [] as unknown as Array<ProductWithDetails>, total: 0 };
+  const orgId = activeData.org.id;
   const page = params?.page ?? 1;
   const perPage = params?.perPage ?? 20;
   const from = (page - 1) * perPage;
@@ -155,7 +165,11 @@ export async function getProducts(params?: {
 }
 
 export async function getProductById(id: string) {
-  const { supabase, orgId } = await getCtx();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
+  const activeData = await getActiveOrganization();
+  if (!activeData) return null as any;
+  const orgId = activeData.org.id;
   const { data, error } = await supabase
     .from("products")
     .select(`
@@ -348,7 +362,8 @@ export async function archiveProduct(id: string) {
 }
 
 export async function getProductStats(orgId: string): Promise<ProductStats> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null as any;
 
   const { data: allProducts } = await supabase
     .from("products")

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import type {
   DateRange,
@@ -30,11 +31,12 @@ import type {
 // ============================================================================
 
 async function getCtx() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null;
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Não autenticado");
+  if (!user) return null;
   const activeData = await getActiveOrganization();
-  if (!activeData) throw new Error("Nenhuma organização ativa");
+  if (!activeData) return null;
   return { supabase, user, orgId: activeData.org.id };
 }
 
@@ -55,7 +57,9 @@ function dateToEndISO(d: string): string {
 // ============================================================================
 
 export async function getSalesKPIs(dateRange: DateRange, previousRange?: DateRange): Promise<SalesKPIs> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return null as unknown as SalesKPIs;
+  const { supabase, orgId } = ctx;
 
   const { data: current, error } = await supabase
     .from("v_sales_summary")
@@ -110,7 +114,9 @@ export async function getSalesKPIs(dateRange: DateRange, previousRange?: DateRan
 }
 
 export async function getSalesByChannel(dateRange: DateRange): Promise<SalesByChannel[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_sales_summary")
@@ -144,7 +150,9 @@ export async function getSalesByChannel(dateRange: DateRange): Promise<SalesByCh
 }
 
 export async function getSalesByPeriod(dateRange: DateRange): Promise<SalesByPeriod[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_sales_summary")
@@ -172,7 +180,9 @@ export async function getSalesByPeriod(dateRange: DateRange): Promise<SalesByPer
 }
 
 export async function getTopCustomers(dateRange: DateRange, limit = 10): Promise<TopCustomer[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_sales_summary")
@@ -205,7 +215,9 @@ export async function getTopCustomers(dateRange: DateRange, limit = 10): Promise
 }
 
 export async function getTopProducts(dateRange: DateRange, limit = 10): Promise<TopProduct[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("order_items")
@@ -242,7 +254,9 @@ export async function getTopProducts(dateRange: DateRange, limit = 10): Promise<
 // ============================================================================
 
 export async function getCRMKPIs(dateRange: DateRange, previousRange?: DateRange): Promise<CRMKPIs> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return null as unknown as CRMKPIs;
+  const { supabase, orgId } = ctx;
 
   // Active customers
   const { count: totalActiveCustomers } = await supabase
@@ -338,7 +352,9 @@ export async function getCRMKPIs(dateRange: DateRange, previousRange?: DateRange
 }
 
 export async function getPipelineFunnel(): Promise<PipelineFunnelStage[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_pipeline_funnel")
@@ -361,7 +377,9 @@ export async function getPipelineFunnel(): Promise<PipelineFunnelStage[]> {
 }
 
 export async function getLeadsBySource(dateRange: DateRange): Promise<LeadsBySource[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("leads")
@@ -392,7 +410,9 @@ export async function getLeadsBySource(dateRange: DateRange): Promise<LeadsBySou
 // ============================================================================
 
 export async function getFinancialKPIs(dateRange: DateRange, previousRange?: DateRange): Promise<FinancialKPIs> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return null as unknown as FinancialKPIs;
+  const { supabase, orgId } = ctx;
 
   // Total received (inbound payments in period)
   const { data: inbound } = await supabase
@@ -523,7 +543,9 @@ export async function getFinancialKPIs(dateRange: DateRange, previousRange?: Dat
 }
 
 export async function getCashflowMonthly(months = 12): Promise<CashflowMonthlyRow[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_cashflow_monthly")
@@ -544,7 +566,9 @@ export async function getCashflowMonthly(months = 12): Promise<CashflowMonthlyRo
 }
 
 export async function getReceivablesAging(): Promise<AgingBucket[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_receivables_aging")
@@ -586,7 +610,9 @@ export async function getReceivablesAging(): Promise<AgingBucket[]> {
 }
 
 export async function getPayablesAging(): Promise<AgingBucket[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_payables_aging")
@@ -628,7 +654,9 @@ export async function getPayablesAging(): Promise<AgingBucket[]> {
 }
 
 export async function getExpensesByCategory(dateRange: DateRange): Promise<ExpenseByCategory[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("financial_transactions")
@@ -660,7 +688,9 @@ export async function getExpensesByCategory(dateRange: DateRange): Promise<Expen
 }
 
 export async function getAccountBalances(): Promise<AccountBalanceSummary[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data: accounts, error } = await supabase
     .from("financial_accounts")
@@ -696,7 +726,9 @@ export async function getAccountBalances(): Promise<AccountBalanceSummary[]> {
 // ============================================================================
 
 export async function getInventoryKPIs(): Promise<InventoryKPIs> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return null as unknown as InventoryKPIs;
+  const { supabase, orgId } = ctx;
 
   // Total active products
   const { count: totalProducts } = await supabase
@@ -750,7 +782,9 @@ export async function getInventoryKPIs(): Promise<InventoryKPIs> {
 }
 
 export async function getInventoryValuation(): Promise<InventoryValuationRow[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_inventory_valuation")
@@ -781,7 +815,9 @@ export async function getInventoryValuation(): Promise<InventoryValuationRow[]> 
 }
 
 export async function getMovementSummary(dateRange: DateRange): Promise<MovementSummary[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("inventory_movements")
@@ -810,7 +846,9 @@ export async function getMovementSummary(dateRange: DateRange): Promise<Movement
 // ============================================================================
 
 export async function getTeamKPIs(): Promise<TeamKPIs> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return null as unknown as TeamKPIs;
+  const { supabase, orgId } = ctx;
 
   // Active members
   const { count: activeMembers } = await supabase
@@ -856,7 +894,9 @@ export async function getTeamKPIs(): Promise<TeamKPIs> {
 }
 
 export async function getTeamPerformance(dateRange: DateRange): Promise<TeamPerformanceRow[]> {
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return [];
+  const { supabase, orgId } = ctx;
 
   const { data, error } = await supabase
     .from("v_team_performance")
@@ -896,7 +936,9 @@ export async function getExecutiveDashboard(dateRange: DateRange): Promise<Execu
     getInventoryKPIs(),
   ]);
 
-  const { supabase, orgId } = await getCtx();
+  const ctx = await getCtx();
+  if (!ctx) return null as unknown as ExecutiveDashboardData;
+  const { supabase, orgId } = ctx;
 
   // Recent orders
   const { data: recentOrdersData } = await supabase

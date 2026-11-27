@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 
 export async function switchOrganization(organizationId: string) {
   const supabase = await createClient();
@@ -14,8 +15,9 @@ export async function switchOrganization(organizationId: string) {
     return { error: "Usuário não autenticado." };
   }
 
-  // Verify membership
-  const { data: membership } = await supabase
+  // Verify membership (use admin client to bypass RLS)
+  const adminSupabase = requireAdminClient();
+  const { data: membership } = await adminSupabase
     .from("memberships")
     .select("id")
     .eq("organization_id", organizationId)

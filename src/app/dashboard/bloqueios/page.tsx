@@ -42,7 +42,7 @@ export default async function BloqueiosPage({
             <div>
               <p className="text-sm text-barber-muted">Bloqueios Ativos</p>
               <p className="text-xl font-bold text-barber-white">
-                {blocks.filter((b) => new Date(b.ends_at) > new Date()).length}
+                {blocks.filter((b) => new Date(b.end_at) > new Date()).length}
               </p>
             </div>
           </div>
@@ -58,7 +58,7 @@ export default async function BloqueiosPage({
               <p className="text-xl font-bold text-barber-white">
                 {
                   blocks.filter((b) => {
-                    const d = new Date(b.starts_at);
+                    const d = new Date(b.start_at);
                     const now = new Date();
                     return (
                       d.getMonth() === now.getMonth() &&
