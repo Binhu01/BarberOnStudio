@@ -70,23 +70,44 @@ export async function getPublicServices(
 }
 
 /**
- * Lista barbeiros disponíveis para seleção na página pública
+ * Lista barbeiros disponíveis para seleção na página pública.
+ * Usa queries diretas via cliente anon (RLS permite leitura de memberships ativas e profiles básicos).
  */
 export async function getPublicBarbers(
   orgId: string
 ): Promise<Array<{ membership_id: string; name: string; bio: string | null; specialties: string[] | null }>> {
   const supabase = getPublicClient();
 
-  const { data, error } = await supabase
-    .rpc("public_api.get_public_barbers", { p_org_id: orgId });
+  // Buscar membros ativos da organização (EMPLOYEE/MANAGER)
+  const { data: members, error: membersError } = await supabase
+    .from("memberships")
+    .select("id, user_id")
+    .eq("organization_id", orgId)
+    .eq("status", "active")
+    .in("role", ["EMPLOYEE", "MANAGER"]);
 
-  if (error) throw error;
+  if (membersError) throw membersError;
+  if (!members || members.length === 0) return [];
 
-  return (data ?? []).map((row: any) => ({
-    membership_id: row.membership_id,
-    name: row.name ?? "Profissional",
-    bio: row.bio ?? null,
-    specialties: row.specialties ?? null,
+  const userIds = members.map((m: any) => m.user_id);
+  const userIdToMembershipId: Record<string, string> = {};
+  for (const m of members) {
+    userIdToMembershipId[m.user_id] = m.id;
+  }
+
+  // Buscar profiles dos barbeiros
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, full_name, avatar_url")
+    .in("id", userIds);
+
+  if (profilesError) throw profilesError;
+
+  return (profiles ?? []).map((p: any) => ({
+    membership_id: userIdToMembershipId[p.id] ?? "",
+    name: p.full_name ?? "Profissional",
+    bio: null,
+    specialties: null,
   }));
 }
 
