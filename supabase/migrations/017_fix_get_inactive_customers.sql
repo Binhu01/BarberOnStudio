@@ -1,6 +1,9 @@
 -- =============================================================================
 -- Migration 017: Corrigir função get_inactive_customers
--- A coluna orders.total_amount não existe; o nome correto é orders.total
+-- Correções:
+-- 1. orders.total_amount → orders.total
+-- 2. profiles.phone não existe → usar customers.phone / customers.name / customers.email
+-- 3. orders.customer_id referencia customers(id), não profiles(id)
 -- =============================================================================
 
 CREATE OR REPLACE FUNCTION get_inactive_customers(
@@ -24,24 +27,22 @@ AS $$
 BEGIN
   RETURN QUERY
   SELECT
-    p.id,
-    p.full_name,
-    p.phone,
-    p.email,
+    c.id,
+    c.name,
+    c.phone,
+    c.email,
     MAX(o.created_at) AS last_visit_at,
     EXTRACT(DAY FROM (now() - MAX(o.created_at)))::INT AS days_inactive,
     COUNT(o.id)::INT AS total_visits,
     COALESCE(SUM(o.total), 0) AS total_spent
-  FROM profiles p
-  JOIN memberships m ON m.user_id = p.id AND m.organization_id = p_org_id
-  LEFT JOIN orders o ON o.customer_id = p.id AND o.organization_id = p_org_id
-  WHERE p.id IN (
-    SELECT DISTINCT customer_id FROM orders WHERE organization_id = p_org_id
-  )
-  GROUP BY p.id, p.full_name, p.phone, p.email
+  FROM customers c
+  LEFT JOIN orders o ON o.customer_id = c.id AND o.organization_id = p_org_id
+  WHERE c.organization_id = p_org_id
+    AND c.status = 'active'
+  GROUP BY c.id, c.name, c.phone, c.email
   HAVING MAX(o.created_at) < now() - (p_inactive_days || ' days')::INTERVAL
   ORDER BY days_inactive DESC;
 END;
 $$;
 
-COMMENT ON FUNCTION get_inactive_customers IS 'Lista clientes inativos há N dias para reativação (corrigido: orders.total em vez de orders.total_amount)';
+COMMENT ON FUNCTION get_inactive_customers IS 'Lista clientes inativos há N dias para reativação (usa tabela customers com phone/name/email corretos)';
