@@ -45,7 +45,7 @@ export async function getLandingData() {
     .select("user_id, role")
     .eq("organization_id", org.id)
     .eq("status", "active")
-    .in("role", ["EMPLOYEE", "MANAGER"]);
+    .in("role", ["EMPLOYEE", "MANAGER", "OWNER"]);
 
   if (membersError) {
     console.error("[getLandingData] Erro ao buscar membros:", membersError.message);
@@ -433,26 +433,38 @@ export async function createPublicBookingFromLanding(input: {
 
   if (error) throw new Error(`Erro ao criar agendamento: ${error.message}`);
 
-  // Criar registro correspondente em calendar_events para aparecer na agenda do admin
+  // Criar registro correspondente em calendar_events via RPC SECURITY DEFINER
+  // (INSERT direto falha por RLS com anon key)
   const endAt = new Date(
     new Date(scheduledAt).getTime() + service.duration_minutes * 60 * 1000
   ).toISOString();
 
   try {
-    await supabase.from("calendar_events").insert({
-      organization_id: org.id,
-      title: `${service.name} — ${input.customerName}`,
-      description: input.notes ?? null,
-      start_at: scheduledAt,
-      end_at: endAt,
-      all_day: false,
-      barber_service_id: input.serviceId,
-      assigned_barber_id: membershipId,
-      total_price: service.price,
-      status: "confirmed",
-      origin: "landing_page",
-      notes: `Agendamento público via landing page\nTelefone: ${input.customerPhone}${input.customerEmail ? `\nEmail: ${input.customerEmail}` : ""}`,
-      confirmed_at: new Date().toISOString(),
+    // Buscar user_id do barbeiro para created_by (FK para profiles.id)
+    let createdBy = membershipId; // fallback
+    if (membershipId) {
+      const { data: memberRow } = await supabase
+        .from("memberships")
+        .select("user_id")
+        .eq("id", membershipId)
+        .maybeSingle();
+      if (memberRow?.user_id) {
+        createdBy = memberRow.user_id;
+      }
+    }
+
+    await supabase.rpc("create_public_calendar_event", {
+      p_organization_id: org.id,
+      p_title: `${service.name} — ${input.customerName}`,
+      p_description: input.notes ?? null,
+      p_start_at: scheduledAt,
+      p_end_at: endAt,
+      p_barber_service_id: input.serviceId,
+      p_assigned_barber_id: membershipId,
+      p_total_price: service.price,
+      p_status: "confirmed",
+      p_notes: `Agendamento público via landing page\nTelefone: ${input.customerPhone}${input.customerEmail ? `\nEmail: ${input.customerEmail}` : ""}`,
+      p_created_by: createdBy,
     });
   } catch (calErr: any) {
     // Não bloqueia a confirmação do booking se calendar_events falhar

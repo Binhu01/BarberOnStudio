@@ -78,13 +78,13 @@ export async function getPublicBarbers(
 ): Promise<Array<{ membership_id: string; name: string; bio: string | null; specialties: string[] | null }>> {
   const supabase = getPublicClient();
 
-  // Buscar membros ativos da organização (EMPLOYEE/MANAGER)
+  // Buscar membros ativos da organização (EMPLOYEE/MANAGER/OWNER)
   const { data: members, error: membersError } = await supabase
     .from("memberships")
     .select("id, user_id")
     .eq("organization_id", orgId)
     .eq("status", "active")
-    .in("role", ["EMPLOYEE", "MANAGER"]);
+    .in("role", ["EMPLOYEE", "MANAGER", "OWNER"]);
 
   if (membersError) throw membersError;
   if (!members || members.length === 0) return [];
