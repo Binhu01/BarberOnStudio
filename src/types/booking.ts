@@ -53,14 +53,16 @@ export interface ScheduleBlock {
   id: string;
   organization_id: string;
   membership_id: string | null;
+  block_type: string;
   title: string;
+  description: string | null;
   reason: string | null;
-  starts_at: string;
-  ends_at: string;
+  start_at: string;
+  end_at: string;
   is_recurring: boolean;
   recurring_days: number[] | null;
   recurring_until: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
   // Joins
@@ -72,8 +74,8 @@ export interface CreateScheduleBlockInput {
   membership_id?: string | null;
   title: string;
   reason?: string | null;
-  starts_at: string;
-  ends_at: string;
+  start_at: string;
+  end_at: string;
   is_recurring?: boolean;
   recurring_days?: number[];
   recurring_until?: string | null;
@@ -82,8 +84,8 @@ export interface CreateScheduleBlockInput {
 export interface UpdateScheduleBlockInput {
   title?: string;
   reason?: string | null;
-  starts_at?: string;
-  ends_at?: string;
+  start_at?: string;
+  end_at?: string;
   is_recurring?: boolean;
   recurring_days?: number[];
   recurring_until?: string | null;

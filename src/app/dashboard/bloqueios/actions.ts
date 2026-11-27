@@ -45,16 +45,16 @@ export async function getScheduleBlocks(filters?: {
     `
     )
     .eq("organization_id", org.id)
-    .order("starts_at", { ascending: false });
+    .order("start_at", { ascending: false });
 
   if (filters?.membership_id) {
     query = query.eq("membership_id", filters.membership_id);
   }
   if (filters?.date_from) {
-    query = query.gte("starts_at", filters.date_from);
+    query = query.gte("start_at", filters.date_from);
   }
   if (filters?.date_to) {
-    query = query.lte("starts_at", filters.date_to);
+    query = query.lte("start_at", filters.date_to);
   }
 
   const { data, error } = await query;
@@ -93,8 +93,8 @@ export async function createScheduleBlock(
       membership_id: parsed.membership_id ?? null,
       title: parsed.title,
       reason: parsed.reason ?? null,
-      starts_at: parsed.starts_at,
-      ends_at: parsed.ends_at,
+      start_at: parsed.start_at,
+      end_at: parsed.end_at,
       is_recurring: parsed.is_recurring ?? false,
       recurring_days: parsed.recurring_days ?? null,
       recurring_until: parsed.recurring_until ?? null,

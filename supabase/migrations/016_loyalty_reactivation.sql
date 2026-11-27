@@ -347,7 +347,7 @@ BEGIN
     MAX(o.created_at) AS last_visit_at,
     EXTRACT(DAY FROM (now() - MAX(o.created_at)))::INT AS days_inactive,
     COUNT(o.id)::INT AS total_visits,
-    COALESCE(SUM(o.total_amount), 0) AS total_spent
+    COALESCE(SUM(o.total), 0) AS total_spent
   FROM profiles p
   JOIN memberships m ON m.user_id = p.id AND m.organization_id = p_org_id
   LEFT JOIN orders o ON o.customer_id = p.id AND o.organization_id = p_org_id
