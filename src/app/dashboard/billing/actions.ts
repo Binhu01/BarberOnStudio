@@ -30,10 +30,12 @@ import type {
 
 async function getCtx() {
  const supabase = await createClient();
+ const adminSupabase = requireAdminClient();
  const { data: { user } } = await supabase.auth.getUser();
  if (!user) throw new Error("Não autenticado");
 
- const { data: membership } = await supabase
+ // Usar admin client para evitar recursão infinita RLS na tabela memberships
+ const { data: membership } = await adminSupabase
  .from("memberships")
  .select("organization_id, role, id, status")
  .eq("user_id", user.id)

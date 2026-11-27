@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, requireAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import {
   openCashSessionSchema,
@@ -32,7 +33,8 @@ async function getOrg() {
 // =============================================================================
 
 export async function getCashRegisters(): Promise<CashRegister[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -51,7 +53,8 @@ export async function getCashRegisters(): Promise<CashRegister[]> {
 // =============================================================================
 
 export async function getOpenCashSession(): Promise<CashSession | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return null;
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -86,7 +89,8 @@ export async function getCashSessions(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<CashSession[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -126,11 +130,12 @@ export async function getCashSessions(filters?: {
 export async function openCashSession(input: OpenCashSessionInput): Promise<string> {
   const parsed = openCashSessionSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Verificar se já existe sessão aberta neste caixa
-  const { data: existing } = await supabase
+  // Verificar se já existe sessão aberta neste caixa (admin client para evitar RLS)
+  const { data: existing } = await adminSupabase
     .from("cash_sessions")
     .select("id")
     .eq("organization_id", org.id)
@@ -142,8 +147,8 @@ export async function openCashSession(input: OpenCashSessionInput): Promise<stri
     throw new Error("Já existe uma sessão de caixa aberta neste caixa");
   }
 
-  // Buscar membership_id do usuário
-  const { data: membership } = await supabase
+  // Buscar membership_id do usuário (admin client para evitar RLS 42501)
+  const { data: membership } = await adminSupabase
     .from("memberships")
     .select("id")
     .eq("organization_id", org.id)
@@ -183,11 +188,12 @@ export async function openCashSession(input: OpenCashSessionInput): Promise<stri
 export async function closeCashSession(input: CloseCashSessionInput): Promise<void> {
   const parsed = closeCashSessionSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Buscar sessão
-  const { data: session } = await supabase
+  // Buscar sessão (admin client para evitar RLS)
+  const { data: session } = await adminSupabase
     .from("cash_sessions")
     .select("*")
     .eq("id", parsed.cash_session_id)
@@ -197,8 +203,8 @@ export async function closeCashSession(input: CloseCashSessionInput): Promise<vo
   if (!session) throw new Error("Sessão de caixa não encontrada");
   if (session.status !== "open") throw new Error("Sessão já está fechada");
 
-  // Buscar membership_id do usuário que está fechando
-  const { data: membership } = await supabase
+  // Buscar membership_id do usuário que está fechando (admin client)
+  const { data: membership } = await adminSupabase
     .from("memberships")
     .select("id")
     .eq("organization_id", org.id)
@@ -244,7 +250,8 @@ export async function closeCashSession(input: CloseCashSessionInput): Promise<vo
 export async function getCashMovements(
   sessionId: string
 ): Promise<CashMovement[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   const { data, error } = await supabase
@@ -272,11 +279,12 @@ export async function createCashMovement(
 ): Promise<void> {
   const parsed = createCashMovementSchema.parse(input);
   const supabase = await createClient();
+  const adminSupabase = requireAdminClient();
   const org = await getOrg();
   const user = await supabase.auth.getUser();
 
-  // Verificar se a sessão está aberta
-  const { data: session } = await supabase
+  // Verificar se a sessão está aberta (admin client para evitar RLS)
+  const { data: session } = await adminSupabase
     .from("cash_sessions")
     .select("id, status")
     .eq("id", parsed.cash_session_id)
@@ -286,8 +294,8 @@ export async function createCashMovement(
   if (!session) throw new Error("Sessão de caixa não encontrada");
   if (session.status !== "open") throw new Error("Sessão de caixa está fechada");
 
-  // Buscar membership_id
-  const { data: membership } = await supabase
+  // Buscar membership_id (admin client para evitar RLS 42501)
+  const { data: membership } = await adminSupabase
     .from("memberships")
     .select("id")
     .eq("organization_id", org.id)
@@ -318,7 +326,19 @@ export async function createCashMovement(
 export async function getDailyCashSummary(
   date?: string
 ): Promise<DailyCashSummary> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) {
+    return {
+      total_sales: 0,
+      total_refunds: 0,
+      total_withdrawals: 0,
+      total_deposits: 0,
+      net_amount: 0,
+      orders_count: 0,
+      commissions_pending: 0,
+      commissions_paid: 0,
+    };
+  }
   const org = await getOrg();
 
   const targetDate = date ?? new Date().toISOString().slice(0, 10);
@@ -354,7 +374,8 @@ export async function getBarberCommissions(filters?: {
   date_from?: string;
   date_to?: string;
 }): Promise<BarberCommission[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) return [];
   const org = await getOrg();
 
   let query = supabase
@@ -416,7 +437,16 @@ export async function markCommissionPaid(input: MarkCommissionPaidInput): Promis
 }
 
 export async function getCommissionStats(): Promise<CommissionStats> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
+  if (!supabase) {
+    return {
+      total_pending: 0,
+      total_pending_amount: 0,
+      total_paid_this_month: 0,
+      top_barber_name: null,
+      top_barber_amount: 0,
+    };
+  }
   const org = await getOrg();
 
   const now = new Date();
