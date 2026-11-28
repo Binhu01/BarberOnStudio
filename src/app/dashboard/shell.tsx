@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -34,7 +34,6 @@ import {
   Wallet,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { switchOrganization } from "./actions";
 import type { UserRole } from "@/types/database";
 
 interface NavSubItem {
@@ -162,7 +161,6 @@ export function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orgMenuOpen, setOrgMenuOpen] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
-  const [isPending, startTransition] = useTransition();
 
   function toggleSubmenu(label: string) {
     setOpenSubmenus((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -176,12 +174,9 @@ export function DashboardShell({
 
   async function handleSwitchOrg(orgId: string) {
     setOrgMenuOpen(false);
-    startTransition(async () => {
-      const result = await switchOrganization(orgId);
-      if (result.success) {
-        router.refresh();
-      }
-    });
+    // Set cookie client-side and refresh — avoids importing server actions
+    document.cookie = `barber_active_org=${orgId};path=/;max-age=31536000;samesite=lax`;
+    router.refresh();
   }
 
   const userInitial = (user.name ?? user.email).charAt(0).toUpperCase();
@@ -194,6 +189,8 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen bg-barber-dark">
+      {/* DIAGNOSTIC: confirms shell renders — remove after fix verified */}
+      <div style={{ position: "fixed", top: 0, right: 0, zIndex: 99999, background: "#22c55e", color: "#000", padding: "4px 12px", fontSize: "12px", fontWeight: "bold" }}>SHELL OK</div>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -343,8 +340,7 @@ export function DashboardShell({
           <div className="relative hidden md:block">
             <button
               onClick={() => setOrgMenuOpen(!orgMenuOpen)}
-              disabled={isPending}
-              className="flex items-center gap-2 rounded-lg border border-barber-border px-3 py-1.5 text-sm transition-colors hover:bg-barber-graphite disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg border border-barber-border px-3 py-1.5 text-sm transition-colors hover:bg-barber-graphite"
             >
               <Building2 className="h-4 w-4 text-barber-gold" />
               <span className="max-w-[200px] truncate font-medium text-barber-white">
@@ -366,7 +362,6 @@ export function DashboardShell({
                     <button
                       key={org.id}
                       onClick={() => handleSwitchOrg(org.id)}
-                      disabled={isPending}
                       className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-barber-dark ${
                         activeOrg && org.id === activeOrg.id
                           ? "font-medium text-barber-gold"

@@ -13,16 +13,11 @@ export function PWAInstallPrompt() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Registrar service worker
+    // Unregister any existing service worker to prevent stale cache
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then((reg) => {
-          console.info("[PWA] Service worker registered:", reg.scope);
-        })
-        .catch((err) => {
-          console.warn("[PWA] Service worker registration failed:", err);
-        });
+      navigator.serviceWorker.getRegistrations().then((regs) => {
+        regs.forEach((reg) => reg.unregister());
+      });
     }
 
     // Capturar evento beforeinstallprompt
