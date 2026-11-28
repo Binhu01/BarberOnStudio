@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
@@ -9,43 +10,29 @@ import { OrganizationProvider } from "../organization-context";
  * Server component that handles auth + org resolution for the dashboard.
  * Extracted from layout.tsx so Next.js can isolate the uncached
  * supabase.auth.getUser() call and stop showing the Insights overlay.
+ *
+ * connection() é OBRIGATÓRIO com cacheComponents: true — marca esta rota
+ * como dinâmica e impede prerender estático durante o build.
  */
 export async function DashboardAuthGate({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // connection() removido — pode causar erro silencioso em algumas versões do Next.js
-  // O cache busting já é garantido pelo cacheComponents: true no next.config
+  // connection() sinaliza ao Next.js Cache Components que esta rota
+  // depende de runtime state (cookies/auth) e NÃO deve ser pré-renderizada.
+  await connection();
 
-  let supabase;
-  try {
-    supabase = await createClient();
-  } catch (err: any) {
-    console.error("[DashboardAuthGate] Falha ao criar Supabase client:", err);
-    redirect("/login");
-  }
-
-  let user: any = null;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data?.user ?? null;
-  } catch (err: any) {
-    console.error("[DashboardAuthGate] Falha ao obter usuário:", err);
-    redirect("/login");
-  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  let activeData: Awaited<ReturnType<typeof getActiveOrganization>> = null;
-  try {
-    activeData = await getActiveOrganization();
-  } catch (err: any) {
-    console.error("[DashboardAuthGate] Falha ao obter organização:", err);
-    // Não crashar — tentar continuar com dados mínimos
-  }
+  const activeData = await getActiveOrganization();
 
   if (!activeData) {
     console.warn(
@@ -57,33 +44,29 @@ export async function DashboardAuthGate({
   let userName: string | null = null;
   let userAvatar: string | null = null;
 
-  try {
-    const admin = createAdminClient();
-    if (admin) {
-      const { data: profile } = await admin
-        .from("profiles")
-        .select("full_name, avatar_url")
-        .eq("id", user.id)
-        .maybeSingle();
+  // Buscar perfil — tenta admin primeiro, fallback para anon
+  const admin = createAdminClient();
+  if (admin) {
+    const { data: profile } = await admin
+      .from("profiles")
+      .select("full_name, avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
 
-      userName = profile?.full_name ?? null;
-      userAvatar = profile?.avatar_url ?? null;
-    }
+    userName = profile?.full_name ?? null;
+    userAvatar = profile?.avatar_url ?? null;
+  }
 
-    // Fallback via anon client se admin não disponível ou não encontrou
-    if (!userName) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, avatar_url")
-        .eq("id", user.id)
-        .maybeSingle();
+  // Fallback via anon client se admin não disponível ou não encontrou
+  if (!userName) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
 
-      userName = profile?.full_name ?? null;
-      userAvatar = profile?.avatar_url ?? null;
-    }
-  } catch (err: any) {
-    console.error("[DashboardAuthGate] Falha ao buscar perfil:", err);
-    // Continuar sem nome/avatar — melhor que tela preta
+    userName = profile?.full_name ?? null;
+    userAvatar = profile?.avatar_url ?? null;
   }
 
   return (
