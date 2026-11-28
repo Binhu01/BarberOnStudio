@@ -1,26 +1,24 @@
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveOrganization } from "@/lib/organizations";
 import { DashboardShell } from "../shell";
 import { OrganizationProvider } from "../organization-context";
 
 /**
  * Server component that handles auth + org resolution for the dashboard.
- * Extracted from layout.tsx so Next.js can isolate the uncached
- * supabase.auth.getUser() call and stop showing the Insights overlay.
  *
- * connection() é OBRIGATÓRIO com cacheComponents: true — marca esta rota
- * como dinâmica e impede prerender estático durante o build.
+ * IMPORTANT: Uses ANON client for all queries because SUPABASE_SERVICE_ROLE_KEY
+ * may be invalid or missing in production. Anon client works correctly with RLS
+ * for authenticated users reading their own data.
  */
 export async function DashboardAuthGate({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // connection() sinaliza ao Next.js Cache Components que esta rota
-  // depende de runtime state (cookies/auth) e NÃO deve ser pré-renderizada.
+  // connection() signals to Next.js Cache Components that this route
+  // depends on runtime state (cookies/auth) and must NOT be prerendered.
   await connection();
 
   const supabase = await createClient();
@@ -35,39 +33,21 @@ export async function DashboardAuthGate({
   const activeData = await getActiveOrganization();
 
   if (!activeData) {
-    console.warn(
-      "⚠️ DashboardAuthGate: usuário sem organização ativa, redirecionando para onboarding"
-    );
     redirect("/dashboard/onboarding");
   }
 
+  // Fetch profile using ANON client (works with RLS for own profile)
   let userName: string | null = null;
   let userAvatar: string | null = null;
 
-  // Buscar perfil — tenta admin primeiro, fallback para anon
-  const admin = createAdminClient();
-  if (admin) {
-    const { data: profile } = await admin
-      .from("profiles")
-      .select("full_name, avatar_url")
-      .eq("id", user.id)
-      .maybeSingle();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, avatar_url")
+    .eq("id", user.id)
+    .maybeSingle();
 
-    userName = profile?.full_name ?? null;
-    userAvatar = profile?.avatar_url ?? null;
-  }
-
-  // Fallback via anon client se admin não disponível ou não encontrou
-  if (!userName) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    userName = profile?.full_name ?? null;
-    userAvatar = profile?.avatar_url ?? null;
-  }
+  userName = profile?.full_name ?? null;
+  userAvatar = profile?.avatar_url ?? null;
 
   return (
     <OrganizationProvider org={activeData.org} allOrgs={activeData.allOrgs}>
