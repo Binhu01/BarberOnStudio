@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
@@ -51,27 +52,35 @@ export async function DashboardAuthGate({
 
   return (
     <OrganizationProvider org={activeData.org} allOrgs={activeData.allOrgs}>
-      <DashboardShell
-        user={{
-          id: user.id,
-          name: userName,
-          email: user.email ?? "",
-          avatarUrl: userAvatar,
-        }}
-        activeOrg={{
-          id: activeData.org.id,
-          name: activeData.org.name,
-          slug: activeData.org.slug,
-          role: activeData.org.membership.role,
-        }}
-        allOrgs={activeData.allOrgs.map((o) => ({
-          id: o.id,
-          name: o.name,
-          slug: o.slug,
-        }))}
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-barber-dark">
+            <p className="text-barber-muted">Carregando dashboard...</p>
+          </div>
+        }
       >
-        {children}
-      </DashboardShell>
+        <DashboardShell
+          user={{
+            id: user.id,
+            name: userName,
+            email: user.email ?? "",
+            avatarUrl: userAvatar,
+          }}
+          activeOrg={{
+            id: activeData.org.id,
+            name: activeData.org.name,
+            slug: activeData.org.slug,
+            role: activeData.org.membership.role,
+          }}
+          allOrgs={activeData.allOrgs.map((o) => ({
+            id: o.id,
+            name: o.name,
+            slug: o.slug,
+          }))}
+        >
+          {children}
+        </DashboardShell>
+      </Suspense>
     </OrganizationProvider>
   );
 }
