@@ -15,14 +15,31 @@ export async function switchOrganization(organizationId: string) {
     return { error: "Usuário não autenticado." };
   }
 
-  // Verify membership (use admin client to bypass RLS)
-  const adminSupabase = requireAdminClient();
-  const { data: membership } = await adminSupabase
-    .from("memberships")
-    .select("id")
-    .eq("organization_id", organizationId)
-    .eq("user_id", user.id)
-    .maybeSingle();
+  // Verify membership — tenta admin client primeiro, fallback para anon
+  let membership: { id: string } | null = null;
+
+  const adminSupabase = createAdminClient();
+  if (adminSupabase) {
+    const { data } = await adminSupabase
+      .from("memberships")
+      .select("id")
+      .eq("organization_id", organizationId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    membership = data ?? null;
+  }
+
+  // Fallback: verificar via anon client (RLS permite leitura da própria membership)
+  if (!membership) {
+    const { data } = await supabase
+      .from("memberships")
+      .select("id")
+      .eq("organization_id", organizationId)
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
+    membership = data ?? null;
+  }
 
   if (!membership) {
     return { error: "Você não tem acesso a esta organização." };
