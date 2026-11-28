@@ -83,7 +83,7 @@ export async function DashboardAuthGate({
             id: activeData.org.id,
             name: activeData.org.name,
             slug: activeData.org.slug,
-            role: activeData.org.membership.role,
+            role: activeData.org.membership.role as "OWNER" | "ADMIN" | "MANAGER" | "EMPLOYEE",
           }}
           allOrgs={activeData.allOrgs.map((o) => ({
             id: o.id,

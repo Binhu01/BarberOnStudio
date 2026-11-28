@@ -155,7 +155,8 @@ export async function getUserOrganizations(): Promise<UserOrganization[]> {
                 return httpMemberships
                   .filter((m: { organization_id: string }) => orgMap.has(m.organization_id))
                   .map((m: { id: string; organization_id: string; user_id: string; role: string; status: string; created_at: string }) => {
-                    const org = orgMap.get(m.organization_id)!;
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const org = orgMap.get(m.organization_id) as any;
                     return {
                       id: org.id,
                       name: org.name,

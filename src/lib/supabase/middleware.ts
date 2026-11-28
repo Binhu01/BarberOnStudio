@@ -126,8 +126,10 @@ export async function updateSession(request: NextRequest) {
         sameSite: 'lax'
       });
 
-      const m = fullMemberships[0];
-      const org = m.organizations!;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const m = fullMemberships[0] as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const org = m.organizations as any;
       const orgData = {
         org: {
           id: org.id,
