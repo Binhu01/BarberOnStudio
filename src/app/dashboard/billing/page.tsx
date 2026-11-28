@@ -20,7 +20,6 @@ import {
   getMySubscriptionEvents,
 } from "./actions";
 
-export const instant = false;
 
 const BRL = new Intl.NumberFormat("pt-BR", {
   style: "currency",

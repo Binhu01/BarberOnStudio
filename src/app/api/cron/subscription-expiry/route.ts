@@ -7,7 +7,6 @@ import { createModuleLogger } from "@/lib/observability/logger";
 const logger = createModuleLogger("cron:subscription-expiry");
 
 // This route uses dynamic server data
-export const instant = false;
 
 // =============================================================================
 // CRON JOB: Verificar assinaturas próximas do vencimento (3 dias)

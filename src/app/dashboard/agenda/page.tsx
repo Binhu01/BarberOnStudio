@@ -1,6 +1,5 @@
 // This page uses dynamic server data
 // With cacheComponents: true, instant=false allows blocking render + connection() opts out of prerender
-export const instant = false;
 
 import { connection } from "next/server";
 import Link from "next/link";

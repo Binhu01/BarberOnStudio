@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { connection } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-export const instant = false;
 
 // =============================================================================
 // API: Testar conexão WhatsApp Business Cloud API

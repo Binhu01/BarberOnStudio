@@ -1,7 +1,6 @@
 import { MessageSquare, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 import { adminGetSupportTickets } from "@/app/dashboard/billing/actions";
 
-export const instant = false;
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   open: { label: "Aberto", color: "bg-blue-100 text-blue-700", icon: AlertCircle },

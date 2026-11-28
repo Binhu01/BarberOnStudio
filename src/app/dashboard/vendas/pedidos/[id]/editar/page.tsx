@@ -1,5 +1,4 @@
 // This page uses dynamic server data
-export const instant = false;
 
 import { notFound } from "next/navigation";
 import { getOrderById, updateOrder } from "../../../actions";

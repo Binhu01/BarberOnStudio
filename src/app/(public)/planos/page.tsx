@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Check, X, Sparkles, ArrowRight } from "lucide-react";
 import { getActivePlans, getPlanEntitlements } from "@/app/dashboard/billing/actions";
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Planos e Preços — Barber-On Studio",

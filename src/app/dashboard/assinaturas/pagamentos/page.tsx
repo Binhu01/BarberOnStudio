@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { connection } from "next/server";
 import { DollarSign, CreditCard, CheckCircle2, XCircle, Clock, Search } from "lucide-react";

@@ -11,7 +11,6 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { getAdminDashboardStats } from "@/app/dashboard/billing/actions";
 
-export const instant = false;
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();

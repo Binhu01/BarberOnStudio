@@ -29,3 +29,5 @@ supabase/.branches/
 
 # TypeScript
 *.tsbuildinfo
+.vercel
+.env*

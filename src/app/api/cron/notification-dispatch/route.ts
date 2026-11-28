@@ -7,7 +7,6 @@ import { createModuleLogger } from "@/lib/observability/logger";
 const logger = createModuleLogger("cron:notification-dispatch");
 
 // This route uses dynamic server data
-export const instant = false;
 
 // =============================================================================
 // CRON JOB: Processar fila de notification_logs e enviar mensagens

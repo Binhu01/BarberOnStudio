@@ -1,5 +1,4 @@
 // @cache-bust: 2026-11-23T00-00-00 — monitoring dashboard
-export const instant = false;
 
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";

@@ -1,7 +1,6 @@
 import { CreditCard, Check, X } from "lucide-react";
 import { getAllPlans } from "@/app/dashboard/billing/actions";
 
-export const instant = false;
 
 const BRL = new Intl.NumberFormat("pt-BR", {
   style: "currency",

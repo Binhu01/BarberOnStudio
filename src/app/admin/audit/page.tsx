@@ -1,7 +1,6 @@
 import { ShieldCheck, Search } from "lucide-react";
 import { adminGetAuditLogs } from "@/app/dashboard/billing/actions";
 
-export const instant = false;
 
 export default async function AdminAuditPage() {
   const logs = await adminGetAuditLogs(200);

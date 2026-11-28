@@ -1,5 +1,4 @@
 // This page uses dynamic server data
-export const instant = false;
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

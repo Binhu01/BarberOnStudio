@@ -1,5 +1,4 @@
 // This page uses dynamic server data
-export const instant = false;
 
 import { connection } from "next/server";
 import {

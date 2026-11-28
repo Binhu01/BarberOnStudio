@@ -1,5 +1,4 @@
 // This page uses dynamic server data
-export const instant = false;
 
 import { getComandaById } from "../actions";
 import { ComandaDetailClient } from "./_components/comanda-detail-client";

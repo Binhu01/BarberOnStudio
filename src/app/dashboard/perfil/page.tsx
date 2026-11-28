@@ -1,5 +1,4 @@
 // This page uses dynamic server data
-export const instant = false;
 
 import { createClient } from "@/lib/supabase/server";
 import { getActiveOrganization } from "@/lib/organizations";

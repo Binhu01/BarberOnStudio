@@ -1,7 +1,6 @@
 import { Search } from "lucide-react";
 import { adminGetOrganizations } from "@/app/dashboard/billing/actions";
 
-export const instant = false;
 
 const STATUS_COLORS: Record<string, string> = {
   active: "bg-emerald-100 text-emerald-700",

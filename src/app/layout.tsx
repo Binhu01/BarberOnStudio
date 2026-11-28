@@ -1,7 +1,3 @@
-// Opt out of instant navigation — required by cacheComponents: true
-// because getUserOrganizations() accesses supabase.auth.getUser()
-export const instant = false;
-
 import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat, Geist } from "next/font/google";
 import Script from "next/script";

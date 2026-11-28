@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { connection } from "next/server";
 import { CalendarDays, TrendingUp, Users, Clock, AlertTriangle } from "lucide-react";
