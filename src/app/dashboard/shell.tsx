@@ -189,8 +189,6 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen bg-barber-dark">
-      {/* DIAGNOSTIC: confirms shell renders — remove after fix verified */}
-      <div style={{ position: "fixed", top: 0, right: 0, zIndex: 99999, background: "#22c55e", color: "#000", padding: "4px 12px", fontSize: "12px", fontWeight: "bold" }}>SHELL OK</div>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div

@@ -104,34 +104,70 @@ export async function updateSession(request: NextRequest) {
   let hasOrg = false;
 
   if (user) {
-    console.log('🔍 Middleware: verificando organização para usuário', user.id);
-
-    // First try with anon key (respects RLS)
-    const { data: memberships, error } = await supabase
+    // Fetch full membership + org data in one query (anon key respects RLS)
+    const { data: fullMemberships } = await supabase
       .from("memberships")
-      .select("id")
+      .select("id, organization_id, user_id, role, status, created_at, organizations(id, name, slug, created_by, created_at, updated_at)")
       .eq("user_id", user.id)
       .limit(1);
 
-    console.log('📊 Resultado da query anon:', { memberships, error });
-    hasOrg = !!(memberships && memberships.length > 0);
+    hasOrg = !!(fullMemberships && fullMemberships.length > 0 && fullMemberships[0].organizations);
 
     // If anon key doesn't find anything, try with service role key
     if (!hasOrg) {
-      console.log('⚠️ Anon não encontrou, tentando service role...');
       hasOrg = await hasMembershipServiceRole(user.id);
-      console.log('✅ Resultado service role:', hasOrg);
+    }
+
+    // Set cookie and pass org data via header so DashboardAuthGate doesn't need to re-query
+    if (hasOrg && fullMemberships && fullMemberships.length > 0 && fullMemberships[0].organizations) {
+      supabaseResponse.cookies.set('barber_has_org', 'true', {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'lax'
+      });
+
+      const m = fullMemberships[0];
+      const org = m.organizations!;
+      const orgData = {
+        org: {
+          id: org.id,
+          name: org.name,
+          slug: org.slug,
+          created_by: org.created_by,
+          created_at: org.created_at,
+          updated_at: org.updated_at,
+          membership: {
+            id: m.id,
+            organization_id: m.organization_id,
+            user_id: m.user_id,
+            role: m.role,
+            status: m.status ?? "active",
+            created_at: m.created_at,
+          },
+        },
+        allOrgs: [{
+          id: org.id,
+          name: org.name,
+          slug: org.slug,
+          created_by: org.created_by,
+          created_at: org.created_at,
+          updated_at: org.updated_at,
+          membership: {
+            id: m.id,
+            organization_id: m.organization_id,
+            user_id: m.user_id,
+            role: m.role,
+            status: m.status ?? "active",
+            created_at: m.created_at,
+          },
+        }],
+      };
+      const encoded = Buffer.from(JSON.stringify(orgData)).toString('base64');
+      supabaseResponse.headers.set('x-barber-org-data', encoded);
     }
   }
 
-  // Set cookie to signal to downstream components that user has org
-  if (hasOrg) {
-    supabaseResponse.cookies.set('barber_has_org', 'true', {
-      path: '/',
-      httpOnly: true,
-      sameSite: 'lax'
-    });
-  } else {
+  if (!hasOrg) {
     supabaseResponse.cookies.delete('barber_has_org');
   }
 

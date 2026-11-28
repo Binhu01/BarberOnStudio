@@ -1,28 +1,25 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { getActiveOrganization } from "@/lib/organizations";
 import { DashboardShell } from "../shell";
-import { OrganizationProvider } from "../organization-context";
+import { OrganizationProvider, type ClientOrganization } from "../organization-context";
 
 /**
  * Server component that handles auth + org resolution for the dashboard.
  *
- * IMPORTANT: Uses ANON client for all queries because SUPABASE_SERVICE_ROLE_KEY
- * may be invalid or missing in production. Anon client works correctly with RLS
- * for authenticated users reading their own data.
+ * IMPORTANT: Org data is passed from middleware via x-barber-org-data header
+ * to avoid RLS/cookie issues in server components. The middleware already
+ * verified the user has an active organization.
  */
 export async function DashboardAuthGate({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // connection() signals to Next.js Cache Components that this route
-  // depends on runtime state (cookies/auth) and must NOT be prerendered.
-  await connection();
-
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -31,7 +28,20 @@ export async function DashboardAuthGate({
     redirect("/login");
   }
 
-  const activeData = await getActiveOrganization();
+  // Read org data from middleware header instead of re-querying
+  const headersList = await headers();
+  const orgDataHeader = headersList.get("x-barber-org-data");
+
+  let activeData: { org: ClientOrganization; allOrgs: ClientOrganization[] } | null = null;
+
+  if (orgDataHeader) {
+    try {
+      const decoded = Buffer.from(orgDataHeader, "base64").toString("utf-8");
+      activeData = JSON.parse(decoded);
+    } catch (e) {
+      console.error("[AuthGate] failed to parse org header:", e);
+    }
+  }
 
   if (!activeData) {
     redirect("/dashboard/onboarding");
@@ -49,6 +59,9 @@ export async function DashboardAuthGate({
 
   userName = profile?.full_name ?? null;
   userAvatar = profile?.avatar_url ?? null;
+
+  // Force dynamic rendering — ensures RSC payload streams correctly
+  await connection();
 
   return (
     <OrganizationProvider org={activeData.org} allOrgs={activeData.allOrgs}>
